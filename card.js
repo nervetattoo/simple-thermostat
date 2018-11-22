@@ -151,22 +151,22 @@ class ThermostatCard extends LitElement {
               <dt>State:</dt>
               <dd>${state}</dd>
             </dl>
-            ${ config.energy && this.renderInfoItem('energy') }
-            ${ config.power && this.renderInfoItem('power') }
+            ${ config.energy && this.renderInfoItem('energy', 'Energy today') }
+            ${ config.power && this.renderInfoItem('power', 'Current power') }
           </div>
         </section>
       </ha-card>
     `
   }
 
-  renderInfoItem (name) {
+  renderInfoItem (name, heading) {
     const entityId = this.config[name]
     const state = name in this && this[name]
     if (!state) return
 
     return html`
       <dl @click='${() => this.openEntityPopover(entityId)}' >
-        <dt>Energy today:</dt>
+        <dt>${heading}:</dt>
         <dd>${state.state} ${state.attributes.unit_of_measurement}</dd>
       </dl>
     `

@@ -1,7 +1,17 @@
 # better-thermostat
 A better thermostat card for Home Assistant Lovelace UI
 
-Example usage:
+## Installation
+
+1. Download the repo as a zip or with git clone and store it in `www/better-thermostat/` in your configuration folder.
+2. Configure Lovelace to load the card:
+    ```
+    resources:
+      - url: /local/better-thermostat/card.js?v=1
+        type: module
+    ```
+
+## Example usage:
 
 ```yaml
 cards:
