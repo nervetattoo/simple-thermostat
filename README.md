@@ -1,6 +1,8 @@
 # better-thermostat
 A better thermostat card for Home Assistant Lovelace UI
 
+![Example thermostat](https://github.com/nervetattoo/better-thermostat/raw/master/thermostat-card.png)
+
 ## Installation
 
 1. Download the repo as a zip or with git clone and store it in `www/better-thermostat/` in your configuration folder.
