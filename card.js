@@ -71,7 +71,7 @@ function renderStyles () {
   `
 }
 
-class ThermostatCard extends LitElement {
+class BetterThermostat extends LitElement {
 
   static get properties () {
     return {
@@ -212,4 +212,4 @@ class ThermostatCard extends LitElement {
   }
 }
 
-customElements.define('thermostat-card', ThermostatCard);
+customElements.define('better-thermostat', BetterThermostat);
