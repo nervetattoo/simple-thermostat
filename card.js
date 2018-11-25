@@ -8,7 +8,7 @@ function renderStyles () {
         --thermostat-font-size-xl: var(--paper-font-display3_-_font-size);
         --thermostat-font-size-l: var(--paper-font-display2_-_font-size);
         --thermostat-font-size-m: var(--paper-font-title_-_font-size);
-        --thermostat-font-size-title: 32px;
+        --thermostat-font-size-title: 24px;
       }
       div:empty { display: none; }
       .body {
@@ -45,7 +45,12 @@ function renderStyles () {
       header {
         display: flex;
         justify-content: center;
-        padding: 16px 0 8px 0;
+        flex-direction: row;
+        padding: 16px 0 16px 0;
+      }
+      .icon {
+        margin-right: 4px;
+        color: grey;
       }
       .title {
         font-size: var(--thermostat-font-size-title);
@@ -72,21 +77,18 @@ function renderStyles () {
       .thermostat-trigger {
         padding: 0px;
       }
-      dl, dt, dd {
-        padding: 0;
-        margin: 0;
-      }
-      dl {
-        display: flex;
-        flex-direction: row;
-        margin-bottom: 6px;
-      }
-      dt {
-        font-weight: 500;
-      }
-      dd {
-        margin-left: 4px;
+      .sensors th {
+        text-align: right;
         font-weight: 300;
+        padding-right: 8px;
+        padding-bottom: 4px;
+      }
+      .sensors td {
+        padding-bottom: 4px;
+      }
+      .sensors td.clickable {
+        text-decoration: underline;
+        cursor: pointer;
       }
     </style>
   `
@@ -113,6 +115,7 @@ class BetterThermostat extends LitElement {
       config: Object,
       entity: Object,
       sensors: Array,
+      icon: String,
     }
   }
 
@@ -122,6 +125,10 @@ class BetterThermostat extends LitElement {
     const entity = hass.states[this.config.entity]
     if (this.entity !== entity) {
       this.entity = entity;
+    }
+
+    if (this.config.icon) {
+      this.icon = this.config.icon;
     }
 
     if (this.config.sensors) {
@@ -157,24 +164,25 @@ class BetterThermostat extends LitElement {
 
     return html`
       ${renderStyles()}
-      <ha-card
-      >
+      <ha-card>
         <header>
-          <h2 class="title">${entity._entityDisplay}</h2>
+          ${ this.icon && html`
+            <ha-icon class="icon" .icon=${this.icon}></ha-icon>
+          `}
+          <h2 class="title">
+          ${entity.attributes.friendly_name}
+          </h2>
         </header>
         <section class="body">
           <div class="section sensors">
-            <dl>
-              <dt>Temperature:</dt>
-              <dd>${current}${unit}</dd>
-            </dl>
-            <dl>
-              <dt>State:</dt>
-              <dd>${state}</dd>
-            </dl>
-            ${ sensors.map(({ name, state }) => {
-              return this.renderInfoItem(state, name)
-            }) }
+            <table>
+              ${ this.renderInfoItem(`${current}${unit}`, 'Temperature') }
+              ${ this.renderInfoItem(`${state}`, 'State') }
+
+              ${ sensors.map(({ name, state }) => {
+                return this.renderInfoItem(state, name)
+              }) }
+            </table>
 
           </div>
 
@@ -221,12 +229,23 @@ class BetterThermostat extends LitElement {
   renderInfoItem (state, heading) {
     if (!state) return
 
-    const onClick = () => this.openEntityPopover(state.entity_id)
+    let valueCell
+    if (typeof state === 'string') {
+      valueCell = html`<td>${state}</td>`
+    }
+    else {
+      valueCell = html`<td
+        class="clickable"
+        @click='${() => this.openEntityPopover(state.entity_id)}'
+      >
+        ${state.state} ${state.attributes.unit_of_measurement}
+      </td>`
+    }
     return html`
-      <dl @click='${onClick}' >
-        <dt>${heading}:</dt>
-        <dd>${state.state} ${state.attributes.unit_of_measurement}</dd>
-      </dl>
+      <tr>
+        <th>${heading}:</th>
+        ${valueCell}
+      </tr>
     `
   }
 
