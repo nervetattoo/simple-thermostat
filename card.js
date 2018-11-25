@@ -54,11 +54,12 @@ function renderStyles () {
       }
       dl, dt, dd {
         padding: 0;
-        margin: 0,
+        margin: 0;
       }
       dl {
         display: flex;
         flex-direction: row;
+        margin-top: 4px;
       }
       dt {
         font-weight: 500;
@@ -78,8 +79,7 @@ class BetterThermostat extends LitElement {
       _hass: Object,
       config: Object,
       entity: Object,
-      energy: Object,
-      power: Object,
+      sensors: Array,
     }
   }
 
@@ -91,20 +91,21 @@ class BetterThermostat extends LitElement {
       this.entity = entity;
     }
 
-    const energy = hass.states[this.config.energy]
-    if (this.energy !== energy) {
-      this.energy = energy;
+    if (this.config.sensors) {
+      this.sensors = this.config.sensors.map(({ name, entity }) => {
+        const state = hass.states[entity]
+        return {
+          name: [name, state.attributes.friendly_name, entity].find(n => !!n),
+          entity,
+          state,
+        }
+      })
     }
 
-    const power = hass.states[this.config.power]
-    if (this.power !== power) {
-      this.power = power;
-    }
   }
 
-  render ({ _hass, config, entity, energy, power } = this) {
+  render ({ _hass, config, entity, sensors } = this) {
     if (!entity) return
-    console.log(entity, energy, power)
     const {
       state,
       attributes: {
@@ -151,21 +152,21 @@ class BetterThermostat extends LitElement {
               <dt>State:</dt>
               <dd>${state}</dd>
             </dl>
-            ${ config.energy && this.renderInfoItem('energy', 'Energy today') }
-            ${ config.power && this.renderInfoItem('power', 'Current power') }
+            ${ sensors.map(({ name, state }) => {
+              return this.renderInfoItem(state, name)
+            }) }
+
           </div>
         </section>
       </ha-card>
     `
   }
 
-  renderInfoItem (name, heading) {
-    const entityId = this.config[name]
-    const state = name in this && this[name]
+  renderInfoItem (state, heading) {
     if (!state) return
 
     return html`
-      <dl @click='${() => this.openEntityPopover(entityId)}' >
+      <dl @click='${() => this.openEntityPopover(state.entity_id)}' >
         <dt>${heading}:</dt>
         <dd>${state.state} ${state.attributes.unit_of_measurement}</dd>
       </dl>
@@ -173,10 +174,16 @@ class BetterThermostat extends LitElement {
   }
 
   setTemperature (target) {
-    console.log('set temp', target)
+    let temperature = target
+    console.log(typeof target, target)
+    if (typeof target == 'object') {
+      temperature = target.temperature
+    }
+
+    console.log('set temp', temperature)
     this._hass.callService("climate", "set_temperature", {
       entity_id: this.config.entity,
-      temperature: target,
+      temperature,
     })
   }
 
