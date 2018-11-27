@@ -1,10 +1,12 @@
 import { LitElement, html } from 'https://unpkg.com/@polymer/lit-element@^0.6.1/lit-element.js?module';
 
+import { Debouncer } from "https://unpkg.com/@polymer/polymer/lib/utils/debounce";
+
 function renderStyles () {
   return html`
     <style is="custom-style">
       ha-card {
-        padding: 8px;
+        padding: 16px;
         --thermostat-font-size-xl: var(--paper-font-display3_-_font-size);
         --thermostat-font-size-l: var(--paper-font-display2_-_font-size);
         --thermostat-font-size-m: var(--paper-font-title_-_font-size);
@@ -46,7 +48,7 @@ function renderStyles () {
         display: flex;
         justify-content: center;
         flex-direction: row;
-        padding: 16px 0 16px 0;
+        padding-bottom: 16px;
       }
       .icon {
         margin-right: 4px;
@@ -94,7 +96,13 @@ function renderStyles () {
   `
 }
 
-const UPDATE_PROPS = ['entity', 'sensors']
+function formatNumber (number) {
+  const [int, dec] = String(number).split('.')
+  return `${int}.${dec || '0'}`
+}
+
+const STEP_SIZE = .5
+const UPDATE_PROPS = ['entity', 'sensors', '_temperature']
 const modeIcons = {
   auto: "hass:autorenew",
   manual: "hass:cursor-pointer",
@@ -116,6 +124,15 @@ class BetterThermostat extends LitElement {
       entity: Object,
       sensors: Array,
       icon: String,
+      _temperature: {
+        type: Number,
+        notify: true,
+      },
+      mode: {
+        type: String,
+        notify: true,
+        observer: '_modeChanged',
+      },
     }
   }
 
@@ -125,6 +142,16 @@ class BetterThermostat extends LitElement {
     const entity = hass.states[this.config.entity]
     if (this.entity !== entity) {
       this.entity = entity;
+
+      const {
+        attributes: {
+          operation_mode: mode,
+          operation_list: modes,
+          temperature: _temperature,
+        }
+      } = entity
+      this._temperature = _temperature
+      this.mode = modes.indexOf(mode)
     }
 
     if (this.config.icon) {
@@ -176,7 +203,9 @@ class BetterThermostat extends LitElement {
         <section class="body">
           <div class="section sensors">
             <table>
-              ${ this.renderInfoItem(`${current}${unit}`, 'Temperature') }
+              ${ this.renderInfoItem(
+                `${formatNumber(current)}${unit}`, 'Temperature'
+                ) }
               ${ this.renderInfoItem(`${state}`, 'State') }
 
               ${ sensors.map(({ name, state }) => {
@@ -186,36 +215,22 @@ class BetterThermostat extends LitElement {
 
           </div>
 
-          <div class="modes">
-            ${ operations.map(op => {
-              return html`
-              <paper-icon-button
-                icon="${modeIcons[op]}"
-                title="${op}"
-                class="mode ${op === operation ? 'active' : ''}"
-                @click="${() => this.setMode(op)}"
-              >
-              </paper-icon-button>
-              `
-            })}
-          </div>
-
           <div class="main section">
             <div class="current-wrapper">
               <paper-icon-button
                 class="thermostat-trigger"
                 icon="hass:chevron-up"
-                @click='${() => this.setTemperature(desired + .5)}'
+                @click='${() => this.setTemperature(this._temperature + STEP_SIZE)}'
               >
               </paper-icon-button>
 
               <div class="current" @click='${() => this.openEntityPopover(config.entity)}'>
-                <h3 class="current--value">${desired}</h3>
+                <h3 class="current--value">${formatNumber(this._temperature)}</h3>
               </div>
               <paper-icon-button
                 class="thermostat-trigger"
                 icon="hass:chevron-down"
-                @click='${() => this.setTemperature(desired - .5)}'
+                @click='${() => this.setTemperature(this._temperature - STEP_SIZE)}'
               >
               </paper-icon-button>
             </div>
@@ -249,22 +264,29 @@ class BetterThermostat extends LitElement {
     `
   }
 
-  setTemperature (target) {
-    let temperature = target
-    //console.log(typeof target, target)
-    if (typeof target == 'object') {
-      temperature = target.temperature
-    }
-
-    //console.log('set temp', temperature)
-    this._hass.callService("climate", "set_temperature", {
-      entity_id: this.config.entity,
-      temperature,
-    })
+  setTemperature (temperature) {
+    this._debouncedSetTemperature = Debouncer.debounce(
+			this._debouncedSetTemperature,
+      {
+        run: (fn) => {
+          this._temperature = temperature
+          return window.setTimeout(fn, 250)
+        },
+        cancel: handle => window.clearTimeout(handle),
+      },
+      () => {
+        this._hass.callService("climate", "set_temperature", {
+          entity_id: this.config.entity,
+          temperature: this._temperature,
+        })
+      }
+    )
   }
 
-  setMode (mode) {
-     this._hass.callService("climate", "set_operation_mode", {
+  setMode (e) {
+    console.log('mode', e)
+    return
+    this._hass.callService("climate", "set_operation_mode", {
       entity_id: this.config.entity,
       operation_mode: mode,
     });
