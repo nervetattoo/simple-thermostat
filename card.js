@@ -158,6 +158,8 @@ class BetterThermostat extends LitElement {
       this.icon = this.config.icon;
     }
 
+    this._stepSize = this.config.step_size || STEP_SIZE
+
     if (this.config.sensors) {
       this.sensors = this.config.sensors.map(({ name, entity }) => {
         const state = hass.states[entity]
@@ -220,7 +222,7 @@ class BetterThermostat extends LitElement {
               <paper-icon-button
                 class="thermostat-trigger"
                 icon="hass:chevron-up"
-                @click='${() => this.setTemperature(this._temperature + STEP_SIZE)}'
+                @click='${() => this.setTemperature(this._temperature + this._stepSize)}'
               >
               </paper-icon-button>
 
@@ -230,7 +232,7 @@ class BetterThermostat extends LitElement {
               <paper-icon-button
                 class="thermostat-trigger"
                 icon="hass:chevron-down"
-                @click='${() => this.setTemperature(this._temperature - STEP_SIZE)}'
+                @click='${() => this.setTemperature(this._temperature - this._stepSize)}'
               >
               </paper-icon-button>
             </div>

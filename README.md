@@ -19,6 +19,7 @@ A better thermostat card for Home Assistant Lovelace UI
 cards:
   - type: custom:better-thermostat
     entity: climate.my_room
+    step_size: 1
     sensors:
       - entity: sensor.fibaro_system_fgwpef_wall_plug_gen5_energy
       - entity: sensor.fibaro_system_fgwpef_wall_plug_gen5_power
