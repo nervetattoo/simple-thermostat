@@ -30,20 +30,6 @@ function renderStyles () {
         justify-content: center;
         font-size: 1.1em;
       }
-      .modes {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      .mode {
-        padding: 0;
-        width: 24px;
-        height: 24px;
-        margin: 4px 2px;
-      }
-      .mode.active {
-        color: var(--paper-item-icon-active-color, #FDD835);
-      }
       header {
         display: flex;
         justify-content: center;
@@ -103,17 +89,6 @@ function formatNumber (number) {
 
 const STEP_SIZE = .5
 const UPDATE_PROPS = ['entity', 'sensors', '_temperature']
-const modeIcons = {
-  auto: "hass:autorenew",
-  manual: "hass:cursor-pointer",
-  heat: "hass:fire",
-  cool: "hass:snowflake",
-  off: "hass:power",
-  fan_only: "hass:fan",
-  eco: "hass:leaf",
-  dry: "hass:water-percent",
-  idle: "hass:power",
-}
 
 class BetterThermostat extends LitElement {
 
@@ -128,11 +103,6 @@ class BetterThermostat extends LitElement {
         type: Number,
         notify: true,
       },
-      mode: {
-        type: String,
-        notify: true,
-        observer: '_modeChanged',
-      },
     }
   }
 
@@ -145,13 +115,10 @@ class BetterThermostat extends LitElement {
 
       const {
         attributes: {
-          operation_mode: mode,
-          operation_list: modes,
           temperature: _temperature,
         }
       } = entity
       this._temperature = _temperature
-      this.mode = modes.indexOf(mode)
     }
 
     if (this.config.icon) {
@@ -184,12 +151,9 @@ class BetterThermostat extends LitElement {
       attributes: {
         current_temperature: current,
         temperature: desired,
-        operation_list: operations,
-        operation_mode: operation,
       },
     } = entity
-    const unit = '℃'
-    //console.log('render', entity)
+    const unit = this._hass.config.unit_system.temperature
 
     return html`
       ${renderStyles()}
@@ -283,15 +247,6 @@ class BetterThermostat extends LitElement {
         })
       }
     )
-  }
-
-  setMode (e) {
-    console.log('mode', e)
-    return
-    this._hass.callService("climate", "set_operation_mode", {
-      entity_id: this.config.entity,
-      operation_mode: mode,
-    });
   }
 
   openEntityPopover (entityId) {
