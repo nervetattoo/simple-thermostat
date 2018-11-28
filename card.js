@@ -1,6 +1,7 @@
 import { LitElement, html } from 'https://unpkg.com/@polymer/lit-element@^0.6.1/lit-element.js?module';
 
 import { Debouncer } from "https://unpkg.com/@polymer/polymer/lib/utils/debounce";
+import { timeOut, microTask } from "https://unpkg.com/@polymer/polymer/lib/utils/async";
 
 function renderStyles () {
   return html`
@@ -29,6 +30,25 @@ function renderStyles () {
         flex-direction: column;
         justify-content: center;
         font-size: 1.1em;
+      }
+      .modes {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      .mode {
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        margin: 4px 2px;
+      }
+      .mode.active {
+        color: var(--paper-item-icon-active-color, #FDD835);
+      }
+      .mode-selector {
+        --paper-dropdown-menu: {
+          display: inline;
+        };
       }
       header {
         display: flex;
@@ -89,6 +109,17 @@ function formatNumber (number) {
 
 const STEP_SIZE = .5
 const UPDATE_PROPS = ['entity', 'sensors', '_temperature']
+const modeIcons = {
+  auto: "hass:autorenew",
+  manual: "hass:cursor-pointer",
+  heat: "hass:fire",
+  cool: "hass:snowflake",
+  off: "hass:power",
+  fan_only: "hass:fan",
+  eco: "hass:leaf",
+  dry: "hass:water-percent",
+  idle: "hass:power",
+}
 
 class BetterThermostat extends LitElement {
 
@@ -103,6 +134,7 @@ class BetterThermostat extends LitElement {
         type: Number,
         notify: true,
       },
+      _mode: String,
     }
   }
 
@@ -115,10 +147,13 @@ class BetterThermostat extends LitElement {
 
       const {
         attributes: {
+          operation_mode: mode,
+          operation_list: modes = [],
           temperature: _temperature,
         }
       } = entity
       this._temperature = _temperature
+      this._mode = mode
     }
 
     if (this.config.icon) {
@@ -151,6 +186,8 @@ class BetterThermostat extends LitElement {
       attributes: {
         current_temperature: current,
         temperature: desired,
+        operation_list: operations = [],
+        operation_mode: operation,
       },
     } = entity
     const unit = this._hass.config.unit_system.temperature
@@ -173,6 +210,8 @@ class BetterThermostat extends LitElement {
                 `${formatNumber(current)}${unit}`, 'Temperature'
                 ) }
               ${ this.renderInfoItem(`${state}`, 'State') }
+
+              ${ this.renderModeSelector(operations, operation) }
 
               ${ sensors.map(({ name, state }) => {
                 return this.renderInfoItem(state, name)
@@ -204,6 +243,34 @@ class BetterThermostat extends LitElement {
           </div>
         </section>
       </ha-card>
+    `
+  }
+
+  renderModeSelector (modes, mode) {
+    const selected = modes.indexOf(mode)
+    return html`
+      <tr>
+        <th>Mode:</th>
+        <td style="max-width: 4em;">
+          <paper-dropdown-menu
+            class="mode-selector"
+            no-label-float
+            noink
+            no-animations
+            vertical-offset="34"
+            @selected-item-label-changed="${this.setMode}"
+          >
+            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="${selected}">
+              ${ modes.map(m =>
+                html`<paper-item>
+                  <ha-icon .icon=${modeIcons[m]}></ha-icon>
+                  ${m}
+                  </paper-item>`
+              ) }
+            </paper-listbox>
+          </paper-dropdown-menu>
+        </td>
+      </tr>
     `
   }
 
@@ -247,6 +314,16 @@ class BetterThermostat extends LitElement {
         })
       }
     )
+  }
+
+  setMode (e) {
+    const { detail: { value = '' } } = e
+    if (value && value !== this._mode) {
+      this._hass.callService("climate", "set_operation_mode", {
+        entity_id: this.config.entity,
+        operation_mode: value,
+      });
+    }
   }
 
   openEntityPopover (entityId) {
