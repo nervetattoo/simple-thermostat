@@ -11,7 +11,7 @@ The aim is to provide a card with simpler interactions that are easier to use an
 2. Configure Lovelace to load the card:
     ```
     resources:
-      - url: /local/simple-thermostat/card.js?v=1
+      - url: /local/simple-thermostat/simple-thermostat.js?v=1
         type: module
     ```
 
