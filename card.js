@@ -12,8 +12,14 @@ function renderStyles () {
         --thermostat-font-size-l: var(--paper-font-display2_-_font-size);
         --thermostat-font-size-m: var(--paper-font-title_-_font-size);
         --thermostat-font-size-title: 24px;
+
+        font-family: var(--paper-font-body1_-_font-family);
+        -webkit-font-smoothing: var(--paper-font-body1_-_-webkit-font-smoothing);
+        font-size: var(--paper-font-body1_-_font-size);
+        font-weight: var(--paper-font-body1_-_font-weight);
+        line-height: var(--paper-font-body1_-_line-height);
       }
-      div:empty { display: none; }
+
       .body {
         display: flex;
         flex-direction: row;
@@ -31,33 +37,30 @@ function renderStyles () {
         justify-content: center;
         font-size: 1.1em;
       }
-      .modes {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      .mode {
-        padding: 0;
-        width: 24px;
-        height: 24px;
-        margin: 4px 2px;
-      }
-      .mode.active {
-        color: var(--paper-item-icon-active-color, #FDD835);
-      }
       .mode-selector {
         --paper-dropdown-menu: {
           display: inline;
         };
+        --paper-input-container: {
+          padding: 0;
+        }
       }
       header {
         display: flex;
-        justify-content: center;
         flex-direction: row;
-        padding-bottom: 16px;
+
+        font-family: var(--paper-font-headline_-_font-family);
+        -webkit-font-smoothing: var(--paper-font-headline_-_-webkit-font-smoothing);
+        font-size: var(--paper-font-headline_-_font-size);
+        font-weight: var(--paper-font-headline_-_font-weight);
+        letter-spacing: var(--paper-font-headline_-_letter-spacing);
+        line-height: var(--paper-font-headline_-_line-height);
+        text-rendering: var(--paper-font-common-expensive-kerning_-_text-rendering);
+        opacity: var(--dark-primary-opacity);
+        padding: 24px 16px 16px;
       }
       .icon {
-        margin-right: 4px;
+        margin-right: 8px;
         color: grey;
       }
       .title {
@@ -138,6 +141,18 @@ class BetterThermostat extends LitElement {
     }
   }
 
+  constructor () {
+    super();
+
+    this._hass = null
+    this.entity = null
+    this.icon = null
+    this.sensors = []
+    this._stepSize = STEP_SIZE
+    this._temperature = null
+    this._mode = null
+  }
+
   set hass (hass) {
     this._hass = hass
 
@@ -160,7 +175,9 @@ class BetterThermostat extends LitElement {
       this.icon = this.config.icon;
     }
 
-    this._stepSize = this.config.step_size || STEP_SIZE
+    if (this.config.step_size) {
+      this._stepSize = this.config.step_size
+    }
 
     if (this.config.sensors) {
       this.sensors = this.config.sensors.map(({ name, entity }) => {
@@ -257,7 +274,7 @@ class BetterThermostat extends LitElement {
             no-label-float
             noink
             no-animations
-            vertical-offset="34"
+            vertical-offset="26"
             @selected-item-label-changed="${this.setMode}"
           >
             <paper-listbox slot="dropdown-content" class="dropdown-content" selected="${selected}">
