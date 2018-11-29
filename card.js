@@ -138,6 +138,7 @@ class BetterThermostat extends LitElement {
         notify: true,
       },
       _mode: String,
+      name: String,
     }
   }
 
@@ -179,6 +180,14 @@ class BetterThermostat extends LitElement {
       this._stepSize = this.config.step_size
     }
 
+    if (typeof this.config.name === 'string') {
+      this.name = this.config.name
+    } else if (this.config.name === false) {
+      this.name = false
+    } else {
+      this.name = entity.attributes.friendly_name
+    }
+
     if (this.config.sensors) {
       this.sensors = this.config.sensors.map(({ name, entity }) => {
         const state = hass.states[entity]
@@ -212,14 +221,7 @@ class BetterThermostat extends LitElement {
     return html`
       ${renderStyles()}
       <ha-card>
-        <header>
-          ${ this.icon && html`
-            <ha-icon class="icon" .icon=${this.icon}></ha-icon>
-          `}
-          <h2 class="title">
-          ${entity.attributes.friendly_name}
-          </h2>
-        </header>
+      ${ this.renderHeader() }
         <section class="body">
           <div class="section sensors">
             <table>
@@ -260,6 +262,21 @@ class BetterThermostat extends LitElement {
           </div>
         </section>
       </ha-card>
+    `
+  }
+
+  renderHeader () {
+    if (this.name === false) return ''
+
+    return html`
+      <header>
+        ${ this.icon && html`
+          <ha-icon class="icon" .icon=${this.icon}></ha-icon>
+        `}
+        <h2 class="title">
+        ${this.name}
+        </h2>
+      </header>
     `
   }
 
