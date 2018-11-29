@@ -13,6 +13,16 @@ A better thermostat card for Home Assistant Lovelace UI
         type: module
     ```
 
+## Available configuration options:
+
+* `entity` *string*: The thermostat entity id **required**
+* `name` *string|false*: Override the card name, or disable showing a name at all. Default is to use the friendly_name of the thermostat provided
+* `icon` *string*: Show an icon next to the card name
+* `step_size` *number*: Override the default 0.5 step size for increasing/decreasing the temperature
+* `sensors` *array*
+  * `entity` *string*: A sensor value entity id **required**
+  * `name` *string*: Specify a sensor name to use instead of the default friendly_name
+
 ## Example usage:
 
 ```yaml
