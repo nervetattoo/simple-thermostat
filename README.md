@@ -3,15 +3,15 @@
 A different take on the thermostat card for Home Assistant Lovelace UI.
 The aim is to provide a card with simpler interactions that are easier to use and take up less space, as well as provide more modularity to tweak the card. For example the abiltity to embed sensor values that are relevant to your thermostat (like humidity, energy usage, hours on +++).
 
-![Example thermostat](https://github.com/nervetattoo/better-thermostat/raw/master/thermostat-card.png)
+![Example thermostat](https://github.com/nervetattoo/simple-thermostat/raw/master/thermostat-card.png)
 
 ## Installation
 
-1. Download the repo as a zip or with git clone and store it in `www/better-thermostat/` in your configuration folder.
+1. Download the repo as a zip or with git clone and store it in `www/simple-thermostat/` in your configuration folder.
 2. Configure Lovelace to load the card:
     ```
     resources:
-      - url: /local/better-thermostat/card.js?v=1
+      - url: /local/simple-thermostat/card.js?v=1
         type: module
     ```
 
@@ -29,7 +29,7 @@ The aim is to provide a card with simpler interactions that are easier to use an
 
 ```yaml
 cards:
-  - type: custom:better-thermostat
+  - type: custom:simple-thermostat
     entity: climate.my_room
     step_size: 1
     sensors:
