@@ -7,7 +7,6 @@ function renderStyles () {
   return html`
     <style is="custom-style">
       ha-card {
-        padding: 16px;
         --thermostat-font-size-xl: var(--paper-font-display3_-_font-size);
         --thermostat-font-size-l: var(--paper-font-display2_-_font-size);
         --thermostat-font-size-m: var(--paper-font-title_-_font-size);
@@ -18,6 +17,12 @@ function renderStyles () {
         font-size: var(--paper-font-body1_-_font-size);
         font-weight: var(--paper-font-body1_-_font-weight);
         line-height: var(--paper-font-body1_-_line-height);
+
+        padding-bottom: 16px;
+      }
+
+      ha-card.no-header {
+        padding: 16px 0;
       }
 
       .body {
@@ -220,8 +225,8 @@ class BetterThermostat extends LitElement {
 
     return html`
       ${renderStyles()}
-      <ha-card>
-      ${ this.renderHeader() }
+      <ha-card class="${this.name ? '' : 'no-header' }">
+        ${ this.renderHeader() }
         <section class="body">
           <div class="section sensors">
             <table>
