@@ -129,6 +129,12 @@ const modeIcons = {
   idle: "hass:power",
 }
 
+const STATE_ICONS = {
+  idle: 'mdi:radiator-disabled',
+  heat: 'mdi:radiator',
+  cool: 'mdi:snowflake',
+}
+
 class SimpleThermostat extends LitElement {
 
   static get properties () {
@@ -179,6 +185,8 @@ class SimpleThermostat extends LitElement {
 
     if (this.config.icon) {
       this.icon = this.config.icon;
+    } else {
+      this.icon = STATE_ICONS;
     }
 
     if (this.config.step_size) {
@@ -273,10 +281,16 @@ class SimpleThermostat extends LitElement {
   renderHeader () {
     if (this.name === false) return ''
 
+    let icon = this.icon
+    const { state } = this.entity
+    if (typeof this.icon === 'object') {
+      icon = state in this.icon ? this.icon[state] : false
+    }
+
     return html`
       <header>
-        ${ this.icon && html`
-          <ha-icon class="icon" .icon=${this.icon}></ha-icon>
+        ${ icon && html`
+          <ha-icon class="icon" .icon=${icon}></ha-icon>
         `}
         <h2 class="title">
         ${this.name}

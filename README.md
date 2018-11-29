@@ -19,7 +19,10 @@ The aim is to provide a card with simpler interactions that are easier to use an
 
 * `entity` *string*: The thermostat entity id **required**
 * `name` *string|false*: Override the card name, or disable showing a name at all. Default is to use the friendly_name of the thermostat provided
-* `icon` *string*: Show an icon next to the card name
+* `icon` *string|object*: Show an icon next to the card name. You can also pass an object to specify state-specific icons. Defaults state-specific icons radiator/radiator-disabled/snowflake
+  * `idle`: *string*: Use this icon for state idle
+  * `heat`: *string* Use this icon for state heat
+  * `cool`: *string* Use this icon for state cool
 * `step_size` *number*: Override the default 0.5 step size for increasing/decreasing the temperature
 * `sensors` *array*
   * `entity` *string*: A sensor value entity id **required**
