@@ -129,7 +129,7 @@ const modeIcons = {
   idle: "hass:power",
 }
 
-class BetterThermostat extends LitElement {
+class SimpleThermostat extends LitElement {
 
   static get properties () {
     return {
@@ -396,4 +396,4 @@ class BetterThermostat extends LitElement {
   }
 }
 
-customElements.define('better-thermostat', BetterThermostat);
+customElements.define('simple-thermostat', SimpleThermostat);
