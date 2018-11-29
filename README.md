@@ -1,5 +1,7 @@
-# better-thermostat
-A better thermostat card for Home Assistant Lovelace UI
+# Lovelace simple thermostat card
+
+A different take on the thermostat card for Home Assistant Lovelace UI.
+The aim is to provide a card with simpler interactions that are easier to use and take up less space, as well as provide more modularity to tweak the card. For example the abiltity to embed sensor values that are relevant to your thermostat (like humidity, energy usage, hours on +++).
 
 ![Example thermostat](https://github.com/nervetattoo/better-thermostat/raw/master/thermostat-card.png)
 
