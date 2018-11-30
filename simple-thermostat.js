@@ -115,6 +115,7 @@ function formatNumber (number) {
   return `${int}.${dec || '0'}`
 }
 
+const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = .5
 const UPDATE_PROPS = ['entity', 'sensors', '_temperature']
 const modeIcons = {
@@ -202,13 +203,14 @@ class SimpleThermostat extends LitElement {
     }
 
     if (this.config.sensors) {
-      this.sensors = this.config.sensors.map(({ name, entity }) => {
+      this.sensors = this.config.sensors.map(({ name: wantedName, entity }) => {
         const state = hass.states[entity]
-        return {
-          name: [name, state.attributes.friendly_name, entity].find(n => !!n),
-          entity,
-          state,
-        }
+        const name = [
+          wantedName,
+          state.attributes && state.attributes.friendly_name,
+          entity
+        ].find(n => !!n)
+        return { name, entity, state }
       })
     }
 
@@ -223,6 +225,8 @@ class SimpleThermostat extends LitElement {
     const {
       state,
       attributes: {
+        min_temp: minTemp = null,
+        max_temp: maxTemp = null,
         current_temperature: current,
         temperature: desired,
         operation_list: operations = [],
@@ -356,7 +360,7 @@ class SimpleThermostat extends LitElement {
       {
         run: (fn) => {
           this._temperature = temperature
-          return window.setTimeout(fn, 250)
+          return window.setTimeout(fn, DEBOUNCE_TIMEOUT)
         },
         cancel: handle => window.clearTimeout(handle),
       },
