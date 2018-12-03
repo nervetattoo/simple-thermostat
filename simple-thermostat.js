@@ -28,6 +28,7 @@ function renderStyles () {
         display: flex;
         flex-direction: row;
         justify-content: space-around;
+        align-items: center;
       }
       .main {
         display: flex;
