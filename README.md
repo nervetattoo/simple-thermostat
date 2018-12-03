@@ -24,6 +24,10 @@ The aim is to provide a card with simpler interactions that are easier to use an
   * `heat`: *string* Use this icon for state heat
   * `cool`: *string* Use this icon for state cool
 * `step_size` *number*: Override the default 0.5 step size for increasing/decreasing the temperature
+* `hide` *object*: Control specifically information fields to show. Defaults to showing everything
+  * `temperature`: *bool*
+  * `state`: *bool*
+  * `mode`: *bool*
 * `sensors` *array*
   * `entity` *string*: A sensor value entity id **required**
   * `name` *string*: Specify a sensor name to use instead of the default friendly_name
@@ -39,4 +43,6 @@ cards:
       - entity: sensor.fibaro_system_fgwpef_wall_plug_gen5_energy
       - entity: sensor.fibaro_system_fgwpef_wall_plug_gen5_power
         name: Energy today
+    hide:
+      mode: true
 ```

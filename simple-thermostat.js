@@ -1,7 +1,6 @@
 import { LitElement, html } from 'https://unpkg.com/@polymer/lit-element@^0.6.1/lit-element.js?module';
 
 import { Debouncer } from "https://unpkg.com/@polymer/polymer/lib/utils/debounce";
-import { timeOut, microTask } from "https://unpkg.com/@polymer/polymer/lib/utils/async";
 
 function renderStyles () {
   return html`
@@ -37,10 +36,10 @@ function renderStyles () {
         justify-content: center;
       }
       .sensors {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
         font-size: 1.1em;
+      }
+      table:empty {
+        display: none;
       }
       .mode-selector {
         --paper-dropdown-menu: {
@@ -136,6 +135,12 @@ const STATE_ICONS = {
   cool: 'mdi:snowflake',
 }
 
+const DEFAULT_HIDE = {
+  temperature: false,
+  state: false,
+  mode: false,
+}
+
 class SimpleThermostat extends LitElement {
 
   static get properties () {
@@ -150,6 +155,7 @@ class SimpleThermostat extends LitElement {
         notify: true,
       },
       _mode: String,
+      _hide: Object,
       name: String,
     }
   }
@@ -164,6 +170,7 @@ class SimpleThermostat extends LitElement {
     this._stepSize = STEP_SIZE
     this._temperature = null
     this._mode = null
+    this._hide = DEFAULT_HIDE
   }
 
   set hass (hass) {
@@ -194,6 +201,10 @@ class SimpleThermostat extends LitElement {
       this._stepSize = this.config.step_size
     }
 
+    if (this.config.hide) {
+      this._hide = { ...DEFAULT_HIDE, ...this.config.hide }
+    }
+
     if (typeof this.config.name === 'string') {
       this.name = this.config.name
     } else if (this.config.name === false) {
@@ -220,7 +231,7 @@ class SimpleThermostat extends LitElement {
     return UPDATE_PROPS.some(prop => changedProps.has(prop))
   }
 
-  render ({ _hass, config, entity, sensors } = this) {
+  render ({ _hass, _hide, config, entity, sensors } = this) {
     if (!entity) return
     const {
       state,
@@ -228,35 +239,31 @@ class SimpleThermostat extends LitElement {
         min_temp: minTemp = null,
         max_temp: maxTemp = null,
         current_temperature: current,
-        temperature: desired,
         operation_list: operations = [],
         operation_mode: operation,
       },
     } = entity
     const unit = this._hass.config.unit_system.temperature
 
+    const sensorHtml = [
+      _hide.temperature ? null : this.renderInfoItem(
+        `${formatNumber(current)}${unit}`, 'Temperature'
+      ),
+      _hide.state ? null : this.renderInfoItem(`${state}`, 'State'),
+      _hide.mode ? null : this.renderModeSelector(operations, operation),
+      sensors.map(({ name, state }) => {
+        return this.renderInfoItem(state, name)
+      }) || null,
+    ].filter(it => it !== null)
+
     return html`
       ${renderStyles()}
       <ha-card class="${this.name ? '' : 'no-header' }">
         ${ this.renderHeader() }
         <section class="body">
-          <div class="section sensors">
-            <table>
-              ${ this.renderInfoItem(
-                `${formatNumber(current)}${unit}`, 'Temperature'
-                ) }
-              ${ this.renderInfoItem(`${state}`, 'State') }
+          <table class="sensors">${sensorHtml}</table>
 
-              ${ this.renderModeSelector(operations, operation) }
-
-              ${ sensors.map(({ name, state }) => {
-                return this.renderInfoItem(state, name)
-              }) }
-            </table>
-
-          </div>
-
-          <div class="main section">
+          <div class="main">
             <div class="current-wrapper">
               <paper-icon-button
                 class="thermostat-trigger"
@@ -320,7 +327,7 @@ class SimpleThermostat extends LitElement {
             <paper-listbox slot="dropdown-content" class="dropdown-content" selected="${selected}">
               ${ modes.map(m =>
                 html`<paper-item>
-                  <ha-icon .icon=${modeIcons[m]}></ha-icon>
+                    <ha-icon .icon=${modeIcons[m]}></ha-icon>
                   ${m}
                   </paper-item>`
               ) }
