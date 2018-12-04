@@ -131,6 +131,7 @@ const modeIcons = {
 }
 
 const STATE_ICONS = {
+  off: 'mdi:radiator-off',
   idle: 'mdi:radiator-disabled',
   heat: 'mdi:radiator',
   cool: 'mdi:snowflake',
@@ -232,6 +233,11 @@ class SimpleThermostat extends LitElement {
     return UPDATE_PROPS.some(prop => changedProps.has(prop))
   }
 
+  localize (label, prefix) {
+    const lang = this._hass.selectedLanguage || this._hass.language;
+    return this._hass.resources[lang][`${prefix}${label}`] || label
+  }
+
   render ({ _hass, _hide, config, entity, sensors } = this) {
     if (!entity) return
     const {
@@ -250,7 +256,7 @@ class SimpleThermostat extends LitElement {
       _hide.temperature ? null : this.renderInfoItem(
         `${formatNumber(current)}${unit}`, 'Temperature'
       ),
-      _hide.state ? null : this.renderInfoItem(`${state}`, 'State'),
+      _hide.state ? null : this.renderInfoItem(this.localize(state, 'state.climate.'), 'State'),
       _hide.mode ? null : this.renderModeSelector(operations, operation),
       sensors.map(({ name, state }) => {
         return this.renderInfoItem(state, name)
@@ -323,13 +329,18 @@ class SimpleThermostat extends LitElement {
             noink
             no-animations
             vertical-offset="26"
-            @selected-item-label-changed="${this.setMode}"
+            @selected-item-changed="${this.setMode}"
           >
-            <paper-listbox slot="dropdown-content" class="dropdown-content" selected="${selected}">
+            <paper-listbox
+              items="${modes}"
+              slot="dropdown-content"
+              class="dropdown-content"
+              selected="${selected}"
+            >
               ${ modes.map(m =>
-                html`<paper-item>
+                html`<paper-item mode-value="${m}">
                     <ha-icon .icon=${modeIcons[m]}></ha-icon>
-                  ${m}
+                  ${this.localize(m, 'state.climate.')}
                   </paper-item>`
               ) }
             </paper-listbox>
@@ -382,7 +393,9 @@ class SimpleThermostat extends LitElement {
   }
 
   setMode (e) {
-    const { detail: { value = '' } } = e
+    const { detail: { value: node } } = e
+    if (!node) return
+    const value = node.getAttribute('mode-value')
     if (value && value !== this._mode) {
       this._hass.callService("climate", "set_operation_mode", {
         entity_id: this.config.entity,
