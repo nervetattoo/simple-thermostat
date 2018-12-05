@@ -263,6 +263,8 @@ class SimpleThermostat extends LitElement {
       }) || null,
     ].filter(it => it !== null)
 
+    const increaseTemperature = this.handleTemperatureChange.bind(this, +this._stepSize)
+    const decreaseTemperature = this.handleTemperatureChange.bind(this, -this._stepSize)
     return html`
       ${renderStyles()}
       <ha-card class="${this.name ? '' : 'no-header' }">
@@ -275,7 +277,7 @@ class SimpleThermostat extends LitElement {
               <paper-icon-button
                 class="thermostat-trigger"
                 icon="hass:chevron-up"
-                @click='${() => this.setTemperature(this._temperature + this._stepSize)}'
+                @click='${increaseTemperature}'
               >
               </paper-icon-button>
 
@@ -285,7 +287,7 @@ class SimpleThermostat extends LitElement {
               <paper-icon-button
                 class="thermostat-trigger"
                 icon="hass:chevron-down"
-                @click='${() => this.setTemperature(this._temperature - this._stepSize)}'
+                @click='${decreaseTemperature}'
               >
               </paper-icon-button>
             </div>
@@ -371,6 +373,11 @@ class SimpleThermostat extends LitElement {
         ${valueCell}
       </tr>
     `
+  }
+
+  handleTemperatureChange (change, e) {
+    e.stopPropagation();
+    this.setTemperature(this._temperature + change)
   }
 
   setTemperature (temperature) {
