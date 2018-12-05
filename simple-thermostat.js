@@ -132,9 +132,14 @@ const modeIcons = {
 
 const STATE_ICONS = {
   off: 'mdi:radiator-off',
+  on: 'mdi:radiator',
   idle: 'mdi:radiator-disabled',
   heat: 'mdi:radiator',
   cool: 'mdi:snowflake',
+  auto: 'mdi:radiator',
+  manual: 'mdi:radiator',
+  boost: 'mdi:radiator',
+  away: 'mdi:radiator-disabled'
 }
 
 const DEFAULT_HIDE = {
