@@ -132,9 +132,14 @@ const modeIcons = {
 
 const STATE_ICONS = {
   off: 'mdi:radiator-off',
+  on: 'mdi:radiator',
   idle: 'mdi:radiator-disabled',
   heat: 'mdi:radiator',
   cool: 'mdi:snowflake',
+  auto: 'mdi:radiator',
+  manual: 'mdi:radiator',
+  boost: 'mdi:fire',
+  away: 'mdi:radiator-disabled'
 }
 
 const DEFAULT_HIDE = {
@@ -311,7 +316,7 @@ class SimpleThermostat extends LitElement {
       <header>
         ${ icon && html`
           <ha-icon class="icon" .icon=${icon}></ha-icon>
-        `}
+        ` || '' }
         <h2 class="title">
         ${this.name}
         </h2>
