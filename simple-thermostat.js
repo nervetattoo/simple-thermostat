@@ -138,7 +138,7 @@ const STATE_ICONS = {
   cool: 'mdi:snowflake',
   auto: 'mdi:radiator',
   manual: 'mdi:radiator',
-  boost: 'mdi:radiator',
+  boost: 'mdi:fire',
   away: 'mdi:radiator-disabled'
 }
 
@@ -314,7 +314,7 @@ class SimpleThermostat extends LitElement {
       <header>
         ${ icon && html`
           <ha-icon class="icon" .icon=${icon}></ha-icon>
-        `}
+        ` || '' }
         <h2 class="title">
         ${this.name}
         </h2>
