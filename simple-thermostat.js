@@ -228,7 +228,7 @@ class SimpleThermostat extends LitElement {
         const state = hass.states[entity]
         const name = [
           wantedName,
-          state.attributes && state.attributes.friendly_name,
+          state && state.attributes && state.attributes.friendly_name,
           entity
         ].find(n => !!n)
         return { name, entity, state }
