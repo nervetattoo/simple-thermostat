@@ -14,6 +14,16 @@ The aim is to provide a card with simpler interactions that are easier to use an
       - url: /local/simple-thermostat/simple-thermostat.js?v=1
         type: module
     ```
+### *(Optional)* Add to custom updater
+
+1. Make sure you've the [custom_updater](https://github.com/custom-components/custom_updater) component installed and working.
+2. Add a new reference under `card_urls` in your `custom_updater` configuration in `configuration.yaml`.
+
+  ```yaml
+  custom_updater:
+    card_urls:
+      - https://raw.githubusercontent.com/nervetattoo/simple-thermostat/allow-updates/tracker.json
+  ```
 
 ## Available configuration options:
 
