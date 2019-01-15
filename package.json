@@ -22,6 +22,9 @@
     }
   },
   "release-it": {
+    "github": {
+      "release": true
+    },
     "scripts": {
       "afterBump": "yarn update-tracker ${name} ${version} $(date +'%Y-%m-%d')"
     }
