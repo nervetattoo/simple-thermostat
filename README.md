@@ -43,7 +43,8 @@ Home Assistant 0.84 or higher
   * `state`: *bool*
   * `mode`: *bool*
 * `sensors` *array*
-  * `entity` *string*: A sensor value entity id **required**
+  * `entity` *string*: A sensor value entity id
+  * `attribute` *string*: The key for an attribute provided by the main entity (for example `min_temp`)
   * `name` *string*: Specify a sensor name to use instead of the default friendly_name
 
 ## Example usage:
@@ -57,6 +58,8 @@ cards:
       - entity: sensor.fibaro_system_fgwpef_wall_plug_gen5_energy
       - entity: sensor.fibaro_system_fgwpef_wall_plug_gen5_power
         name: Energy today
+      - attribute: min_temp
+        name: Min temp
     hide:
       mode: true
 ```

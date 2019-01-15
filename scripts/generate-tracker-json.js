@@ -15,4 +15,4 @@ const content = {
   },
 }
 
-fs.writeFileSync('tracker2.json', JSON.stringify(content))
+fs.writeFileSync('tracker.json', JSON.stringify(content, null, 2))

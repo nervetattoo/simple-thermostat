@@ -229,15 +229,28 @@ class SimpleThermostat extends LitElement {
     }
 
     if (this.config.sensors) {
-      this.sensors = this.config.sensors.map(({ name: wantedName, entity }) => {
-        const state = hass.states[entity]
-        const name = [
-          wantedName,
-          state && state.attributes && state.attributes.friendly_name,
-          entity,
-        ].find(n => !!n)
-        return { name, entity, state }
-      })
+      this.sensors = this.config.sensors.map(
+        ({ name: wantedName, entity, attribute }) => {
+          let state
+          const name = [wantedName]
+          if (entity) {
+            state = hass.states[entity]
+            name.push(
+              state && state.attributes && state.attributes.friendly_name
+            )
+          } else if (attribute && attribute in this.entity.attributes) {
+            state = this.entity.attributes[attribute]
+            name.push(attribute)
+          }
+          name.push(entity)
+
+          return {
+            name: name.find(n => !!n),
+            state,
+            entity,
+          }
+        }
+      )
     }
   }
 
@@ -273,7 +286,7 @@ class SimpleThermostat extends LitElement {
         : this.renderInfoItem(this.localize(state, 'state.climate.'), 'State'),
       _hide.mode ? null : this.renderModeSelector(operations, operation),
       sensors.map(({ name, state }) => {
-        return this.renderInfoItem(state, name)
+        return state && this.renderInfoItem(state, name)
       }) || null,
     ].filter(it => it !== null)
 
@@ -390,11 +403,7 @@ class SimpleThermostat extends LitElement {
     if (!state) return
 
     let valueCell
-    if (typeof state === 'string') {
-      valueCell = html`
-        <td>${state}</td>
-      `
-    } else {
+    if (typeof state === 'object') {
       valueCell = html`
         <td
           class="clickable"
@@ -402,6 +411,10 @@ class SimpleThermostat extends LitElement {
         >
           ${state.state} ${state.attributes.unit_of_measurement}
         </td>
+      `
+    } else {
+      valueCell = html`
+        <td>${state}</td>
       `
     }
     return html`
