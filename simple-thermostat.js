@@ -1,4 +1,7 @@
-import { LitElement, html } from 'https://unpkg.com/@polymer/lit-element@^0.6.1/lit-element.js?module';
+var LitElement =
+  LitElement ||
+  Object.getPrototypeOf(customElements.get("hui-error-entity-row"));
+var html = LitElement.prototype.html;
 
 import { Debouncer } from "https://unpkg.com/@polymer/polymer/lib/utils/debounce";
 
