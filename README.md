@@ -5,6 +5,10 @@ The aim is to provide a card with simpler interactions that are easier to use an
 
 ![Example thermostat](https://github.com/nervetattoo/simple-thermostat/raw/master/thermostat-card.png)
 
+## Requirements
+
+Home Assistant 0.84 or higher
+
 ## Installation
 
 1. Download the repo as a zip or with git clone and store it in `www/simple-thermostat/` in your configuration folder.
