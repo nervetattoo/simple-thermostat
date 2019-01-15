@@ -1,0 +1,21 @@
+{
+  "name": "simple-thermostat",
+  "version": "0.11.0",
+  "description": "A different take on the thermostat card for Home Assistant Lovelace UI",
+  "main": "simple-thermostat.js",
+  "repository": "git@github.com:nervetattoo/simple-thermostat.git",
+  "author": "Raymond Julin <raymond.julin@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "release-it": "^9.8.1"
+  },
+  "scripts": {
+    "release": "release-it",
+    "update-tracker": "node scripts/generate-tracker-json.js"
+  },
+  "release-it": {
+    "scripts": {
+      "afterBump": "yarn update-tracker ${name} ${version} $(date +'%Y-%m-%d')"
+    }
+  }
+}
