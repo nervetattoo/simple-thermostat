@@ -450,4 +450,6 @@ class SimpleThermostat extends LitElement {
   }
 }
 
-customElements.define('simple-thermostat', SimpleThermostat);
+window.customElements.define('simple-thermostat', SimpleThermostat);
+
+export default SimpleThermostat
