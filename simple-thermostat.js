@@ -1,4 +1,4 @@
-const LitElement =
+var LitElement =
   LitElement ||
   Object.getPrototypeOf(customElements.get('hui-error-entity-row'))
 const html = LitElement.prototype.html
