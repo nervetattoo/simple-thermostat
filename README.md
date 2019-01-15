@@ -22,7 +22,7 @@ The aim is to provide a card with simpler interactions that are easier to use an
   ```yaml
   custom_updater:
     card_urls:
-      - https://raw.githubusercontent.com/nervetattoo/simple-thermostat/allow-updates/tracker.json
+      - https://raw.githubusercontent.com/nervetattoo/simple-thermostat/master/tracker.json
   ```
 
 ## Available configuration options:
