@@ -112,7 +112,6 @@ function renderStyles() {
         padding-bottom: 4px;
       }
       .sensors td.clickable {
-        text-decoration: underline;
         cursor: pointer;
       }
     </style>
@@ -258,9 +257,12 @@ class SimpleThermostat extends LitElement {
     return UPDATE_PROPS.some(prop => changedProps.has(prop))
   }
 
-  localize(label, prefix) {
+  localize(label, prefix = '') {
     const lang = this._hass.selectedLanguage || this._hass.language
-    return this._hass.resources[lang][`${prefix}${label}`] || label
+    const key = `${prefix}${label}`
+    const translations = this._hass.resources[lang]
+
+    return key in translations ? translations[key] : label
   }
 
   render({ _hass, _hide, config, entity, sensors } = this) {
@@ -404,12 +406,20 @@ class SimpleThermostat extends LitElement {
 
     let valueCell
     if (typeof state === 'object') {
+      let value = state.state
+      if ('device_class' in state.attributes) {
+        const [type] = state.entity_id.split('.')
+        const prefix = ['state', type, state.attributes.device_class, ''].join(
+          '.'
+        )
+        value = this.localize(state.state, prefix)
+      }
       valueCell = html`
         <td
           class="clickable"
           @click="${() => this.openEntityPopover(state.entity_id)}"
         >
-          ${state.state} ${state.attributes.unit_of_measurement}
+          ${value} ${state.attributes.unit_of_measurement}
         </td>
       `
     } else {
