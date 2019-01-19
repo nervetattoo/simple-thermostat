@@ -1,9 +1,11 @@
+import { Debouncer } from '@polymer/polymer/lib/utils/debounce'
+
 var LitElement =
   LitElement ||
   Object.getPrototypeOf(customElements.get('hui-error-entity-row'))
 const html = LitElement.prototype.html
 
-import { Debouncer } from 'https://unpkg.com/@polymer/polymer/lib/utils/debounce'
+//import { Debouncer } from 'https://unpkg.com/@polymer/polymer/lib/utils/debounce'
 
 function renderStyles() {
   return html`
@@ -75,7 +77,7 @@ function renderStyles() {
       }
       .icon {
         margin-right: 8px;
-        color: grey;
+        color: var(--paper-item-icon-color, #44739e);
       }
       .title {
         font-size: var(--thermostat-font-size-title);
