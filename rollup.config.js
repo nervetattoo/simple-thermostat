@@ -1,5 +1,6 @@
 import resolve from 'rollup-plugin-node-resolve'
 import { terser } from 'rollup-plugin-terser'
+import replace from 'rollup-plugin-replace'
 
 export default {
   input: 'simple-thermostat.js',
@@ -8,5 +9,12 @@ export default {
     format: 'umd',
     name: 'SimpleThermostat',
   },
-  plugins: [resolve(), terser()],
+  plugins: [
+    replace({
+      'https://unpkg.com/@polymer/polymer/lib/utils/debounce':
+        '@polymer/polymer/lib/utils/debounce',
+    }),
+    resolve(),
+    terser(),
+  ],
 }
