@@ -15,7 +15,8 @@
     "rollup": "^1.1.0",
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
-    "rollup-plugin-terser": "^4.0.2"
+    "rollup-plugin-terser": "^4.0.2",
+    "tracker-json": "^1.1.0"
   },
   "scripts": {
     "release": "release-it",
@@ -39,7 +40,7 @@
       ]
     },
     "scripts": {
-      "afterBump": "node_modules/.bin/tracker-json"
+      "afterBump": "npx tracker-json"
     }
   },
   "prettier": {
