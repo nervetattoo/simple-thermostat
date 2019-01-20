@@ -33,7 +33,10 @@
   },
   "release-it": {
     "github": {
-      "release": true
+      "release": true,
+      "assets": [
+        "simple-thermostat.*"
+      ]
     },
     "scripts": {
       "afterBump": "tracker-json"
