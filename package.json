@@ -39,7 +39,7 @@
       ]
     },
     "scripts": {
-      "afterBump": "tracker-json"
+      "afterBump": "node_modules/.bin/tracker-json"
     }
   },
   "prettier": {
