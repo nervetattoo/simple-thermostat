@@ -2,7 +2,7 @@ import resolve from 'rollup-plugin-node-resolve'
 import { terser } from 'rollup-plugin-terser'
 
 export default {
-  input: 'simple-thermostat.js',
+  input: 'index.js',
   output: {
     file: 'simple-thermostat.min.js',
     format: 'umd',

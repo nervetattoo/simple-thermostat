@@ -11,41 +11,43 @@ Home Assistant 0.84 or higher
 
 ## Installation
 
-1. Download the repo as a zip or with git clone and store it in `www/simple-thermostat/` in your configuration folder.
+1. Download the `simple-thermostat.min.js` from the [latest release](https://github.com/nervetattoo/simple-thermostat/releases/latest) and store it in your `configuration/www` folder.
+   _Previously you could download the source file from Github but starting from the 0.14 release that is no longer possible. If you try to do so it will crash_
 2. Configure Lovelace to load the card:
-    ```
-    resources:
-      - url: /local/simple-thermostat/simple-thermostat.js?v=1
-        type: module
-    ```
-### *(Optional)* Add to custom updater
+   ```
+   resources:
+     - url: /local/simple-thermostat.min.js?v=1
+       type: module
+   ```
+
+### _(Recommended)_ Add to custom updater
 
 1. Make sure you've the [custom_updater](https://github.com/custom-components/custom_updater) component installed and working.
 2. Add a new reference under `card_urls` in your `custom_updater` configuration in `configuration.yaml`.
 
-  ```yaml
-  custom_updater:
-    card_urls:
-      - https://raw.githubusercontent.com/nervetattoo/simple-thermostat/master/tracker.json
-  ```
+```yaml
+custom_updater:
+  card_urls:
+    - https://raw.githubusercontent.com/nervetattoo/simple-thermostat/master/tracker.json
+```
 
 ## Available configuration options:
 
-* `entity` *string*: The thermostat entity id **required**
-* `name` *string|false*: Override the card name, or disable showing a name at all. Default is to use the friendly_name of the thermostat provided
-* `icon` *string|object*: Show an icon next to the card name. You can also pass an object to specify state-specific icons. Defaults state-specific icons radiator/radiator-disabled/snowflake
-  * `idle`: *string*: Use this icon for state idle
-  * `heat`: *string* Use this icon for state heat
-  * `cool`: *string* Use this icon for state cool
-* `step_size` *number*: Override the default 0.5 step size for increasing/decreasing the temperature
-* `hide` *object*: Control specifically information fields to show. Defaults to showing everything
-  * `temperature`: *bool*
-  * `state`: *bool*
-  * `mode`: *bool*
-* `sensors` *array*
-  * `entity` *string*: A sensor value entity id
-  * `attribute` *string*: The key for an attribute provided by the main entity (for example `min_temp`)
-  * `name` *string*: Specify a sensor name to use instead of the default friendly_name
+- `entity` _string_: The thermostat entity id **required**
+- `name` _string|false_: Override the card name, or disable showing a name at all. Default is to use the friendly_name of the thermostat provided
+- `icon` _string|object_: Show an icon next to the card name. You can also pass an object to specify state-specific icons. Defaults state-specific icons radiator/radiator-disabled/snowflake
+  - `idle`: _string_: Use this icon for state idle
+  - `heat`: _string_ Use this icon for state heat
+  - `cool`: _string_ Use this icon for state cool
+- `step_size` _number_: Override the default 0.5 step size for increasing/decreasing the temperature
+- `hide` _object_: Control specifically information fields to show. Defaults to showing everything
+  - `temperature`: _bool_
+  - `state`: _bool_
+  - `mode`: _bool_
+- `sensors` _array_
+  - `entity` _string_: A sensor value entity id
+  - `attribute` _string_: The key for an attribute provided by the main entity (for example `min_temp`)
+  - `name` _string_: Specify a sensor name to use instead of the default friendly_name
 
 ## Example usage:
 
