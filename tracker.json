@@ -3,7 +3,7 @@
     "version": "0.14.0",
     "updated_at": "2019-01-26",
     "visit_repo": "https://github.com/nervetattoo/simple-thermostat",
-    "remote_location": "https://raw.githubusercontent.com/nervetattoo/simple-thermostat/master/simple-thermostat.min.js",
+    "remote_location": "https://github.com/nervetattoo/simple-thermostat/releases/download/0.14.0/simple-thermostat.min.js",
     "changelog": "https://github.com/nervetattoo/simple-thermostat/releases/tag/0.14.0"
   }
 }
