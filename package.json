@@ -19,7 +19,7 @@
     "rollup-plugin-commonjs": "^9.2.0",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-terser": "^4.0.2",
-    "tracker-json": "^1.1.0"
+    "tracker-json": "^1.2.0"
   },
   "scripts": {
     "release": "release-it",
@@ -33,7 +33,8 @@
   "tracker-json": {
     "simple-thermostat": {
       "repo": "nervetattoo/simple-thermostat",
-      "file": "simple-thermostat.min.js"
+      "file": "simple-thermostat.min.js",
+      "resolve": "gh:release"
     }
   },
   "release-it": {

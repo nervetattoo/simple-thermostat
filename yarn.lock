@@ -4150,10 +4150,10 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
 
-tracker-json@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/tracker-json/-/tracker-json-1.1.0.tgz#266c331484b4d79a945bc95e376271cb96c91e02"
-  integrity sha512-VXvrExZ52YgypkINcPjaEt2wwb+nUA/h+eBKutFx9wGUfwOIzy2Wg60Abhdk7heieo3dTjKa1sjvuEewfM8nrQ==
+tracker-json@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/tracker-json/-/tracker-json-1.2.0.tgz#28f53fe5e85843defa1b990f915e47e7a19a770d"
+  integrity sha512-lgm0LCIfZM8LzEkU3C1bCE+HP1t9UfipQlcjow2UB5Kp0uN9CHvBmZHkAsIBHTOc+1EFqfWLawj1m8WC79Cc9g==
   dependencies:
     chalk "^2.4.2"
     meow "^5.0.0"
