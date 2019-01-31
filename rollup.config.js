@@ -4,7 +4,7 @@ import { terser } from 'rollup-plugin-terser'
 export default {
   input: 'index.js',
   output: {
-    file: 'simple-thermostat.min.js',
+    file: 'simple-thermostat.js',
     format: 'umd',
     name: 'SimpleThermostat',
   },

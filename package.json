@@ -33,7 +33,7 @@
   "tracker-json": {
     "simple-thermostat": {
       "repo": "nervetattoo/simple-thermostat",
-      "file": "simple-thermostat.min.js",
+      "file": "simple-thermostat.js",
       "resolve": "gh:release"
     }
   },
