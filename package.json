@@ -45,7 +45,8 @@
       ]
     },
     "scripts": {
-      "afterBump": "npx tracker-json"
+      "afterBump": "npx tracker-json",
+      "beforeStart": "yarn build"
     }
   },
   "prettier": {
