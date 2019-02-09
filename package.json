@@ -8,7 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "@polymer/polymer": "^3.1.0",
-    "lit-element": "^2.0.0-rc.5"
+    "lit-element": "^2.0.1"
   },
   "devDependencies": {
     "husky": "^1.3.1",
@@ -46,7 +46,8 @@
     },
     "scripts": {
       "afterBump": "npx tracker-json",
-      "beforeStart": "yarn build"
+      "beforeStart": "yarn build",
+      "afterRelease": "rm simple-thermostat.js"
     }
   },
   "prettier": {
