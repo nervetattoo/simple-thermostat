@@ -41,9 +41,10 @@ custom_updater:
   - `cool`: _string_ Use this icon for state cool
 - `step_size` _number_: Override the default 0.5 step size for increasing/decreasing the temperature
 - `hide` _object_: Control specifically information fields to show. Defaults to showing everything
-  - `temperature`: _bool_
-  - `state`: _bool_
-  - `mode`: _bool_
+  - `temperature`: _bool_ (Default to `false`)
+  - `state`: _bool_ (Default to `false`)
+  - `mode`: _bool_ (Default to `false`)
+  - `away`: _bool_ (Default to `true`)
 - `sensors` _array_
   - `entity` _string_: A sensor value entity id
   - `attribute` _string_: The key for an attribute provided by the main entity (for example `min_temp`)

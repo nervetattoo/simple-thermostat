@@ -39,6 +39,7 @@ const DEFAULT_HIDE = {
   temperature: false,
   state: false,
   mode: false,
+  away: true,
 }
 
 class SimpleThermostat extends LitElement {
@@ -101,7 +102,7 @@ class SimpleThermostat extends LitElement {
     }
 
     if (this.config.hide) {
-      this._hide = { ...DEFAULT_HIDE, ...this.config.hide }
+      this._hide = { ...this._hide, ...this.config.hide }
     }
 
     if (typeof this.config.name === 'string') {
@@ -160,6 +161,7 @@ class SimpleThermostat extends LitElement {
         current_temperature: current,
         operation_list: operations = [],
         operation_mode: operation,
+        ...attributes
       },
     } = entity
     const unit = this._hass.config.unit_system.temperature
@@ -171,6 +173,7 @@ class SimpleThermostat extends LitElement {
       _hide.state
         ? null
         : this.renderInfoItem(this.localize(state, 'state.climate.'), 'State'),
+      _hide.away ? null : this.renderAwayToggle(attributes.away_mode),
       _hide.mode ? null : this.renderModeSelector(operations, operation),
       sensors.map(({ name, state }) => {
         return state && this.renderInfoItem(state, name)
@@ -283,6 +286,27 @@ class SimpleThermostat extends LitElement {
               }
             </paper-listbox>
           </paper-dropdown-menu>
+        </td>
+      </tr>
+    `
+  }
+
+  renderAwayToggle(state) {
+    return html`
+      <tr>
+        <th>${this.localize('ui.card.climate.away_mode')}</th>
+        <td>
+          <paper-toggle-button
+            ?checked=${state === 'on'}
+            @click=${
+              () => {
+                this._hass.callService('climate', 'set_away_mode', {
+                  entity_id: this.config.entity,
+                  away_mode: !(state === 'on'),
+                })
+              }
+            }
+          />
         </td>
       </tr>
     `
