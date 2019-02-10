@@ -1,7 +1,8 @@
 import { html } from 'lit-element'
 
 function renderVariables() {
-  return html`
+  // prettier-ignore
+  return `
     --thermostat-font-size-xl: var(--paper-font-display3_-_font-size);
     --thermostat-font-size-l: var(--paper-font-display2_-_font-size);
     --thermostat-font-size-m: var(--paper-font-title_-_font-size);
@@ -10,12 +11,11 @@ function renderVariables() {
 }
 
 export function renderNotFoundStyles() {
+  // prettier-ignore
   return html`
     <style is="custom-style">
       ha-card {
-        prettier_html_placeholder_0_in_jsfont-size: var(
-          --paper-font-body1_-_font-size
-        );
+        ${renderVariables()}
         font-weight: var(--paper-font-body1_-_font-weight);
         line-height: var(--paper-font-body1_-_line-height);
       }
@@ -29,12 +29,11 @@ export function renderNotFoundStyles() {
 }
 
 export function renderStyles() {
+  // prettier-ignore
   return html`
     <style is="custom-style">
       ha-card {
-        prettier_html_placeholder_0_in_jsfont-family: var(
-          --paper-font-body1_-_font-family
-        );
+        ${renderVariables()}
         -webkit-font-smoothing: var(
           --paper-font-body1_-_-webkit-font-smoothing
         );
