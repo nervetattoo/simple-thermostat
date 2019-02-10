@@ -8,6 +8,7 @@ export function renderStyles() {
         --thermostat-font-size-l: var(--paper-font-display2_-_font-size);
         --thermostat-font-size-m: var(--paper-font-title_-_font-size);
         --thermostat-font-size-title: 24px;
+        --thermostat-spacing: 4px;
 
         font-family: var(--paper-font-body1_-_font-family);
         -webkit-font-smoothing: var(
@@ -17,11 +18,11 @@ export function renderStyles() {
         font-weight: var(--paper-font-body1_-_font-weight);
         line-height: var(--paper-font-body1_-_line-height);
 
-        padding-bottom: 16px;
+        padding-bottom: calc(var(--thermostat-spacing) * 4);
       }
 
       ha-card.no-header {
-        padding: 16px 0;
+        padding: calc(var(--thermostat-spacing) * 4) 0;
       }
 
       .body {
@@ -53,6 +54,7 @@ export function renderStyles() {
       header {
         display: flex;
         flex-direction: row;
+        align-items: center;
 
         font-family: var(--paper-font-headline_-_font-family);
         -webkit-font-smoothing: var(
@@ -66,13 +68,15 @@ export function renderStyles() {
           --paper-font-common-expensive-kerning_-_text-rendering
         );
         opacity: var(--dark-primary-opacity);
-        padding: 24px 16px 16px;
+        padding: calc(var(--thermostat-spacing) * 6)
+          calc(var(--thermostat-spacing) * 4)
+          calc(var(--thermostat-spacing) * 4);
       }
-      .icon {
-        margin-right: 8px;
+      .header__icon {
+        margin-right: calc(var(--thermostat-spacing) * 2);
         color: var(--paper-item-icon-color, #44739e);
       }
-      .title {
+      .header__title {
         font-size: var(--thermostat-font-size-title);
         line-height: var(--thermostat-font-size-title);
         font-weight: normal;
@@ -111,6 +115,19 @@ export function renderStyles() {
       }
       .mode-selector-container {
         max-width: 90%;
+      }
+      .modes {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding-left: calc(var(--thermostat-spacing) * 4);
+        padding-right: calc(var(--thermostat-spacing) * 4);
+      }
+      .mode--active {
+        color: var(--paper-item-icon-color, #44739e);
+      }
+      .mode__icon {
+        padding-right: var(--thermostat-spacing);
       }
     </style>
   `

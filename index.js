@@ -174,7 +174,6 @@ class SimpleThermostat extends LitElement {
         ? null
         : this.renderInfoItem(this.localize(state, 'state.climate.'), 'State'),
       _hide.away ? null : this.renderAwayToggle(attributes.away_mode),
-      _hide.mode ? null : this.renderModeSelector(operations, operation),
       sensors.map(({ name, state }) => {
         return state && this.renderInfoItem(state, name)
       }) || null,
@@ -226,6 +225,7 @@ class SimpleThermostat extends LitElement {
             <span class="current--unit">${unit}</span>
           </div>
         </section>
+        ${_hide.mode ? null : this.renderModeSelector(operations, operation)}
       </ha-card>
     `
   }
@@ -244,50 +244,32 @@ class SimpleThermostat extends LitElement {
         ${
           (icon &&
             html`
-              <ha-icon class="icon" .icon=${icon}></ha-icon>
+              <ha-icon class="header__icon" .icon=${icon}></ha-icon>
             `) ||
             ''
         }
-        <h2 class="title">${this.name}</h2>
+        <h2 class="header__title">${this.name}</h2>
       </header>
     `
   }
 
-  renderModeSelector(modes, mode) {
-    const selected = modes.indexOf(mode)
+  renderModeSelector(operations, operation) {
     return html`
-      <tr>
-        <th>Mode:</th>
-        <td style="max-width: 4em;">
-          <paper-dropdown-menu
-            class="mode-selector"
-            no-label-float
-            noink
-            no-animations
-            vertical-offset="26"
-            @selected-item-changed="${this.setMode}"
-          >
-            <paper-listbox
-              items="${modes}"
-              slot="dropdown-content"
-              class="dropdown-content"
-              selected="${selected}"
-            >
-              ${
-                modes.map(
-                  m =>
-                    html`
-                      <paper-item mode-value="${m}">
-                        <ha-icon .icon=${modeIcons[m]}></ha-icon>
-                        ${this.localize(m, 'state.climate.')}
-                      </paper-item>
-                    `
-                )
-              }
-            </paper-listbox>
-          </paper-dropdown-menu>
-        </td>
-      </tr>
+      <div class="modes">
+        ${
+          operations.map(
+            op => html`
+              <paper-button
+                class="${op === operation ? 'mode--active' : ''}"
+                @click=${() => this.setMode(op)}
+              >
+                <ha-icon class="mode__icon" .icon=${modeIcons[op]}></ha-icon>
+                ${this.localize(op, 'state.climate.')}
+              </paper-button>
+            `
+          )
+        }
+      </div>
     `
   }
 
@@ -370,16 +352,11 @@ class SimpleThermostat extends LitElement {
     )
   }
 
-  setMode(e) {
-    const {
-      detail: { value: node },
-    } = e
-    if (!node) return
-    const value = node.getAttribute('mode-value')
-    if (value && value !== this._mode) {
+  setMode(mode) {
+    if (mode && mode !== this._mode) {
       this._hass.callService('climate', 'set_operation_mode', {
         entity_id: this.config.entity,
-        operation_mode: value,
+        operation_mode: mode,
       })
     }
   }
