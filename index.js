@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit-element'
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce'
 
-import { renderStyles } from './src/styles'
+import { renderStyles, renderNotFoundStyles } from './src/styles'
 
 function formatNumber(number) {
   const [int, dec] = String(number).split('.')
@@ -77,6 +77,10 @@ class SimpleThermostat extends LitElement {
     this._hass = hass
 
     const entity = hass.states[this.config.entity]
+    if (entity === undefined) {
+      return
+    }
+
     if (this.entity !== entity) {
       this.entity = entity
 
@@ -152,7 +156,15 @@ class SimpleThermostat extends LitElement {
   }
 
   render({ _hass, _hide, config, entity, sensors } = this) {
-    if (!entity) return
+    if (!entity) {
+      return html`
+        ${renderNotFoundStyles()}
+        <ha-card class="not-found">
+          Entity not available: <strong class="name">${config.entity}</strong>
+        </ha-card>
+      `
+    }
+
     const {
       state,
       attributes: {

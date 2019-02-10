@@ -1,16 +1,40 @@
 import { html } from 'lit-element'
 
+function renderVariables() {
+  return html`
+    --thermostat-font-size-xl: var(--paper-font-display3_-_font-size);
+    --thermostat-font-size-l: var(--paper-font-display2_-_font-size);
+    --thermostat-font-size-m: var(--paper-font-title_-_font-size);
+    --thermostat-font-size-title: 24px; --thermostat-spacing: 4px;
+  `
+}
+
+export function renderNotFoundStyles() {
+  return html`
+    <style is="custom-style">
+      ha-card {
+        prettier_html_placeholder_0_in_jsfont-size: var(
+          --paper-font-body1_-_font-size
+        );
+        font-weight: var(--paper-font-body1_-_font-weight);
+        line-height: var(--paper-font-body1_-_line-height);
+      }
+      .not-found {
+        flex: 1;
+        background-color: yellow;
+        padding: calc(var(--thermostat-spacing) * 4);
+      }
+    </style>
+  `
+}
+
 export function renderStyles() {
   return html`
     <style is="custom-style">
       ha-card {
-        --thermostat-font-size-xl: var(--paper-font-display3_-_font-size);
-        --thermostat-font-size-l: var(--paper-font-display2_-_font-size);
-        --thermostat-font-size-m: var(--paper-font-title_-_font-size);
-        --thermostat-font-size-title: 24px;
-        --thermostat-spacing: 4px;
-
-        font-family: var(--paper-font-body1_-_font-family);
+        prettier_html_placeholder_0_in_jsfont-family: var(
+          --paper-font-body1_-_font-family
+        );
         -webkit-font-smoothing: var(
           --paper-font-body1_-_-webkit-font-smoothing
         );
