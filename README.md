@@ -30,7 +30,7 @@ resources:
 
 ```yaml
 resources:
-  - url: /customcards/github/nervetattoo/simple-thermostat/simple-thermostat.js?track=true
+  - url: /customcards/github/nervetattoo/simple-thermostat.js?track=true
     type: module
 ```
 
