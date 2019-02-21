@@ -71,6 +71,7 @@ class SimpleThermostat extends LitElement {
     this._temperature = null
     this._mode = null
     this._hide = DEFAULT_HIDE
+    this._haVersion = null
   }
 
   set hass(hass) {
@@ -80,6 +81,8 @@ class SimpleThermostat extends LitElement {
     if (entity === undefined) {
       return
     }
+
+    this._haVersion = hass.config.version.split('.').map(i => parseInt(i, 10))
 
     if (this.entity !== entity) {
       this.entity = entity
@@ -253,23 +256,21 @@ class SimpleThermostat extends LitElement {
 
     return html`
       <header>
-        ${
-          (icon &&
-            html`
-              <ha-icon class="header__icon" .icon=${icon}></ha-icon>
-            `) ||
-            ''
-        }
+        ${(icon &&
+          html`
+            <ha-icon class="header__icon" .icon=${icon}></ha-icon>
+          `) ||
+          ''}
         <h2 class="header__title">${this.name}</h2>
       </header>
     `
   }
 
   renderModeSelector(operations, operation) {
-    return html`
-      <div class="modes">
-        ${
-          operations.map(
+    if (this._haVersion[1] <= 87) {
+      return html`
+        <div class="modes">
+          ${operations.map(
             op => html`
               <paper-button
                 class="${op === operation ? 'mode--active' : ''}"
@@ -279,8 +280,23 @@ class SimpleThermostat extends LitElement {
                 ${this.localize(op, 'state.climate.')}
               </paper-button>
             `
-          )
-        }
+          )}
+        </div>
+      `
+    }
+    return html`
+      <div class="modes">
+        ${operations.map(
+          op => html`
+            <mwc-button
+              class="${op === operation ? 'mode--active' : ''}"
+              @click=${() => this.setMode(op)}
+            >
+              <ha-icon class="mode__icon" .icon=${modeIcons[op]}></ha-icon>
+              ${this.localize(op, 'state.climate.')}
+            </mwc-button>
+          `
+        )}
       </div>
     `
   }
@@ -292,14 +308,12 @@ class SimpleThermostat extends LitElement {
         <td>
           <paper-toggle-button
             ?checked=${state === 'on'}
-            @click=${
-              () => {
-                this._hass.callService('climate', 'set_away_mode', {
-                  entity_id: this.config.entity,
-                  away_mode: !(state === 'on'),
-                })
-              }
-            }
+            @click=${() => {
+              this._hass.callService('climate', 'set_away_mode', {
+                entity_id: this.config.entity,
+                away_mode: !(state === 'on'),
+              })
+            }}
           />
         </td>
       </tr>
