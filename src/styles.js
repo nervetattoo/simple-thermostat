@@ -66,14 +66,6 @@ export function renderStyles() {
       table:empty {
         display: none;
       }
-      .mode-selector {
-        --paper-dropdown-menu: {
-          display: inline;
-        }
-        --paper-input-container: {
-          padding: 0;
-        }
-      }
       header {
         display: flex;
         flex-direction: row;
@@ -135,9 +127,6 @@ export function renderStyles() {
       }
       .sensors td.clickable {
         cursor: pointer;
-      }
-      .mode-selector-container {
-        max-width: 90%;
       }
       .modes {
         display: flex;

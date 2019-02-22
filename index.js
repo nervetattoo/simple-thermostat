@@ -289,7 +289,9 @@ class SimpleThermostat extends LitElement {
         ${operations.map(
           op => html`
             <mwc-button
-              class="${op === operation ? 'mode--active' : ''}"
+              ?disabled=${op === operation}
+              ?outlined=${op === operation}
+              ?dense=${true}
               @click=${() => this.setMode(op)}
             >
               <ha-icon class="mode__icon" .icon=${modeIcons[op]}></ha-icon>
