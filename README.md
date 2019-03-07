@@ -49,12 +49,27 @@ resources:
 - `hide` _object_: Control specifically information fields to show. Defaults to showing everything
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
-  - `mode`: _bool_ (Default to `false`)
+  - ~`mode`: _bool_ (Default to `false`)~ **DEPRECATED IN 0.19**
   - `away`: _bool_ (Default to `true`)
+- `modes` _object|bool_ (From 0.19)
+  - `{mode_key}` _object|bool_: The key of the mode to define
+    - `include` _bool_: Whether to include this mode in the list or not
+    - `name` _string_: Specify a custom name
+    - `icon` _string_: Specify a custom icon
 - `sensors` _array_
   - `entity` _string_: A sensor value entity id
   - `attribute` _string_: The key for an attribute provided by the main entity (for example `min_temp`)
   - `name` _string_: Specify a sensor name to use instead of the default friendly_name
+
+## A note on modes
+
+Parsing of YAML will read modes named `on` and `off` to `true` and `false` unless you wrap them in ", probably breaking what you wanted to do. If you need to tweak a mode with these names you need to do it like this:
+
+```yaml
+modes:
+  off: will not work
+  "off": works
+```
 
 ## Example usage:
 
@@ -69,6 +84,14 @@ cards:
         name: Energy today
       - attribute: min_temp
         name: Min temp
-    hide:
-      mode: true
+    modes:
+      some_mode: false
+      another_mode:
+        include: false
+      'off':
+        name: Make it cold
+        icon: mdi:whitewalker
+      'on':
+        name: Warmer!
+        icon: mdi:whitewalker
 ```

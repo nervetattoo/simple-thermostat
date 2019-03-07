@@ -49,6 +49,7 @@ class SimpleThermostat extends LitElement {
       config: Object,
       entity: Object,
       sensors: Array,
+      modes: Object,
       icon: String,
       _temperature: {
         type: Number,
@@ -96,6 +97,33 @@ class SimpleThermostat extends LitElement {
       } = entity
       this._temperature = _temperature
       this._mode = mode
+
+      this.modes = {}
+      for (const mode of modes) {
+        this.modes[mode] = {
+          include: true,
+          icon: modeIcons[mode],
+        }
+      }
+    }
+
+    if (this.config.modes === false) {
+      this.modes = false
+    } else if (typeof this.config.modes === 'object') {
+      Object.entries(this.config.modes).map(([mode, config]) => {
+        if (!this.modes.hasOwnProperty(mode)) {
+          // Ignore modes that dont exist as reported by the entity
+          return
+        }
+        if (typeof config === 'boolean') {
+          this.modes[mode].include = config
+        } else {
+          this.modes[mode] = {
+            ...this.modes[mode],
+            ...config,
+          }
+        }
+      })
     }
 
     if (this.config.icon) {
@@ -174,8 +202,7 @@ class SimpleThermostat extends LitElement {
         min_temp: minTemp = null,
         max_temp: maxTemp = null,
         current_temperature: current,
-        operation_list: operations = [],
-        operation_mode: operation,
+        operation_mode: activeMode,
         ...attributes
       },
     } = entity
@@ -240,7 +267,7 @@ class SimpleThermostat extends LitElement {
             <span class="current--unit">${unit}</span>
           </div>
         </section>
-        ${_hide.mode ? null : this.renderModeSelector(operations, operation)}
+        ${this.renderModeSelector(activeMode)}
       </ha-card>
     `
   }
@@ -266,18 +293,27 @@ class SimpleThermostat extends LitElement {
     `
   }
 
-  renderModeSelector(operations, operation) {
+  renderModeSelector(currentMode) {
+    if (this.modes === false) {
+      return
+    }
+
+    console.log(this.modes)
+    const entries = Object.entries(this.modes).filter(
+      ([mode, config]) => config.include
+    )
+    console.log(entries)
     if (this._haVersion[1] <= 87) {
       return html`
         <div class="modes">
-          ${operations.map(
-            op => html`
+          ${entries.map(
+            ([mode, config]) => html`
               <paper-button
-                class="${op === operation ? 'mode--active' : ''}"
-                @click=${() => this.setMode(op)}
+                class="${mode === currentMode ? 'mode--active' : ''}"
+                @click=${() => this.setMode(mode)}
               >
-                <ha-icon class="mode__icon" .icon=${modeIcons[op]}></ha-icon>
-                ${this.localize(op, 'state.climate.')}
+                <ha-icon class="mode__icon" .icon=${config.icon}></ha-icon>
+                ${this.localize(mode, 'state.climate.')}
               </paper-button>
             `
           )}
@@ -286,16 +322,16 @@ class SimpleThermostat extends LitElement {
     }
     return html`
       <div class="modes">
-        ${operations.map(
-          op => html`
+        ${entries.map(
+          ([mode, config]) => html`
             <mwc-button
-              ?disabled=${op === operation}
-              ?outlined=${op === operation}
+              ?disabled=${mode === currentMode}
+              ?outlined=${mode === currentMode}
               ?dense=${true}
-              @click=${() => this.setMode(op)}
+              @click=${() => this.setMode(mode)}
             >
-              <ha-icon class="mode__icon" .icon=${modeIcons[op]}></ha-icon>
-              ${this.localize(op, 'state.climate.')}
+              <ha-icon class="mode__icon" .icon=${config.icon}></ha-icon>
+              ${this.localize(mode, 'state.climate.')}
             </mwc-button>
           `
         )}
