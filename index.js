@@ -312,6 +312,19 @@ class SimpleThermostat extends LitElement {
     const entries = Object.entries(this.modes).filter(
       ([mode, config]) => config.include
     )
+
+    const renderName = (mode, config) => {
+      if (config.name === false) return null
+      return config.name || this.localize(mode, 'state.climate.')
+    }
+
+    const renderIcon = icon => {
+      if (icon === false) return null
+      return html`
+        <ha-icon class="mode__icon" .icon=${icon}></ha-icon>
+      `
+    }
+
     if (this._haVersion[1] <= 87) {
       return html`
         <div class="modes">
@@ -321,8 +334,7 @@ class SimpleThermostat extends LitElement {
                 class="${mode === currentMode ? 'mode--active' : ''}"
                 @click=${() => this.setMode(mode)}
               >
-                <ha-icon class="mode__icon" .icon=${config.icon}></ha-icon>
-                ${this.localize(mode, 'state.climate.')}
+                ${renderIcon(config.icon)} ${renderName(mode, config)}
               </paper-button>
             `
           )}
@@ -339,8 +351,7 @@ class SimpleThermostat extends LitElement {
               ?dense=${true}
               @click=${() => this.setMode(mode)}
             >
-              <ha-icon class="mode__icon" .icon=${config.icon}></ha-icon>
-              ${this.localize(mode, 'state.climate.')}
+              ${renderIcon(config.icon)} ${renderName(mode, config)}
             </mwc-button>
           `
         )}

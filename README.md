@@ -54,8 +54,8 @@ resources:
 - `modes` _object|bool_ (From 0.19)
   - `{mode_key}` _object|bool_: The key of the mode to define
     - `include` _bool_: Whether to include this mode in the list or not
-    - `name` _string_: Specify a custom name
-    - `icon` _string_: Specify a custom icon
+    - `name` _string|bool_: Specify a custom name or set to `false` to show only the icon
+    - `icon` _string|bool_: Specify a custom icon or set to `false` to not show icon
 - `sensors` _array_
   - `entity` _string_: A sensor value entity id
   - `attribute` _string_: The key for an attribute provided by the main entity (for example `min_temp`)
@@ -90,8 +90,8 @@ cards:
         include: false
       'off':
         name: Make it cold
-        icon: mdi:whitewalker
+        icon: false
       'on':
-        name: Warmer!
+        name: false
         icon: mdi:whitewalker
 ```
