@@ -10,7 +10,7 @@ function formatNumber(number) {
 
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
-const UPDATE_PROPS = ['entity', 'sensors', '_temperature']
+const UPDATE_PROPS = ['entity', 'sensors', '_values']
 const modeIcons = {
   auto: 'hass:autorenew',
   manual: 'hass:cursor-pointer',
@@ -42,6 +42,16 @@ const DEFAULT_HIDE = {
   away: true,
 }
 
+function getEntityType(attributes) {
+  if (
+    attributes.hasOwnProperty('target_temp_high') &&
+    attributes.hasOwnProperty('target_temp_low')
+  ) {
+    return 'dual'
+  }
+  return 'single'
+}
+
 class SimpleThermostat extends LitElement {
   static get properties() {
     return {
@@ -51,10 +61,7 @@ class SimpleThermostat extends LitElement {
       sensors: Array,
       modes: Object,
       icon: String,
-      _temperature: {
-        type: Number,
-        notify: true,
-      },
+      _values: Object,
       _mode: String,
       _hide: Object,
       name: String,
@@ -69,7 +76,7 @@ class SimpleThermostat extends LitElement {
     this.icon = null
     this.sensors = []
     this._stepSize = STEP_SIZE
-    this._temperature = null
+    this._values = {}
     this._mode = null
     this._hide = DEFAULT_HIDE
     this._haVersion = null
@@ -87,15 +94,25 @@ class SimpleThermostat extends LitElement {
 
     if (this.entity !== entity) {
       this.entity = entity
+      this.entityType = getEntityType(entity.attributes)
 
       const {
         attributes: {
           operation_mode: mode,
           operation_list: modes = [],
-          temperature: _temperature,
+          ...attributes
         },
       } = entity
-      this._temperature = _temperature
+      if (this.entityType === 'dual') {
+        this._values = {
+          target_temp_low: attributes.target_temp_low,
+          target_temp_high: attributes.target_temp_high,
+        }
+      } else {
+        this._values = {
+          temperature: attributes.temperature,
+        }
+      }
       this._mode = mode
 
       this.modes = {}
@@ -186,7 +203,7 @@ class SimpleThermostat extends LitElement {
     return key in translations ? translations[key] : label
   }
 
-  render({ _hass, _hide, config, entity, sensors } = this) {
+  render({ _hass, _hide, _values, config, entity, sensors } = this) {
     if (!entity) {
       return html`
         ${renderNotFoundStyles()}
@@ -221,14 +238,6 @@ class SimpleThermostat extends LitElement {
       }) || null,
     ].filter(it => it !== null)
 
-    const increaseTemperature = this.handleTemperatureChange.bind(
-      this,
-      +this._stepSize
-    )
-    const decreaseTemperature = this.handleTemperatureChange.bind(
-      this,
-      -this._stepSize
-    )
     return html`
       ${renderStyles()}
       <ha-card class="${this.name ? '' : 'no-header'}">
@@ -238,34 +247,36 @@ class SimpleThermostat extends LitElement {
             ${sensorHtml}
           </table>
 
-          <div class="main">
-            <div class="current-wrapper">
-              <paper-icon-button
-                ?disabled=${maxTemp && this._temperature >= maxTemp}
-                class="thermostat-trigger"
-                icon="hass:chevron-up"
-                @click="${increaseTemperature}"
-              >
-              </paper-icon-button>
+          ${Object.entries(_values).map(([field, value]) => {
+            return html`
+              <div class="main">
+                <div class="current-wrapper">
+                  <paper-icon-button
+                    ?disabled=${maxTemp && value >= maxTemp}
+                    class="thermostat-trigger"
+                    icon="hass:chevron-up"
+                    @click="${() => this.setTemperature(this._stepSize, field)}"
+                  >
+                  </paper-icon-button>
 
-              <div
-                class="current"
-                @click="${() => this.openEntityPopover(config.entity)}"
-              >
-                <h3 class="current--value">
-                  ${formatNumber(this._temperature)}
-                </h3>
+                  <div @click="${() => this.openEntityPopover(config.entity)}">
+                    <h3 class="current--value">
+                      ${formatNumber(value)}
+                    </h3>
+                  </div>
+                  <paper-icon-button
+                    ?disabled=${minTemp && value <= minTemp}
+                    class="thermostat-trigger"
+                    icon="hass:chevron-down"
+                    @click="${() =>
+                      this.setTemperature(-this._stepSize, field)}"
+                  >
+                  </paper-icon-button>
+                </div>
+                <span class="current--unit">${unit}</span>
               </div>
-              <paper-icon-button
-                ?disabled=${minTemp && this._temperature <= minTemp}
-                class="thermostat-trigger"
-                icon="hass:chevron-down"
-                @click="${decreaseTemperature}"
-              >
-              </paper-icon-button>
-            </div>
-            <span class="current--unit">${unit}</span>
-          </div>
+            `
+          })}
         </section>
         ${this.renderModeSelector(activeMode)}
       </ha-card>
@@ -298,11 +309,9 @@ class SimpleThermostat extends LitElement {
       return
     }
 
-    console.log(this.modes)
     const entries = Object.entries(this.modes).filter(
       ([mode, config]) => config.include
     )
-    console.log(entries)
     if (this._haVersion[1] <= 87) {
       return html`
         <div class="modes">
@@ -392,17 +401,15 @@ class SimpleThermostat extends LitElement {
     `
   }
 
-  handleTemperatureChange(change, e) {
-    e.stopPropagation()
-    this.setTemperature(this._temperature + change)
-  }
-
-  setTemperature(temperature) {
+  setTemperature(change, field = 'temperature') {
+    this._values = {
+      ...this._values,
+      [field]: this._values[field] + change,
+    }
     this._debouncedSetTemperature = Debouncer.debounce(
       this._debouncedSetTemperature,
       {
         run: fn => {
-          this._temperature = temperature
           return window.setTimeout(fn, DEBOUNCE_TIMEOUT)
         },
         cancel: handle => window.clearTimeout(handle),
@@ -410,7 +417,7 @@ class SimpleThermostat extends LitElement {
       () => {
         this._hass.callService('climate', 'set_temperature', {
           entity_id: this.config.entity,
-          temperature: this._temperature,
+          ...this._values,
         })
       }
     )
