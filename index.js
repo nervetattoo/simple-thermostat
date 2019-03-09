@@ -259,7 +259,7 @@ class SimpleThermostat extends LitElement {
                   >
                   </paper-icon-button>
 
-                  <div @click="${() => this.openEntityPopover(config.entity)}">
+                  <div @click=${() => this.openEntityPopover()}>
                     <h3 class="current--value">
                       ${formatNumber(value)}
                     </h3>
@@ -293,7 +293,7 @@ class SimpleThermostat extends LitElement {
     }
 
     return html`
-      <header>
+      <header class="clickable" @click=${() => this.openEntityPopover()}>
         ${(icon &&
           html`
             <ha-icon class="header__icon" .icon=${icon}></ha-icon>
@@ -432,7 +432,7 @@ class SimpleThermostat extends LitElement {
     }
   }
 
-  openEntityPopover(entityId) {
+  openEntityPopover(entityId = this.config.entity) {
     this.fire('hass-more-info', { entityId })
   }
 

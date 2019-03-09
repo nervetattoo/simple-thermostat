@@ -125,7 +125,7 @@ export function renderStyles() {
       .sensors td {
         padding-bottom: 4px;
       }
-      .sensors td.clickable {
+      .clickable {
         cursor: pointer;
       }
       .modes {
