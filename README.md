@@ -41,6 +41,7 @@ resources:
 
 - `entity` _string_: The thermostat entity id **required**
 - `name` _string|false_: Override the card name, or disable showing a name at all. Default is to use the friendly_name of the thermostat provided
+- `decimals` _number_: Specify number of decimals to use: 1 or 0
 - `icon` _string|object_: Show an icon next to the card name. You can also pass an object to specify state-specific icons. Defaults state-specific icons radiator/radiator-disabled/snowflake
   - `idle`: _string_: Use this icon for state idle
   - `heat`: _string_ Use this icon for state heat

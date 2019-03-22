@@ -3,13 +3,9 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce'
 
 import { renderStyles, renderNotFoundStyles } from './src/styles'
 
-function formatNumber(number) {
-  const [int, dec] = String(number).split('.')
-  return `${int}.${dec || '0'}`
-}
-
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
+const DECIMALS = 1
 const UPDATE_PROPS = ['entity', 'sensors', '_values']
 const modeIcons = {
   auto: 'hass:autorenew',
@@ -51,6 +47,18 @@ function getEntityType(attributes) {
     return 'dual'
   }
   return 'single'
+}
+
+function formatNumber(number, decimals = 1) {
+  const [int, dec] = String(number).split('.')
+  if (Number.isNaN(int)) {
+    return 'N/A'
+  }
+  if (decimals) {
+    return `${int}.${dec || '0'}`
+  } else {
+    return Math.round(int)
+  }
 }
 
 class SimpleThermostat extends LitElement {
@@ -230,7 +238,10 @@ class SimpleThermostat extends LitElement {
     const sensorHtml = [
       _hide.temperature
         ? null
-        : this.renderInfoItem(`${formatNumber(current)}${unit}`, 'Temperature'),
+        : this.renderInfoItem(
+            `${formatNumber(current, config.decimals)}${unit}`,
+            'Temperature'
+          ),
       _hide.state
         ? null
         : this.renderInfoItem(this.localize(state, 'state.climate.'), 'State'),
@@ -263,7 +274,7 @@ class SimpleThermostat extends LitElement {
 
                   <div @click=${() => this.openEntityPopover()}>
                     <h3 class="current--value">
-                      ${formatNumber(value)}
+                      ${formatNumber(value, config.decimals)}
                     </h3>
                   </div>
                   <paper-icon-button
@@ -466,7 +477,10 @@ class SimpleThermostat extends LitElement {
     if (!config.entity) {
       throw new Error('You need to define an entity')
     }
-    this.config = config
+    this.config = {
+      decimals: DECIMALS,
+      ...config,
+    }
   }
 
   // The height of your card. Home Assistant uses this to automatically
