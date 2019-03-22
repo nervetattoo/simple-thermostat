@@ -168,7 +168,7 @@ class SimpleThermostat extends LitElement {
 
     if (this.config.sensors) {
       this.sensors = this.config.sensors.map(
-        ({ name: wantedName, entity, attribute }) => {
+        ({ name: wantedName, entity, attribute, unit = '' }) => {
           let state
           const name = [wantedName]
           if (entity) {
@@ -177,7 +177,7 @@ class SimpleThermostat extends LitElement {
               state && state.attributes && state.attributes.friendly_name
             )
           } else if (attribute && attribute in this.entity.attributes) {
-            state = this.entity.attributes[attribute]
+            state = this.entity.attributes[attribute] + unit
             name.push(attribute)
           }
           name.push(entity)

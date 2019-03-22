@@ -58,8 +58,9 @@ resources:
     - `icon` _string|bool_: Specify a custom icon or set to `false` to not show icon
 - `sensors` _array_
   - `entity` _string_: A sensor value entity id
-  - `attribute` _string_: The key for an attribute provided by the main entity (for example `min_temp`)
   - `name` _string_: Specify a sensor name to use instead of the default friendly_name
+  - `attribute` _string_: The key for an attribute provided by the main entity (for example `min_temp`)
+  - `unit` _string_: When specifying an attribute you can manually set the unit to display
 
 ## A note on modes
 
