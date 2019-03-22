@@ -44,8 +44,8 @@ const DEFAULT_HIDE = {
 
 function getEntityType(attributes) {
   if (
-    attributes.hasOwnProperty('target_temp_high') &&
-    attributes.hasOwnProperty('target_temp_low')
+    typeof attributes.target_temp_high === 'number' &&
+    typeof attributes.target_temp_low === 'number'
   ) {
     return 'dual'
   }
@@ -92,27 +92,28 @@ class SimpleThermostat extends LitElement {
 
     this._haVersion = hass.config.version.split('.').map(i => parseInt(i, 10))
 
+    const {
+      attributes: {
+        operation_mode: mode,
+        operation_list: modes = [],
+        ...attributes
+      },
+    } = entity
+
+    this.entityType = getEntityType(attributes)
+    if (this.entityType === 'dual') {
+      this._values = {
+        target_temp_low: attributes.target_temp_low,
+        target_temp_high: attributes.target_temp_high,
+      }
+    } else {
+      this._values = {
+        temperature: attributes.temperature,
+      }
+    }
+
     if (this.entity !== entity) {
       this.entity = entity
-      this.entityType = getEntityType(entity.attributes)
-
-      const {
-        attributes: {
-          operation_mode: mode,
-          operation_list: modes = [],
-          ...attributes
-        },
-      } = entity
-      if (this.entityType === 'dual') {
-        this._values = {
-          target_temp_low: attributes.target_temp_low,
-          target_temp_high: attributes.target_temp_high,
-        }
-      } else {
-        this._values = {
-          temperature: attributes.temperature,
-        }
-      }
       this._mode = mode
 
       this.modes = {}
