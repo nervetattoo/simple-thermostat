@@ -18,6 +18,7 @@ const modeIcons = {
   cool: 'hass:snowflake',
   off: 'hass:power',
   fan_only: 'hass:fan',
+  fan: 'hass:fan',
   eco: 'hass:leaf',
   dry: 'hass:water-percent',
   idle: 'hass:power',
