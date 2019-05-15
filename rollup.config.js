@@ -4,7 +4,7 @@ import filesize from 'rollup-plugin-filesize'
 import commonjs from 'rollup-plugin-commonjs'
 
 export default {
-  input: 'index.js',
+  input: 'src/index.js',
   output: {
     file: 'simple-thermostat.js',
     format: 'umd',

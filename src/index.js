@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit-element'
 import debounce from 'debounce-fn'
 
-import { renderStyles, renderNotFoundStyles } from './src/styles'
+import { renderStyles, renderNotFoundStyles } from './styles'
 
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
