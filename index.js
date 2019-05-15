@@ -1,5 +1,5 @@
 import { LitElement, html } from 'lit-element'
-import { Debouncer } from '@polymer/polymer/lib/utils/debounce'
+import debounce from 'debounce-fn'
 
 import { renderStyles, renderNotFoundStyles } from './src/styles'
 
@@ -79,6 +79,18 @@ class SimpleThermostat extends LitElement {
 
   constructor() {
     super()
+
+    this._debouncedSetTemperature = debounce(
+      () => {
+        this._hass.callService('climate', 'set_temperature', {
+          entity_id: this.config.entity,
+          ...this._values,
+        })
+      },
+      {
+        wait: DEBOUNCE_TIMEOUT,
+      }
+    )
 
     this._hass = null
     this.entity = null
@@ -430,21 +442,7 @@ class SimpleThermostat extends LitElement {
       ...this._values,
       [field]: this._values[field] + change,
     }
-    this._debouncedSetTemperature = Debouncer.debounce(
-      this._debouncedSetTemperature,
-      {
-        run: fn => {
-          return window.setTimeout(fn, DEBOUNCE_TIMEOUT)
-        },
-        cancel: handle => window.clearTimeout(handle),
-      },
-      () => {
-        this._hass.callService('climate', 'set_temperature', {
-          entity_id: this.config.entity,
-          ...this._values,
-        })
-      }
-    )
+    this._debouncedSetTemperature()
   }
 
   setMode(mode) {
