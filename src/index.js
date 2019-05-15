@@ -1,7 +1,7 @@
 import { LitElement, html } from 'lit-element'
 import debounce from 'debounce-fn'
 
-import { renderStyles, renderNotFoundStyles } from './styles'
+import styles from './styles'
 
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
@@ -62,6 +62,10 @@ function formatNumber(number, decimals = 1) {
 }
 
 class SimpleThermostat extends LitElement {
+  static get styles() {
+    return styles
+  }
+
   static get properties() {
     return {
       _hass: Object,
@@ -228,7 +232,6 @@ class SimpleThermostat extends LitElement {
   render({ _hass, _hide, _values, config, entity, sensors } = this) {
     if (!entity) {
       return html`
-        ${renderNotFoundStyles()}
         <ha-card class="not-found">
           Entity not available: <strong class="name">${config.entity}</strong>
         </ha-card>
@@ -264,7 +267,6 @@ class SimpleThermostat extends LitElement {
     ].filter(it => it !== null)
 
     return html`
-      ${renderStyles()}
       <ha-card class="${this.name ? '' : 'no-header'}">
         ${this.renderHeader()}
         <section class="body">
