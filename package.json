@@ -17,6 +17,7 @@
     "release-it": "^9.8.1",
     "rollup": "^1.1.0",
     "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-filesize": "^6.0.1",
     "rollup-plugin-node-resolve": "^4.0.0",
     "rollup-plugin-terser": "^4.0.2",
     "tracker-json": "^1.2.0"
