@@ -2,6 +2,8 @@ import { LitElement, html } from 'lit-element'
 import debounce from 'debounce-fn'
 
 import styles from './styles'
+import formatNumber from './formatNumber'
+import getEntityType from './getEntityType'
 
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
@@ -37,28 +39,6 @@ const DEFAULT_HIDE = {
   state: false,
   mode: false,
   away: true,
-}
-
-function getEntityType(attributes) {
-  if (
-    typeof attributes.target_temp_high === 'number' &&
-    typeof attributes.target_temp_low === 'number'
-  ) {
-    return 'dual'
-  }
-  return 'single'
-}
-
-function formatNumber(number, decimals = 1) {
-  const [int, dec] = String(number).split('.')
-  if (Number.isNaN(int)) {
-    return 'N/A'
-  }
-  if (decimals) {
-    return `${int}.${dec || '0'}`
-  } else {
-    return Math.round(int)
-  }
 }
 
 class SimpleThermostat extends LitElement {
@@ -254,7 +234,7 @@ class SimpleThermostat extends LitElement {
       _hide.temperature
         ? null
         : this.renderInfoItem(
-            `${formatNumber(current, config.decimals)}${unit}`,
+            `${formatNumber(current, config)}${unit}`,
             'Temperature'
           ),
       _hide.state
@@ -288,7 +268,7 @@ class SimpleThermostat extends LitElement {
 
                   <div @click=${() => this.openEntityPopover()}>
                     <h3 class="current--value">
-                      ${formatNumber(value, config.decimals)}
+                      ${formatNumber(value, config)}
                     </h3>
                   </div>
                   <paper-icon-button
