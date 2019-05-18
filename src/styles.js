@@ -3,10 +3,12 @@ import { css } from 'lit-element'
 // prettier-ignore
 export default css`
   :host {
-    --thermostat-font-size-xl: var(--paper-font-display3_-_font-size);
-    --thermostat-font-size-l: var(--paper-font-display2_-_font-size);
-    --thermostat-font-size-m: var(--paper-font-title_-_font-size);
-    --thermostat-font-size-title: 24px; --thermostat-spacing: 4px;
+    --st-font-size-xl: var(--paper-font-display3_-_font-size);
+    --st-font-size-l: var(--paper-font-display2_-_font-size);
+    --st-font-size-m: var(--paper-font-title_-_font-size);
+    --st-font-size-title: var(--ha-card-header-font-size, 24px);
+    --st-font-size-sensors: var(--paper-font-subhead_-_font-size, 16px);
+    --st-spacing: 4px;
   }
 
   ha-card {
@@ -17,17 +19,17 @@ export default css`
     font-weight: var(--paper-font-body1_-_font-weight);
     line-height: var(--paper-font-body1_-_line-height);
 
-    padding-bottom: calc(var(--thermostat-spacing) * 4);
+    padding-bottom: calc(var(--st-spacing) * 4);
   }
 
   ha-card.no-header {
-    padding: calc(var(--thermostat-spacing) * 4) 0;
+    padding: calc(var(--st-spacing) * 4) 0;
   }
 
   .not-found {
     flex: 1;
     background-color: yellow;
-    padding: calc(var(--thermostat-spacing) * 4);
+    padding: calc(var(--st-spacing) * 4);
   }
 
   .body {
@@ -43,7 +45,7 @@ export default css`
     justify-content: center;
   }
   .sensors {
-    font-size: 1.1em;
+    font-size: var(--st-font-size-sensors);
   }
   table:empty {
     display: none;
@@ -53,29 +55,20 @@ export default css`
     flex-direction: row;
     align-items: center;
 
-    font-family: var(--paper-font-headline_-_font-family);
-    -webkit-font-smoothing: var(
-      --paper-font-headline_-_-webkit-font-smoothing
-    );
-    font-size: var(--paper-font-headline_-_font-size);
-    font-weight: var(--paper-font-headline_-_font-weight);
-    letter-spacing: var(--paper-font-headline_-_letter-spacing);
-    line-height: var(--paper-font-headline_-_line-height);
-    text-rendering: var(
-      --paper-font-common-expensive-kerning_-_text-rendering
-    );
-    opacity: var(--dark-primary-opacity);
-    padding: calc(var(--thermostat-spacing) * 6)
-      calc(var(--thermostat-spacing) * 4)
-      calc(var(--thermostat-spacing) * 4);
+    padding: calc(var(--st-spacing) * 6)
+      calc(var(--st-spacing) * 4)
+      calc(var(--st-spacing) * 4);
   }
   .header__icon {
-    margin-right: calc(var(--thermostat-spacing) * 2);
+    margin-right: calc(var(--st-spacing) * 2);
     color: var(--paper-item-icon-color, #44739e);
   }
   .header__title {
-    font-size: var(--thermostat-font-size-title);
-    line-height: var(--thermostat-font-size-title);
+    font-size: var(--st-font-size-title);
+    line-height: var(--st-font-size-title);
+    -webkit-font-smoothing: var(
+      --paper-font-headline_-_-webkit-font-smoothing
+    );
     font-weight: normal;
     margin: 0;
     align-self: left;
@@ -88,12 +81,12 @@ export default css`
   }
   .current--value {
     margin: 0;
-    font-size: var(--thermostat-font-size-xl);
+    font-size: var(--st-font-size-xl);
     font-weight: 400;
-    line-height: var(--thermostat-font-size-xl);
+    line-height: var(--st-font-size-xl);
   }
   .current--unit {
-    font-size: var(--thermostat-font-size-m);
+    font-size: var(--st-font-size-m);
   }
   .thermostat-trigger {
     padding: 0px;
@@ -114,13 +107,13 @@ export default css`
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    padding-left: calc(var(--thermostat-spacing) * 4);
-    padding-right: calc(var(--thermostat-spacing) * 4);
+    padding-left: calc(var(--st-spacing) * 4);
+    padding-right: calc(var(--st-spacing) * 4);
   }
   .mode--active {
     color: var(--paper-item-icon-color, #44739e);
   }
   .mode__icon {
-    padding-right: var(--thermostat-spacing);
+    padding-right: var(--st-spacing);
   }
 `

@@ -97,3 +97,16 @@ cards:
         name: false
         icon: mdi:whitewalker
 ```
+
+## CSS vars for theming
+
+The card uses the following CSS variables:
+
+| Var name               | Default value                           | Usage                                                |
+| ---------------------- | --------------------------------------- | ---------------------------------------------------- |
+| --st-font-size-xl      | var(--paper-font-display3\_-_font-size) | Used for target temperature                          |
+| --st-font-size-l       | var(--paper-font-display2\_-_font-size) | Unused at the moment                                 |
+| --st-font-size-m       | var(--paper-font-title\_-_font-size)    | Used for target temperature unit                     |
+| --st-font-size-title   | var(--ha-card-header-font-size, 24      | Font size for card heading                           |
+| --st-font-size-sensors | var(--paper-font-subhead\_-_font-siz    | Font size for sensors                                |
+| --st-spacing           | 4px                                     | Base unit for spacing. Used in multiples many places |
