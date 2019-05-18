@@ -59,6 +59,7 @@ resources:
 - `sensors` _array_
   - `entity` _string_: A sensor value entity id
   - `name` _string_: Specify a sensor name to use instead of the default friendly_name
+  - `icon` _string_: Specify an icon to use instead of a name
   - `attribute` _string_: The key for an attribute to use instead of state. If this sensor has no entity it will use the main entity's attributes
   - `unit` _string_: When specifying an attribute you can manually set the unit to display
 

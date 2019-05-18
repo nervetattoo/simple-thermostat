@@ -173,7 +173,7 @@ class SimpleThermostat extends LitElement {
 
     if (this.config.sensors) {
       this.sensors = this.config.sensors.map(
-        ({ name: wantedName, entity, attribute, unit = '' }) => {
+        ({ name: wantedName, entity, attribute, unit = '', ...rest }) => {
           let state
           const name = [wantedName]
           if (entity) {
@@ -191,6 +191,7 @@ class SimpleThermostat extends LitElement {
           name.push(entity)
 
           return {
+            ...rest,
             name: name.find(n => !!n),
             state,
             entity,
@@ -236,16 +237,17 @@ class SimpleThermostat extends LitElement {
     const sensorHtml = [
       _hide.temperature
         ? null
-        : this.renderInfoItem(
-            `${formatNumber(current, config)}${unit}`,
-            'Temperature'
-          ),
+        : this.renderInfoItem(`${formatNumber(current, config)}${unit}`, {
+            heading: 'Temperature',
+          }),
       _hide.state
         ? null
-        : this.renderInfoItem(this.localize(state, 'state.climate.'), 'State'),
+        : this.renderInfoItem(this.localize(state, 'state.climate.'), {
+            heading: 'State',
+          }),
       _hide.away ? null : this.renderAwayToggle(attributes.away_mode),
-      sensors.map(({ name, state }) => {
-        return state && this.renderInfoItem(state, name)
+      sensors.map(({ name, icon, state }) => {
+        return state && this.renderInfoItem(state, { heading: name, icon })
       }) || null,
     ].filter(it => it !== null)
 
@@ -388,7 +390,7 @@ class SimpleThermostat extends LitElement {
     `
   }
 
-  renderInfoItem(state, heading) {
+  renderInfoItem(state, { heading, icon }) {
     if (!state) return
 
     let valueCell
@@ -414,10 +416,20 @@ class SimpleThermostat extends LitElement {
         <td>${state}</td>
       `
     }
+
+    let headingCell
+    if (icon) {
+      headingCell = html`
+        <th><ha-icon icon="${icon}"></ha-icon></th>
+      `
+    } else {
+      headingCell = html`
+        <th>${heading}:</th>
+      `
+    }
     return html`
       <tr>
-        <th>${heading}:</th>
-        ${valueCell}
+        ${headingCell} ${valueCell}
       </tr>
     `
   }
