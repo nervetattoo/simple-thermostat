@@ -181,6 +181,9 @@ class SimpleThermostat extends LitElement {
             name.push(
               state && state.attributes && state.attributes.friendly_name
             )
+            if (attribute) {
+              state = state.attributes[attribute] + unit
+            }
           } else if (attribute && attribute in this.entity.attributes) {
             state = this.entity.attributes[attribute] + unit
             name.push(attribute)

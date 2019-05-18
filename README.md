@@ -50,8 +50,7 @@ resources:
 - `hide` _object_: Control specifically information fields to show. Defaults to showing everything
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
-  - ~`mode`: _bool_ (Default to `false`)~ **DEPRECATED IN 0.19**
-  - `away`: _bool_ (Default to `true`)
+    t - `away`: _bool_ (Default to `true`)
 - `modes` _object|bool_ (From 0.19)
   - `{mode_key}` _object|bool_: The key of the mode to define
     - `include` _bool_: Whether to include this mode in the list or not
@@ -60,7 +59,7 @@ resources:
 - `sensors` _array_
   - `entity` _string_: A sensor value entity id
   - `name` _string_: Specify a sensor name to use instead of the default friendly_name
-  - `attribute` _string_: The key for an attribute provided by the main entity (for example `min_temp`)
+  - `attribute` _string_: The key for an attribute to use instead of state. If this sensor has no entity it will use the main entity's attributes
   - `unit` _string_: When specifying an attribute you can manually set the unit to display
 
 ## A note on modes
