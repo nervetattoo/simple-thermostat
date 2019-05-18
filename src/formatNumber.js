@@ -14,7 +14,7 @@ function formatNumber(number, { decimals = 1, fallback = 'N/A' } = {}) {
     return fallback
   }
   if (decimals) {
-    return `${int}.${dec || '0'}`
+    return `${int}.${Math.round(dec) || '0'}`
   } else {
     return String(Math.round(number))
   }
