@@ -110,3 +110,20 @@ The card uses the following CSS variables:
 | --st-font-size-title   | var(--ha-card-header-font-size, 24      | Font size for card heading                           |
 | --st-font-size-sensors | var(--paper-font-subhead\_-_font-siz    | Font size for sensors                                |
 | --st-spacing           | 4px                                     | Base unit for spacing. Used in multiples many places |
+
+### Example tweaking with card-modder
+
+Example that makes everything smaller and more compact except sensors that gets blown up completely
+
+```yaml
+type: custom:card-modder
+style:
+  --st-font-size-xl: 24px
+  --st-font-size-m: 20px
+  --st-font-size-title: 20px
+  --st-font-size-sensors: 30px
+  --st-spacing: 2px
+card:
+  type: custom:simple-thermostat
+  ...
+```
