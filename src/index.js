@@ -5,6 +5,7 @@ import styles from './styles'
 import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
 
+const MODE_TYPES = ['operation', 'fan']
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
 const DECIMALS = 1
@@ -52,6 +53,7 @@ class SimpleThermostat extends LitElement {
       config: Object,
       entity: Object,
       sensors: Array,
+      modeType: String,
       modes: Object,
       icon: String,
       _values: Object,
@@ -85,6 +87,20 @@ class SimpleThermostat extends LitElement {
     this._mode = null
     this._hide = DEFAULT_HIDE
     this._haVersion = null
+    this.modeType = 'operation'
+  }
+
+  setConfig(config) {
+    if (!config.entity) {
+      throw new Error('You need to define an entity')
+    }
+    if (config.mode_type && MODE_TYPES.includes(config.mode_type)) {
+      this.modeType = config.mode_type
+    }
+    this.config = {
+      decimals: DECIMALS,
+      ...config,
+    }
   }
 
   set hass(hass) {
@@ -99,8 +115,8 @@ class SimpleThermostat extends LitElement {
 
     const {
       attributes: {
-        operation_mode: mode,
-        operation_list: modes = [],
+        [`${this.modeType}_mode`]: mode,
+        [`${this.modeType}_list`]: modes = [],
         ...attributes
       },
     } = entity
@@ -228,7 +244,7 @@ class SimpleThermostat extends LitElement {
         min_temp: minTemp = null,
         max_temp: maxTemp = null,
         current_temperature: current,
-        operation_mode: activeMode,
+        [`${this.modeType}_mode`]: activeMode,
         ...attributes
       },
     } = entity
@@ -439,14 +455,16 @@ class SimpleThermostat extends LitElement {
       ...this._values,
       [field]: this._values[field] + change,
     }
-    this._debouncedSetTemperature()
+    this._debouncedSetTemperature({
+      ...this._values,
+    })
   }
 
   setMode(mode) {
     if (mode && mode !== this._mode) {
-      this._hass.callService('climate', 'set_operation_mode', {
+      this._hass.callService('climate', `set_${this.modeType}_mode`, {
         entity_id: this.config.entity,
-        operation_mode: mode,
+        [`${this.modeType}_mode`]: mode,
       })
     }
   }
@@ -466,16 +484,6 @@ class SimpleThermostat extends LitElement {
     e.detail = detail
     this.dispatchEvent(e)
     return e
-  }
-
-  setConfig(config) {
-    if (!config.entity) {
-      throw new Error('You need to define an entity')
-    }
-    this.config = {
-      decimals: DECIMALS,
-      ...config,
-    }
   }
 
   // The height of your card. Home Assistant uses this to automatically

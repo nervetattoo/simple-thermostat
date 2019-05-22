@@ -51,6 +51,7 @@ resources:
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
     t - `away`: _bool_ (Default to `true`)
+- `mode_type` _operation|fan_: Specify which mode type the card should control for `modes`. Defaults to **operation** but you can set **fan** if wanted
 - `modes` _object|bool_ (From 0.19)
   - `{mode_key}` _object|bool_: The key of the mode to define
     - `include` _bool_: Whether to include this mode in the list or not
