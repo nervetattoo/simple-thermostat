@@ -67,10 +67,10 @@ class SimpleThermostat extends LitElement {
     super()
 
     this._debouncedSetTemperature = debounce(
-      () => {
+      values => {
         this._hass.callService('climate', 'set_temperature', {
           entity_id: this.config.entity,
-          ...this._values,
+          ...values,
         })
       },
       {
