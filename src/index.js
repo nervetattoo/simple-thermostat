@@ -374,8 +374,8 @@ class SimpleThermostat extends LitElement {
         ${entries.map(
           ([mode, config]) => html`
             <mwc-button
-              ?disabled=${mode === currentMode}
-              ?outlined=${mode === currentMode}
+              ?unelevated=${mode === currentMode}
+              class="${mode === currentMode ? 'active' : ''}"
               ?dense=${true}
               @click=${() => this.setMode(mode)}
             >

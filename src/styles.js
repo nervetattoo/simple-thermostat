@@ -9,6 +9,8 @@ export default css`
     --st-font-size-title: var(--ha-card-header-font-size, 24px);
     --st-font-size-sensors: var(--paper-font-subhead_-_font-size, 16px);
     --st-spacing: 4px;
+    --st-mode-active-background: var(--primary-color);
+    --st-mode-active-color: var(--text-primary-color, #fff);
   }
 
   ha-card {
@@ -115,5 +117,10 @@ export default css`
   }
   .mode__icon {
     padding-right: var(--st-spacing);
+  }
+
+  mwc-button.active {
+    background: var(--st-mode-active-background);
+    color: var(--st-mode-active-color);
   }
 `
