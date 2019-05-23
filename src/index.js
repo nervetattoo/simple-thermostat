@@ -165,7 +165,7 @@ class SimpleThermostat extends LitElement {
       })
     }
 
-    if (this.config.icon) {
+    if (typeof this.config.icon !== 'undefined') {
       this.icon = this.config.icon
     } else {
       this.icon = STATE_ICONS
