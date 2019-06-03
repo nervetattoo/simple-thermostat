@@ -11,13 +11,13 @@
     "lit-element": "^2.1.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.4",
+    "@babel/core": "^7.4.5",
     "@babel/register": "^7.4.4",
-    "ava": "^1.4.1",
+    "ava": "^2.0.0",
     "husky": "^2.3.0",
     "prettier": "^1.17.1",
-    "pretty-quick": "^1.10.0",
-    "release-it": "^12.1.0",
+    "pretty-quick": "^1.11.0",
+    "release-it": "^12.2.2",
     "rollup": "^1.13.1",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-filesize": "^6.1.0",
