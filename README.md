@@ -62,7 +62,7 @@ modes:
 
 ```yaml
 cards:
-  - type: custom:simple-thermostat
+  - type: 'custom:simple-thermostat'
     entity: climate.my_room
     step_size: 1
     sensors:
@@ -103,7 +103,7 @@ The card uses the following CSS variables:
 Example that makes everything smaller and more compact except sensors that gets blown up completely
 
 ```yaml
-type: custom:card-modder
+type: 'custom:card-modder'
 style:
   --st-font-size-xl: 24px
   --st-font-size-m: 20px
@@ -111,6 +111,6 @@ style:
   --st-font-size-sensors: 30px
   --st-spacing: 2px
 card:
-  type: custom:simple-thermostat
+  type: 'custom:simple-thermostat'
   ...
 ```
