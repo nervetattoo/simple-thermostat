@@ -87,7 +87,7 @@ class SimpleThermostat extends LitElement {
     this._mode = null
     this._hide = DEFAULT_HIDE
     this._haVersion = null
-    this.modeType = 'operation'
+    this.modeType = 'hvac'
   }
 
   setConfig(config) {
@@ -116,7 +116,7 @@ class SimpleThermostat extends LitElement {
     const {
       attributes: {
         [`${this.modeType}_mode`]: mode,
-        [`${this.modeType}_list`]: modes = [],
+        [`${this.modeType}_modes`]: modes = [],
         ...attributes
       },
     } = entity
@@ -244,7 +244,6 @@ class SimpleThermostat extends LitElement {
         min_temp: minTemp = null,
         max_temp: maxTemp = null,
         current_temperature: current,
-        [`${this.modeType}_mode`]: activeMode,
         ...attributes
       },
     } = entity
@@ -306,7 +305,7 @@ class SimpleThermostat extends LitElement {
             `
           })}
         </section>
-        ${this.renderModeSelector(activeMode)}
+        ${this.renderModeSelector(state)}
       </ha-card>
     `
   }
