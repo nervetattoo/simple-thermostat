@@ -5,7 +5,7 @@ import styles from './styles'
 import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
 
-const MODE_TYPES = ['operation', 'fan']
+const MODE_TYPES = ['hvac', 'fan']
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
 const DECIMALS = 1
@@ -243,10 +243,14 @@ class SimpleThermostat extends LitElement {
       attributes: {
         min_temp: minTemp = null,
         max_temp: maxTemp = null,
+        hvac_action: action,
         current_temperature: current,
         ...attributes
       },
     } = entity
+
+    const mode =
+      this.modeType === 'hvac' ? state : attributes[`${this.modeType}_mode`]
     const unit = this._hass.config.unit_system.temperature
 
     const sensorHtml = [
@@ -257,7 +261,7 @@ class SimpleThermostat extends LitElement {
           }),
       _hide.state
         ? null
-        : this.renderInfoItem(this.localize(state, 'state.climate.'), {
+        : this.renderInfoItem(this.localize(action, 'state.climate.'), {
             heading: 'State',
           }),
       _hide.away ? null : this.renderAwayToggle(attributes.away_mode),
@@ -305,7 +309,7 @@ class SimpleThermostat extends LitElement {
             `
           })}
         </section>
-        ${this.renderModeSelector(state)}
+        ${this.renderModeSelector(mode)}
       </ha-card>
     `
   }
