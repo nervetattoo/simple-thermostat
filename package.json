@@ -8,22 +8,22 @@
   "license": "MIT",
   "dependencies": {
     "debounce-fn": "^3.0.1",
-    "lit-element": "^2.1.0"
+    "lit-element": "^2.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/register": "^7.4.4",
-    "ava": "^2.0.0",
-    "husky": "^2.3.0",
-    "prettier": "^1.17.1",
-    "pretty-quick": "^1.11.0",
-    "release-it": "^12.2.2",
-    "rollup": "^1.13.1",
-    "rollup-plugin-commonjs": "^10.0.0",
-    "rollup-plugin-filesize": "^6.1.0",
+    "@babel/core": "^7.5.5",
+    "@babel/register": "^7.5.5",
+    "ava": "^2.2.0",
+    "husky": "^3.0.2",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1",
+    "release-it": "^12.3.5",
+    "rollup": "^1.19.3",
+    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup-plugin-filesize": "^6.1.1",
     "rollup-plugin-minify-html-literals": "^1.2.2",
-    "rollup-plugin-node-resolve": "^5.0.1",
-    "rollup-plugin-terser": "^5.0.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^5.1.1",
     "tracker-json": "^1.2.0"
   },
   "scripts": {
