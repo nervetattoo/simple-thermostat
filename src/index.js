@@ -465,10 +465,17 @@ class SimpleThermostat extends LitElement {
 
   setMode(mode) {
     if (mode && mode !== this._mode) {
-      this._hass.callService('climate', `set_${this.modeType}_mode`, {
-        entity_id: this.config.entity,
-        [`${this.modeType}_mode`]: mode,
-      })
+      if (this.config.mqtt && this.config.mqtt.mode_topic) {
+        this._hass.callService('mqtt', 'publish', {
+          topic: this.config.mqtt.mode_topic,
+          payload: mode,
+        })
+      } else {
+        this._hass.callService('climate', `set_${this.modeType}_mode`, {
+          entity_id: this.config.entity,
+          [`${this.modeType}_mode`]: mode,
+        })
+      }
     }
   }
 
