@@ -264,7 +264,9 @@ class SimpleThermostat extends LitElement {
         : this.renderInfoItem(this.localize(action, 'state.climate.'), {
             heading: 'State',
           }),
-      _hide.away ? null : this.renderAwayToggle(attributes.away_mode),
+      _hide.away
+        ? null
+        : this.renderAwayToggle(attributes.preset_mode === 'away'),
       sensors.map(({ name, icon, state }) => {
         return state && this.renderInfoItem(state, { heading: name, icon })
       }) || null,
@@ -396,11 +398,11 @@ class SimpleThermostat extends LitElement {
         <th>${this.localize('ui.card.climate.away_mode')}</th>
         <td>
           <paper-toggle-button
-            ?checked=${state === 'on'}
+            ?checked=${state}
             @click=${() => {
-              this._hass.callService('climate', 'set_away_mode', {
+              this._hass.callService('climate', 'set_preset_mode', {
                 entity_id: this.config.entity,
-                away_mode: !(state === 'on'),
+                preset_mode: state ? '' : 'away',
               })
             }}
           />
