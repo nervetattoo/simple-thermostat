@@ -193,8 +193,9 @@ class SimpleThermostat extends LitElement {
       this.modeOptions.names = _names
       this.modeOptions.icons = _icons
 
-      if (modes.length > 0) {
-        controlModes = Object.entries(modes)
+      const entries = Object.entries(modes)
+      if (entries.length > 0) {
+        controlModes = entries
           .filter(([type]) => supportedModeType(type))
           .map(([type, config]) => {
             return {
