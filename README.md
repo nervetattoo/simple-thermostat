@@ -113,12 +113,12 @@ cards:
       hvac:
   	some_mode: false
     	another_mode: false
-	  'off':
-  	    name: Make it cold
-    	    icon: false
-      	  'on':
-            name: false
-            icon: mdi:whitewalker
+        'off':
+          name: Make it cold
+    	  icon: false
+      	'on':
+          name: false
+          icon: mdi:whitewalker
 ```
 
 ## CSS vars for theming
