@@ -110,15 +110,15 @@ cards:
       - attribute: min_temp
         name: Min temp
     control:
-	    hvac:
-  	    some_mode: false
-    	  another_mode: false
-	      'off':
-  	      name: Make it cold
+      hvac:
+  	some_mode: false
+    	another_mode: false
+	  'off':
+  	    name: Make it cold
     	    icon: false
-      	'on':
-        	name: false
-        	icon: mdi:whitewalker
+      	  'on':
+            name: false
+            icon: mdi:whitewalker
 ```
 
 ## CSS vars for theming
