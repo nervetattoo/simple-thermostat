@@ -10,7 +10,7 @@ export default css`
     --st-font-size-sensors: var(--paper-font-subhead_-_font-size, 16px);
     --st-spacing: 4px;
     --st-mode-active-background: var(--primary-color);
-    --st-mode-active-color: var(--text-primary-color, #fff);
+    --st-mode-active-color: #fff;
   }
 
   ha-card {
@@ -21,7 +21,7 @@ export default css`
     font-weight: var(--paper-font-body1_-_font-weight);
     line-height: var(--paper-font-body1_-_line-height);
 
-    padding-bottom: calc(var(--st-spacing) * 4);
+    padding-bottom: calc(var(--st-spacing) * 2);
   }
 
   ha-card.no-header {
@@ -35,10 +35,11 @@ export default css`
   }
 
   .body {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    place-items: center;
+    padding: 0 calc(var(--st-spacing) * 4);
+    padding-bottom: calc(var(--st-spacing) * 2);
   }
   .main {
     display: flex;
@@ -46,10 +47,23 @@ export default css`
     align-items: center;
     justify-content: center;
   }
+
   .sensors {
+    display: grid;
+    grid: auto-flow / 1fr 2fr;
+    grid-gap: var(--st-spacing);
     font-size: var(--st-font-size-sensors);
   }
-  table:empty {
+  .sensor-heading {
+    text-align: right;
+    font-weight: 300;
+    padding-right: 8px;
+    padding-bottom: 4px;
+  }
+  .sensors td {
+    padding-bottom: 4px;
+  }
+  .sensors:empty {
     display: none;
   }
   header {
@@ -93,34 +107,49 @@ export default css`
   .thermostat-trigger {
     padding: 0px;
   }
-  .sensors th {
-    text-align: right;
-    font-weight: 300;
-    padding-right: 8px;
-    padding-bottom: 4px;
-  }
-  .sensors td {
-    padding-bottom: 4px;
-  }
   .clickable {
     cursor: pointer;
   }
   .modes {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    padding-left: calc(var(--st-spacing) * 4);
-    padding-right: calc(var(--st-spacing) * 4);
+    display: grid;
+    grid-template-columns: min-content;
+    grid-auto-flow: column;
+    grid-gap: 2px;
+    margin-top: calc(var(--st-spacing) * 2);
+    padding: var(--st-spacing);
   }
-  .mode--active {
-    color: var(--paper-item-icon-color, #44739e);
+  .mode-title {
+    padding: 0 16px;
+    place-self: center;
+    font-size: var(--st-font-size-sensors);
+    font-weight: 300;
+    white-space: nowrap;
+  }
+  .mode-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 24px;
+    padding: var(--st-spacing) 0;
+    background: #dff4fd;
+    color: var(--sidebar-selected-icon-color);
+    cursor: pointer;
+    border-radius: var(--st-spacing);
+  }
+  .mode-item:hover {
+    background: var(--primary-color);
+    opacity: 0.5;
+    color: var(--text-primary-color, #fff);
+  }
+  .mode-item.active, .mode-item.active:hover {
+    background: var(--primary-color);
+    opacity: 1;
+    color: var(--text-primary-color, #fff);
   }
   .mode__icon {
-    padding-right: var(--st-spacing);
-  }
-
-  mwc-button.active {
-    background: var(--st-mode-active-background);
-    color: var(--st-mode-active-color);
+    --iron-icon-width: 24px;
+    --iron-icon-height: 24px;
+    display: block;
   }
 `

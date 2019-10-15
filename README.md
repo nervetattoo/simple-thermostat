@@ -34,11 +34,10 @@ resources:
 - `hide` _object_: Control specifically information fields to show. Defaults to showing everything
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
-    t - `away`: _bool_ (Default to `true`)
-- `mode_type` _operation|fan_: Specify which mode type the card should control for `modes`. Defaults to **operation** but you can set **fan** if wanted
-- `modes` _object|bool_ (From 0.19)
-  - `{mode_key}` _object|bool_: The key of the mode to define
-    - `include` _bool_: Whether to include this mode in the list or not
+- `control` _object|array_ (From 0.27)
+  - `_names` _bool_: Show mode names or not. Defaults to true
+  - `_icons` _bool_: Show mode icons or not. Defaults to true
+  - `{type}` _object|bool_: The key of the mode type (hvac, preset, fan, swing)
     - `name` _string|bool_: Specify a custom name or set to `false` to show only the icon
     - `icon` _string|bool_: Specify a custom icon or set to `false` to not show icon
 - `sensors` _array_
@@ -48,14 +47,53 @@ resources:
   - `attribute` _string_: The key for an attribute to use instead of state. If this sensor has no entity it will use the main entity's attributes
   - `unit` _string_: When specifying an attribute you can manually set the unit to display
 
-## A note on modes
+## Usage of the control config
 
-Parsing of YAML will read modes named `on` and `off` to `true` and `false` unless you wrap them in ", probably breaking what you wanted to do. If you need to tweak a mode with these names you need to do it like this:
+In 0.27, in order to both support changes in the climate domain and to support controlling all modes like hvac, preset, fan and swing modes the old `modes` configuration have been removed and replaced with a `control` config.
+
+The `control` config is most easily explained using a few examples as it supports both a simplified definition using just an array to list the types of modes to control. By default, with no config, it will show `hvac` and `preset` (if the entity supports it). You can replicate the default manually like this:
 
 ```yaml
-modes:
-  off: will not work
-  "off": works
+control:
+  - hvac
+  - preset
+```
+
+This will list all modes for both types. You can get more fine grained control by switching to an object format and taking control of specific modes:
+
+```yaml
+control:
+  preset:
+    away: true
+    none:
+      name: Not set
+```
+
+What is worth noticing is that there is no merging of the default any more, so with this config you will not get `hvac_mode` displayed. If you still want it to display like default you need to set:
+
+```yaml
+control:
+  preset:
+    away: true
+none:
+  name: Not set
+hvac: true
+```
+
+As previously you can define both `name` and `icon` on the individual modes, including setting them to `false`. What is new is that if you want to only show icons you can hide the names on all modes for the card (or vice versa for only showing names)
+
+```yaml
+control:
+  _names: false
+```
+
+Please note that you need to quote off/on mode keys to not have them interprented as true/false.
+
+```yaml
+control:
+  hvac:
+    off: will not work
+    "off": works
 ```
 
 ## Example usage:
@@ -71,16 +109,16 @@ cards:
         name: Energy today
       - attribute: min_temp
         name: Min temp
-    modes:
-      some_mode: false
-      another_mode:
-        include: false
-      'off':
-        name: Make it cold
-        icon: false
-      'on':
-        name: false
-        icon: mdi:whitewalker
+    control:
+	    hvac:
+  	    some_mode: false
+    	  another_mode: false
+	      'off':
+  	      name: Make it cold
+    	    icon: false
+      	'on':
+        	name: false
+        	icon: mdi:whitewalker
 ```
 
 ## CSS vars for theming
