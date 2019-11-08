@@ -36,7 +36,8 @@ export default css`
 
   .body {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
     place-items: center;
     padding: 0 calc(var(--st-spacing) * 4);
     padding-bottom: calc(var(--st-spacing) * 2);
