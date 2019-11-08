@@ -133,8 +133,9 @@ class SimpleThermostat extends LitElement {
     this._values = {}
     this._hide = DEFAULT_HIDE
     this.modeOptions = {
-      _names: true,
-      _icons: true,
+      names: true,
+      icons: true,
+      headings: true,
     }
   }
 
@@ -188,10 +189,11 @@ class SimpleThermostat extends LitElement {
     } else if (Array.isArray(this.config.control)) {
       controlModes = buildBasicModes(this.config.control)
     } else if (typeof this.config.control === 'object') {
-      const { _names, _icons, ...modes } = this.config.control
+      const { _names, _icons, _headings, ...modes } = this.config.control
 
       this.modeOptions.names = _names
       this.modeOptions.icons = _icons
+      this.modeOptions.headings = _headings
 
       const entries = Object.entries(modes)
       if (entries.length > 0) {
@@ -414,10 +416,15 @@ class SimpleThermostat extends LitElement {
 
     const str = type == 'hvac' ? 'operation' : `${type}_mode`
     const title = this.localize(`ui.card.climate.${str}`)
+    const { headings } = this.modeOptions
 
     return html`
-      <div class="modes">
-        <div class="mode-title">${title}</div>
+      <div class="modes ${headings ? 'heading' : ''}">
+        ${this.modeOptions.headings
+          ? html`
+              <div class="mode-title">${title}</div>
+            `
+          : null}
         ${list.map(
           ({ value, icon, name }) => html`
             <div

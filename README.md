@@ -37,6 +37,7 @@ resources:
 - `control` _object|array_ (From 0.27)
   - `_names` _bool_: Show mode names or not. Defaults to true
   - `_icons` _bool_: Show mode icons or not. Defaults to true
+  - `_headings` _bool_: Show a heading for each mode button row. Defaults to true
   - `{type}` _object|bool_: The key of the mode type (hvac, preset, fan, swing)
     - `name` _string|bool_: Specify a custom name or set to `false` to show only the icon
     - `icon` _string|bool_: Specify a custom icon or set to `false` to not show icon

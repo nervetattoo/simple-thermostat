@@ -112,11 +112,14 @@ export default css`
   }
   .modes {
     display: grid;
-    grid-template-columns: min-content;
+    grid-template-columns: auto;
     grid-auto-flow: column;
     grid-gap: 2px;
     margin-top: calc(var(--st-spacing) * 2);
     padding: var(--st-spacing);
+  }
+  .modes.heading {
+    grid-template-columns: min-content;
   }
   .mode-title {
     padding: 0 16px;
