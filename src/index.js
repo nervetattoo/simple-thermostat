@@ -199,9 +199,10 @@ class SimpleThermostat extends LitElement {
       if (entries.length > 0) {
         controlModes = entries
           .filter(([type]) => supportedModeType(type))
-          .map(([type, config]) => {
+          .map(([type, { _name, ...config }]) => {
             return {
               type,
+              name: _name,
               list: getModeList(type, attributes, config),
             }
           })
@@ -391,7 +392,7 @@ class SimpleThermostat extends LitElement {
     `
   }
 
-  renderModeType({ type, mode = 'none', list }) {
+  renderModeType({ type, mode = 'none', list, name }) {
     if (list.length === 0) {
       return null
     }
@@ -415,12 +416,12 @@ class SimpleThermostat extends LitElement {
     }
 
     const str = type == 'hvac' ? 'operation' : `${type}_mode`
-    const title = this.localize(`ui.card.climate.${str}`)
+    const title = name || this.localize(`ui.card.climate.${str}`)
     const { headings } = this.modeOptions
 
     return html`
       <div class="modes ${headings ? 'heading' : ''}">
-        ${this.modeOptions.headings
+        ${headings
           ? html`
               <div class="mode-title">${title}</div>
             `
