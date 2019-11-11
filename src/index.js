@@ -332,12 +332,12 @@ class SimpleThermostat extends LitElement {
       this.renderInfoItem(
         _hide.temperature,
         `${formatNumber(current, config)}${unit}`,
-        { heading: 'Temperature' }
+        { heading: this.config.label && this.config.label.temperature || 'Temperature' }
       ),
       this.renderInfoItem(
         _hide.state,
         this.localize(action, 'state_attributes.climate.hvac_action.'),
-        { heading: 'State' }
+        { heading: this.config.label && this.config.label.state || 'State' }
       ),
       sensors.map(({ name, icon, state }) => {
         return (
