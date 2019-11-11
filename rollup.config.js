@@ -11,5 +11,5 @@ export default {
     format: 'umd',
     name: 'SimpleThermostat',
   },
-  plugins: [resolve(), commonjs(), minifyHTML(), filesize()],
+  plugins: [resolve(), commonjs(), minifyHTML(), terser(), filesize()],
 }
