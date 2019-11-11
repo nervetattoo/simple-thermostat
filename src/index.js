@@ -12,6 +12,17 @@ const UPDATE_PROPS = ['entity', 'sensors', '_values', 'modes']
 
 const MODE_TYPES = ['hvac', 'fan', 'preset', 'swing']
 
+// Sorted list of HVAC modes
+const HVAC_MODES = [
+  'off',
+  'heat',
+  'cool',
+  'heat_cool',
+  'auto',
+  'dry',
+  'fan_only',
+]
+
 const DEFAULT_CONTROL = ['hvac', 'preset']
 
 const modeIcons = {
@@ -215,10 +226,19 @@ class SimpleThermostat extends LitElement {
 
     // Decorate mode types with active value and set to this.modes
     this.modes = controlModes.map(values => {
-      const mode =
-        values.type === 'hvac'
-          ? entity.state
-          : attributes[`${values.type}_mode`]
+      if (values.type === 'hvac') {
+        const sortedList = []
+        values.list.forEach(item => {
+          const index = HVAC_MODES.indexOf(item.value)
+          sortedList[index] = item
+        })
+        return {
+          ...values,
+          list: sortedList,
+          mode: entity.state,
+        }
+      }
+      const mode = attributes[`${values.type}_mode`]
       return { ...values, mode }
     })
 
