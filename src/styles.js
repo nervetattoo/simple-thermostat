@@ -11,6 +11,7 @@ export default css`
     --st-spacing: 4px;
     --st-mode-active-background: var(--primary-color);
     --st-mode-active-color: #fff;
+    --st-mode-background: #dff4fd;
   }
 
   ha-card {
@@ -137,7 +138,7 @@ export default css`
     justify-content: center;
     min-height: 24px;
     padding: var(--st-spacing) 0;
-    background: #dff4fd;
+    background: var(--st-mode-background);
     color: var(--sidebar-selected-icon-color);
     cursor: pointer;
     border-radius: var(--st-spacing);

@@ -138,6 +138,7 @@ The card uses the following CSS variables:
 | --st-spacing                | 4px                                     | Base unit for spacing. Used in multiples many places |
 | --st-mode-active-background | var(--primary-color)                    | Background color for active mode button              |
 | --st-mode-active-color      | var(--text-primary-color, #fff)         | Text color for active mode button                    |
+| --st-mode-background        | #dff4fd                                 | Background color for inactive mode button            |
 
 ### Example tweaking with card-modder
 
