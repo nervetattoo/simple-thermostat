@@ -9,7 +9,8 @@
   "dependencies": {
     "debounce-fn": "^3.0.1",
     "lit-element": "^2.2.1",
-    "lodash.isequal": "^4.5.0"
+    "lodash.isequal": "^4.5.0",
+    "lodash.round": "^4.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",

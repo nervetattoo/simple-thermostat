@@ -1,3 +1,4 @@
+import round from 'lodash.round'
 const NA = 'N/A'
 
 function formatNumber(number, { decimals = 1, fallback = 'N/A' } = {}) {
@@ -9,15 +10,8 @@ function formatNumber(number, { decimals = 1, fallback = 'N/A' } = {}) {
   ) {
     return fallback
   }
-  const [int, dec] = String(number).split('.')
-  if (Number.isNaN(int)) {
-    return fallback
-  }
-  if (decimals) {
-    return `${int}.${Math.round(dec) || '0'}`
-  } else {
-    return String(Math.round(number))
-  }
+
+  return round(number, decimals)
 }
 
 export default formatNumber
