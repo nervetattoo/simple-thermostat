@@ -147,14 +147,14 @@ export default css`
     border-radius: var(--st-spacing);
   }
   .mode-item:hover {
-    background: var(--primary-color);
+    background: var(--st-mode-active-background);
+    color: var(--st-mode-active-color);
     opacity: 0.5;
-    color: var(--text-primary-color, #fff);
   }
   .mode-item.active, .mode-item.active:hover {
-    background: var(--primary-color);
+    background: var(--st-mode-active-background);
+    color: var(--st-mode-active-color);
     opacity: 1;
-    color: var(--text-primary-color, #fff);
   }
   .mode__icon {
     --iron-icon-width: 24px;
