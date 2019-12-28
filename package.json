@@ -8,7 +8,8 @@
   "license": "MIT",
   "dependencies": {
     "debounce-fn": "^3.0.1",
-    "lit-element": "^2.2.1"
+    "lit-element": "^2.2.1",
+    "lodash.isequal": "^4.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -29,7 +30,8 @@
   "scripts": {
     "release": "release-it",
     "test": "ava",
-    "build": "NODE_ENV=production rollup -c"
+    "build": "NODE_ENV=production rollup -c",
+    "dist": "yarn build && cp simple-thermostat.js $HA_MOUNT/www/simple-thermostat.js"
   },
   "husky": {
     "hooks": {

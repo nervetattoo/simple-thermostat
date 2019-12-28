@@ -1,14 +1,23 @@
 import { LitElement, html } from 'lit-element'
 import debounce from 'debounce-fn'
+import isEqual from 'lodash.isequal'
 
 import styles from './styles'
 import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
 
+const DUAL = 'dual'
+const SINGLE = 'single'
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
 const DECIMALS = 1
-const UPDATE_PROPS = ['entity', 'sensors', '_values', 'modes']
+const UPDATE_PROPS = [
+  'entity',
+  'sensors',
+  '_values',
+  '_updatingValues',
+  'modes',
+]
 
 const MODE_TYPES = ['hvac', 'fan', 'preset', 'swing']
 
@@ -113,6 +122,7 @@ class SimpleThermostat extends LitElement {
       modes: Object,
       icon: String,
       _values: Object,
+      _updatingValues: Boolean,
       _mode: String,
       _hide: Object,
       name: String,
@@ -142,6 +152,7 @@ class SimpleThermostat extends LitElement {
     this.sensors = []
     this._stepSize = STEP_SIZE
     this._values = {}
+    this._updatingValues = false
     this._hide = DEFAULT_HIDE
     this.modeOptions = {
       names: true,
@@ -174,15 +185,27 @@ class SimpleThermostat extends LitElement {
     const attributes = entity.attributes
 
     this.entityType = getEntityType(attributes)
-    if (this.entityType === 'dual') {
-      this._values = {
+    let values
+    if (this.entityType === DUAL) {
+      values = {
         target_temp_low: attributes.target_temp_low,
         target_temp_high: attributes.target_temp_high,
       }
     } else {
-      this._values = {
+      values = {
         temperature: attributes.temperature,
       }
+    }
+
+    // If we are updating the values, and they are now equal
+    // we can safely assume we've been able to update the set points
+    // in HA and remove the updating flag
+    // If we are not updating we take the values we get from HA
+    // because it means they changed elsewhere
+    if (this._updatingValues && isEqual(values, this._values)) {
+      this._updatingValues = false
+    } else if (!this._updatingValues) {
+      this._values = values
     }
 
     const supportedModeType = type =>
@@ -306,7 +329,9 @@ class SimpleThermostat extends LitElement {
     return key in translations ? translations[key] : label
   }
 
-  render({ _hass, _hide, _values, config, entity, sensors } = this) {
+  render(
+    { _hass, _hide, _values, _updatingValues, config, entity, sensors } = this
+  ) {
     if (!entity) {
       return html`
         <ha-card class="not-found">
@@ -367,7 +392,11 @@ class SimpleThermostat extends LitElement {
                   </paper-icon-button>
 
                   <div @click=${() => this.openEntityPopover()}>
-                    <h3 class="current--value">
+                    <h3
+                      class="current--value ${_updatingValues
+                        ? 'updating'
+                        : ''}"
+                    >
                       ${formatNumber(value, config)}
                     </h3>
                   </div>
@@ -507,6 +536,7 @@ class SimpleThermostat extends LitElement {
   }
 
   setTemperature(change, field = 'temperature') {
+    this._updatingValues = true
     this._values = {
       ...this._values,
       [field]: this._values[field] + change,

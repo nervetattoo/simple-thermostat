@@ -103,6 +103,9 @@ export default css`
     font-weight: 400;
     line-height: var(--st-font-size-xl);
   }
+  .current--value.updating {
+    color: var(--google-red-500);
+  }
   .current--unit {
     font-size: var(--st-font-size-m);
   }
