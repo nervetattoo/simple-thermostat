@@ -318,6 +318,7 @@ class SimpleThermostat extends LitElement {
             name: name.find(n => !!n),
             state,
             entity,
+            unit,
           }
         }
       )
@@ -375,9 +376,10 @@ class SimpleThermostat extends LitElement {
         this.localize(action, 'state_attributes.climate.hvac_action.'),
         { heading: (this.config.label && this.config.label.state) || 'State' }
       ),
-      sensors.map(({ name, icon, state }) => {
+      sensors.map(({ name, icon, state, unit }) => {
         return (
-          state && this.renderInfoItem(false, state, { heading: name, icon })
+          state &&
+          this.renderInfoItem(false, state, { heading: name, icon, unit })
         )
       }) || null,
     ].filter(it => it !== null)
@@ -503,7 +505,7 @@ class SimpleThermostat extends LitElement {
   // Preset mode can be  one of: none, eco, away, boost, comfort, home, sleep, activity
   // See https://github.com/home-assistant/home-assistant/blob/dev/homeassistant/components/climate/const.py#L36-L57
 
-  renderInfoItem(hide, state, { heading, icon }) {
+  renderInfoItem(hide, state, { heading, icon, unit }) {
     if (hide || !state) return
 
     let valueCell
@@ -521,7 +523,7 @@ class SimpleThermostat extends LitElement {
           class="clickable"
           @click="${() => this.openEntityPopover(state.entity_id)}"
         >
-          ${value} ${state.attributes.unit_of_measurement}
+          ${value} ${unit || state.attributes.unit_of_measurement}
         </div>
       `
     } else {
