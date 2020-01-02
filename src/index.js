@@ -1,10 +1,17 @@
 import { LitElement, html } from 'lit-element'
 import debounce from 'debounce-fn'
 import isEqual from 'lodash.isequal'
+import { name, version } from '../package.json'
 
 import styles from './styles'
 import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
+
+function printVersion(version) {
+  console.info(`%c${name}: ${version}`, 'font-weight: bold')
+}
+
+printVersion(version)
 
 const DUAL = 'dual'
 const SINGLE = 'single'
@@ -59,7 +66,7 @@ const presetModeIcons = {
 const STATE_ICONS = {
   off: 'mdi:radiator-off',
   idle: 'mdi:radiator-disabled',
-  heat: 'mdi:radiator',
+  heating: 'mdi:radiator',
   cool: 'mdi:snowflake',
   auto: 'mdi:radiator',
 }
@@ -357,12 +364,16 @@ class SimpleThermostat extends LitElement {
       this.renderInfoItem(
         _hide.temperature,
         `${formatNumber(current, config)}${unit}`,
-        { heading: this.config.label && this.config.label.temperature || 'Temperature' }
+        {
+          heading:
+            (this.config.label && this.config.label.temperature) ||
+            'Temperature',
+        }
       ),
       this.renderInfoItem(
         _hide.state,
         this.localize(action, 'state_attributes.climate.hvac_action.'),
-        { heading: this.config.label && this.config.label.state || 'State' }
+        { heading: (this.config.label && this.config.label.state) || 'State' }
       ),
       sensors.map(({ name, icon, state }) => {
         return (
