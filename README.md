@@ -29,7 +29,7 @@ resources:
 - `fallback` _string_: Specify a text to display if a valid set point can't be determined. Defaults to `N/A`
 - `icon` _string|object_: Show an icon next to the card name. You can also pass an object to specify state-specific icons. Defaults state-specific icons radiator/radiator-disabled/snowflake
   - `idle`: _string_: Use this icon for state idle
-  - `heat`: _string_ Use this icon for state heat
+  - `heating`: _string_ Use this icon for state heating
   - `cool`: _string_ Use this icon for state cool
 - `step_size` _number_: Override the default 0.5 step size for increasing/decreasing the temperature
 - `label` _object_: Override untranslated labels
