@@ -141,9 +141,24 @@ The card uses the following CSS variables:
 | --st-mode-active-color      | var(--text-primary-color, #fff)         | Text color for active mode button                    |
 | --st-mode-background        | #dff4fd                                 | Background color for inactive mode button            |
 
-### Example using card-mod
+These variables can be changed globally in the current theme or on each card via card-mod.
+
+### Example using custom theme
 
 Example that makes everything smaller and more compact except sensors that gets blown up completely.
+
+```yaml
+example-theme:
+  st-font-size-xl: 24px
+  st-font-size-m: 20px
+  st-font-size-title: 20px
+  st-font-size-sensors: 30px
+  st-spacing: 2px
+```
+
+### Example using card-mod
+
+Same example as above, but will only apply to a single card.
 
 ```yaml
 type: 'custom:simple-thermostat'

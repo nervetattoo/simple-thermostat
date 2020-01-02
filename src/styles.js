@@ -2,18 +2,6 @@ import { css } from 'lit-element'
 
 // prettier-ignore
 export default css`
-  :host {
-    --st-font-size-xl: var(--paper-font-display3_-_font-size);
-    --st-font-size-l: var(--paper-font-display2_-_font-size);
-    --st-font-size-m: var(--paper-font-title_-_font-size);
-    --st-font-size-title: var(--ha-card-header-font-size, 24px);
-    --st-font-size-sensors: var(--paper-font-subhead_-_font-size, 16px);
-    --st-spacing: 4px;
-    --st-mode-active-background: var(--primary-color);
-    --st-mode-active-color: #fff;
-    --st-mode-background: #dff4fd;
-  }
-
   ha-card {
     -webkit-font-smoothing: var(
       --paper-font-body1_-_-webkit-font-smoothing
@@ -22,17 +10,17 @@ export default css`
     font-weight: var(--paper-font-body1_-_font-weight);
     line-height: var(--paper-font-body1_-_line-height);
 
-    padding-bottom: calc(var(--st-spacing) * 2);
+    padding-bottom: calc(var(--st-spacing, 4px) * 2);
   }
 
   ha-card.no-header {
-    padding: calc(var(--st-spacing) * 4) 0;
+    padding: calc(var(--st-spacing, 4px) * 4) 0;
   }
 
   .not-found {
     flex: 1;
     background-color: yellow;
-    padding: calc(var(--st-spacing) * 4);
+    padding: calc(var(--st-spacing, 4px) * 4);
   }
 
   .body {
@@ -40,8 +28,8 @@ export default css`
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
     place-items: center;
-    padding: 0 calc(var(--st-spacing) * 4);
-    padding-bottom: calc(var(--st-spacing) * 2);
+    padding: 0 calc(var(--st-spacing, 4px) * 4);
+    padding-bottom: calc(var(--st-spacing, 4px) * 2);
   }
   .main {
     display: flex;
@@ -53,8 +41,8 @@ export default css`
   .sensors {
     display: grid;
     grid: auto-flow / 1fr 2fr;
-    grid-gap: var(--st-spacing);
-    font-size: var(--st-font-size-sensors);
+    grid-gap: var(--st-spacing, 4px);
+    font-size: var(--st-font-size-sensors, var(--paper-font-subhead_-_font-size, 16px));
   }
   .sensor-heading {
     text-align: right;
@@ -73,17 +61,17 @@ export default css`
     flex-direction: row;
     align-items: center;
 
-    padding: calc(var(--st-spacing) * 6)
-      calc(var(--st-spacing) * 4)
-      calc(var(--st-spacing) * 4);
+    padding: calc(var(--st-spacing, 4px) * 6)
+      calc(var(--st-spacing, 4px) * 4)
+      calc(var(--st-spacing, 4px) * 4);
   }
   .header__icon {
-    margin-right: calc(var(--st-spacing) * 2);
+    margin-right: calc(var(--st-spacing, 4px) * 2);
     color: var(--paper-item-icon-color, #44739e);
   }
   .header__title {
-    font-size: var(--st-font-size-title);
-    line-height: var(--st-font-size-title);
+    font-size: var(--st-font-size-title, var(--ha-card-header-font-size, 24px));
+    line-height: var(--st-font-size-title, var(--ha-card-header-font-size, 24px));
     -webkit-font-smoothing: var(
       --paper-font-headline_-_-webkit-font-smoothing
     );
@@ -99,15 +87,15 @@ export default css`
   }
   .current--value {
     margin: 0;
-    font-size: var(--st-font-size-xl);
+    font-size: var(--st-font-size-xl, var(--paper-font-display3_-_font-size));
     font-weight: 400;
-    line-height: var(--st-font-size-xl);
+    line-height: var(--st-font-size-xl, var(--paper-font-display3_-_font-size));
   }
   .current--value.updating {
     color: var(--google-red-500);
   }
   .current--unit {
-    font-size: var(--st-font-size-m);
+    font-size: var(--st-font-size-m, var(--paper-font-title_-_font-size));
   }
   .thermostat-trigger {
     padding: 0px;
@@ -120,8 +108,8 @@ export default css`
     grid-template-columns: auto;
     grid-auto-flow: column;
     grid-gap: 2px;
-    margin-top: calc(var(--st-spacing) * 2);
-    padding: var(--st-spacing);
+    margin-top: calc(var(--st-spacing, 4px) * 2);
+    padding: var(--st-spacing, 4px);
   }
   .modes.heading {
     grid-template-columns: min-content;
@@ -129,7 +117,7 @@ export default css`
   .mode-title {
     padding: 0 16px;
     place-self: center;
-    font-size: var(--st-font-size-sensors);
+    font-size: var(--st-font-size-sensors, var(--paper-font-subhead_-_font-size, 16px));
     font-weight: 300;
     white-space: nowrap;
   }
@@ -140,20 +128,20 @@ export default css`
     text-align: center;
     justify-content: center;
     min-height: 24px;
-    padding: var(--st-spacing) 0;
-    background: var(--st-mode-background);
+    padding: var(--st-spacing, 4px) 0;
+    background: var(--st-mode-background, #dff4fd);
     color: var(--sidebar-selected-icon-color);
     cursor: pointer;
-    border-radius: var(--st-spacing);
+    border-radius: var(--st-spacing, 4px);
   }
   .mode-item:hover {
-    background: var(--st-mode-active-background);
-    color: var(--st-mode-active-color);
+    background: var(--st-mode-active-background, var(--primary-color));
+    color: var(--st-mode-active-color, #fff);
     opacity: 0.5;
   }
   .mode-item.active, .mode-item.active:hover {
-    background: var(--st-mode-active-background);
-    color: var(--st-mode-active-color);
+    background: var(--st-mode-active-background, var(--primary-color));
+    color: var(--st-mode-active-color, #fff);
     opacity: 1;
   }
   .mode__icon {
