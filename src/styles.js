@@ -2,6 +2,11 @@ import { css } from 'lit-element'
 
 // prettier-ignore
 export default css`
+  :host {
+    --st-default-spacing: 4px;
+    --st-default-mode-active-color: #fff;
+    --st-default-mode-background: #dff4fd;
+  }
   ha-card {
     -webkit-font-smoothing: var(
       --paper-font-body1_-_-webkit-font-smoothing
@@ -10,17 +15,17 @@ export default css`
     font-weight: var(--paper-font-body1_-_font-weight);
     line-height: var(--paper-font-body1_-_line-height);
 
-    padding-bottom: calc(var(--st-spacing, 4px) * 2);
+    padding-bottom: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
   }
 
   ha-card.no-header {
-    padding: calc(var(--st-spacing, 4px) * 4) 0;
+    padding: calc(var(--st-spacing, var(--st-default-spacing)) * 4) 0;
   }
 
   .not-found {
     flex: 1;
     background-color: yellow;
-    padding: calc(var(--st-spacing, 4px) * 4);
+    padding: calc(var(--st-spacing, var(--st-default-spacing)) * 4);
   }
 
   .body {
@@ -28,8 +33,8 @@ export default css`
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
     place-items: center;
-    padding: 0 calc(var(--st-spacing, 4px) * 4);
-    padding-bottom: calc(var(--st-spacing, 4px) * 2);
+    padding: 0 calc(var(--st-spacing, var(--st-default-spacing)) * 4);
+    padding-bottom: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
   }
   .main {
     display: flex;
@@ -41,7 +46,7 @@ export default css`
   .sensors {
     display: grid;
     grid: auto-flow / 1fr 2fr;
-    grid-gap: var(--st-spacing, 4px);
+    grid-gap: var(--st-spacing, var(--st-default-spacing));
     font-size: var(--st-font-size-sensors, var(--paper-font-subhead_-_font-size, 16px));
   }
   .sensor-heading {
@@ -61,12 +66,12 @@ export default css`
     flex-direction: row;
     align-items: center;
 
-    padding: calc(var(--st-spacing, 4px) * 6)
-      calc(var(--st-spacing, 4px) * 4)
-      calc(var(--st-spacing, 4px) * 4);
+    padding: calc(var(--st-spacing, var(--st-default-spacing)) * 6)
+      calc(var(--st-spacing, var(--st-default-spacing)) * 4)
+      calc(var(--st-spacing, var(--st-default-spacing)) * 4);
   }
   .header__icon {
-    margin-right: calc(var(--st-spacing, 4px) * 2);
+    margin-right: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
     color: var(--paper-item-icon-color, #44739e);
   }
   .header__title {
@@ -108,8 +113,8 @@ export default css`
     grid-template-columns: auto;
     grid-auto-flow: column;
     grid-gap: 2px;
-    margin-top: calc(var(--st-spacing, 4px) * 2);
-    padding: var(--st-spacing, 4px);
+    margin-top: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
+    padding: var(--st-spacing, var(--st-default-spacing));
   }
   .modes.heading {
     grid-template-columns: min-content;
@@ -128,20 +133,20 @@ export default css`
     text-align: center;
     justify-content: center;
     min-height: 24px;
-    padding: var(--st-spacing, 4px) 0;
-    background: var(--st-mode-background, #dff4fd);
+    padding: var(--st-spacing, var(--st-default-spacing)) 0;
+    background: var(--st-mode-background, var(--st-default-mode-background));
     color: var(--sidebar-selected-icon-color);
     cursor: pointer;
-    border-radius: var(--st-spacing, 4px);
+    border-radius: var(--st-spacing, var(--st-default-spacing));
   }
   .mode-item:hover {
     background: var(--st-mode-active-background, var(--primary-color));
-    color: var(--st-mode-active-color, #fff);
+    color: var(--st-mode-active-color, var(--st-default-mode-active-color));
     opacity: 0.5;
   }
   .mode-item.active, .mode-item.active:hover {
     background: var(--st-mode-active-background, var(--primary-color));
-    color: var(--st-mode-active-color, #fff);
+    color: var(--st-mode-active-color, var(--st-default-mode-active-color));
     opacity: 1;
   }
   .mode__icon {
