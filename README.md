@@ -141,19 +141,19 @@ The card uses the following CSS variables:
 | --st-mode-active-color      | var(--text-primary-color, #fff)         | Text color for active mode button                    |
 | --st-mode-background        | #dff4fd                                 | Background color for inactive mode button            |
 
-### Example tweaking with card-modder
+### Example using card-mod
 
-Example that makes everything smaller and more compact except sensors that gets blown up completely
+Example that makes everything smaller and more compact except sensors that gets blown up completely.
 
 ```yaml
-type: 'custom:card-modder'
-style:
-  --st-font-size-xl: 24px
-  --st-font-size-m: 20px
-  --st-font-size-title: 20px
-  --st-font-size-sensors: 30px
-  --st-spacing: 2px
-card:
-  type: 'custom:simple-thermostat'
+type: 'custom:simple-thermostat'
+style: |
+  ha-card {
+    --st-font-size-xl: 24px;
+    --st-font-size-m: 20px;
+    --st-font-size-title: 20px;
+    --st-font-size-sensors: 30px;
+    --st-spacing: 2px;
+  }
   ...
 ```
