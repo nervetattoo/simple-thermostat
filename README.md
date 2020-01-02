@@ -32,6 +32,9 @@ resources:
   - `heat`: _string_ Use this icon for state heat
   - `cool`: _string_ Use this icon for state cool
 - `step_size` _number_: Override the default 0.5 step size for increasing/decreasing the temperature
+- `label` _object_: Override untranslated labels
+  - `temperature`: _string_ Override Temperature label
+  - `state`: _string_ Override State label
 - `hide` _object_: Control specifically information fields to show. Defaults to showing everything
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
