@@ -1,4 +1,3 @@
-import round from 'lodash.round'
 const NA = 'N/A'
 
 function formatNumber(number, { decimals = 1, fallback = 'N/A' } = {}) {
@@ -11,7 +10,7 @@ function formatNumber(number, { decimals = 1, fallback = 'N/A' } = {}) {
     return fallback
   }
 
-  return round(number, decimals)
+  return Number(number).toFixed(decimals)
 }
 
 export default formatNumber
