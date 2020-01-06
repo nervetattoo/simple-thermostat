@@ -1,9 +1,9 @@
 {
   "simple-thermostat": {
-    "version": "0.33.0",
-    "updated_at": "2020-01-02",
+    "version": "0.33.1",
+    "updated_at": "2020-01-06",
     "visit_repo": "https://github.com/nervetattoo/simple-thermostat",
-    "remote_location": "https://github.com/nervetattoo/simple-thermostat/releases/download/0.33.0/simple-thermostat.js",
-    "changelog": "https://github.com/nervetattoo/simple-thermostat/releases/0.33.0"
+    "remote_location": "https://github.com/nervetattoo/simple-thermostat/releases/download/0.33.1/simple-thermostat.js",
+    "changelog": "https://github.com/nervetattoo/simple-thermostat/releases/0.33.1"
   }
 }
