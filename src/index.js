@@ -51,18 +51,6 @@ const modeIcons = {
   dry: 'hass:water-percent',
 }
 
-// Preset mode can be  one of: none, eco, away, boost, comfort, home, sleep, activity
-const presetModeIcons = {
-  none: 'hass:power',
-  eco: 'hass:leaf',
-  away: 'mdi:radiator-disabled',
-  boost: 'mdi:fire',
-  home: 'hass:fire',
-  comfort: 'hass:fire',
-  sleep: 'hass:fire',
-  activity: 'hass:fire',
-}
-
 const STATE_ICONS = {
   off: 'mdi:radiator-off',
   idle: 'mdi:radiator-disabled',
@@ -74,8 +62,6 @@ const STATE_ICONS = {
 const DEFAULT_HIDE = {
   temperature: false,
   state: false,
-  mode: false,
-  preset: false,
 }
 
 function isIncluded(key, values) {
@@ -138,8 +124,6 @@ class SimpleThermostat extends LitElement {
 
   constructor() {
     super()
-
-    this.i = 0
 
     this._debouncedSetTemperature = debounce(
       values => {
