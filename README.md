@@ -32,6 +32,7 @@ resources:
   - `heating`: _string_ Use this icon for state heating
   - `cool`: _string_ Use this icon for state cool
 - `step_size` _number_: Override the default 0.5 step size for increasing/decreasing the temperature
+- `step_layout` _string_: `row` or `column` (default). Using `row` will make the card more compact
 - `label` _object_: Override untranslated labels
   - `temperature`: _string_ Override Temperature label
   - `state`: _string_ Override State label

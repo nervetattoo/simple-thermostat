@@ -90,6 +90,13 @@ export default css`
     align-items: center;
     justify-content: center;
   }
+  .current-wrapper.row {
+    flex-direction: row-reverse;
+  }
+  .current--value-wrapper {
+    display: flex;
+    align-items: center;
+  }
   .current--value {
     margin: 0;
     font-size: var(--st-font-size-xl, var(--paper-font-display3_-_font-size));

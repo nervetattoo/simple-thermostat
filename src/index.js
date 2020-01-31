@@ -41,6 +41,13 @@ const HVAC_MODES = [
 
 const DEFAULT_CONTROL = ['hvac', 'preset']
 
+const ICONS = {
+  UP: 'hass:chevron-up',
+  DOWN: 'hass:chevron-down',
+  PLUS: 'mdi:plus',
+  MINUS: 'mdi:minus',
+}
+
 const modeIcons = {
   off: 'hass:power',
   auto: 'hass:autorenew',
@@ -368,6 +375,9 @@ class SimpleThermostat extends LitElement {
       }) || null,
     ].filter(it => it !== null)
 
+    const stepLayout = this.config.step_layout || 'column'
+    const row = stepLayout === 'row'
+
     return html`
       <ha-card class="${this.name ? '' : 'no-header'}">
         ${this.renderHeader()}
@@ -379,16 +389,19 @@ class SimpleThermostat extends LitElement {
           ${Object.entries(_values).map(([field, value]) => {
             return html`
               <div class="main">
-                <div class="current-wrapper">
+                <div class="current-wrapper ${stepLayout}">
                   <paper-icon-button
                     ?disabled=${maxTemp && value >= maxTemp}
                     class="thermostat-trigger"
-                    icon="hass:chevron-up"
+                    icon=${row ? ICONS.PLUS : ICONS.UP}
                     @click="${() => this.setTemperature(this._stepSize, field)}"
                   >
                   </paper-icon-button>
 
-                  <div @click=${() => this.openEntityPopover()}>
+                  <div
+                    @click=${() => this.openEntityPopover()}
+                    class="current--value-wrapper"
+                  >
                     <h3
                       class="current--value ${_updatingValues
                         ? 'updating'
@@ -396,17 +409,17 @@ class SimpleThermostat extends LitElement {
                     >
                       ${formatNumber(value, config)}
                     </h3>
+                    <span class="current--unit">${unit}</span>
                   </div>
                   <paper-icon-button
                     ?disabled=${minTemp && value <= minTemp}
                     class="thermostat-trigger"
-                    icon="hass:chevron-down"
+                    icon=${row ? ICONS.MINUS : ICONS.DOWN}
                     @click="${() =>
                       this.setTemperature(-this._stepSize, field)}"
                   >
                   </paper-icon-button>
                 </div>
-                <span class="current--unit">${unit}</span>
               </div>
             `
           })}
