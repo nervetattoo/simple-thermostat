@@ -3,7 +3,7 @@ import debounce from 'debounce-fn'
 import isEqual from 'lodash.isequal'
 import { name, version } from '../package.json'
 
-import styles from './styles'
+import styles from './styles.css'
 import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
 
@@ -470,7 +470,7 @@ class SimpleThermostat extends LitElement {
       if (!icon) return null
       if (this.modeOptions.icons === false) return null
       return html`
-        <ha-icon class="mode__icon" .icon=${icon}></ha-icon>
+        <ha-icon class="mode-icon" .icon=${icon}></ha-icon>
       `
     }
 

@@ -4,6 +4,9 @@ import filesize from 'rollup-plugin-filesize'
 import commonjs from '@rollup/plugin-commonjs'
 import minifyHTML from 'rollup-plugin-minify-html-literals'
 import json from 'rollup-plugin-json'
+import postCSS from 'rollup-plugin-postcss'
+import postCSSLit from 'rollup-plugin-postcss-lit'
+import postCSSPresetEnv from 'postcss-preset-env'
 
 export default {
   input: 'src/index.js',
@@ -15,9 +18,29 @@ export default {
   plugins: [
     resolve(),
     commonjs(),
+    postCSS({
+      plugins: [
+        postCSSPresetEnv({
+          stage: 2,
+          features: {
+            'nesting-rules': true,
+          },
+        }),
+      ],
+    }),
+    postCSSLit(),
     json({ compact: true }),
-    minifyHTML(),
-    terser(),
+    minifyHTML({
+      options: {
+        shouldMinifyCSS: () => false,
+        minifyCSS: false,
+      },
+    }),
+    terser({
+      output: {
+        comments: false,
+      },
+    }),
     filesize(),
   ],
 }
