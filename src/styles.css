@@ -54,6 +54,7 @@ ha-card.no-header {
   font-weight: 300;
   padding-right: 8px;
   padding-bottom: 4px;
+  white-space: nowrap;
 }
 .sensors:empty {
   display: none;
