@@ -378,8 +378,9 @@ class SimpleThermostat extends LitElement {
     const stepLayout = this.config.step_layout || 'column'
     const row = stepLayout === 'row'
 
+    const classes = [!this.name && 'no-header', action].filter(cx => !!cx)
     return html`
-      <ha-card class="${this.name ? '' : 'no-header'}">
+      <ha-card class="${classes.join(' ')}">
         ${this.renderHeader()}
         <section class="body">
           <div class="sensors">
