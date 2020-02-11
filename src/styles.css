@@ -1,3 +1,8 @@
+@custom-media --vp-s (width >= 480px);
+@custom-media --vp-m (width >= 768px);
+@custom-media --vp-l (width >= 992px);
+@custom-media --vp-xl (width >= 1200px);
+
 :host {
   --st-default-spacing: 4px;
 }
@@ -90,9 +95,13 @@ header {
 }
 .current--value {
   margin: 0;
-  font-size: var(--st-font-size-xl, var(--paper-font-display3_-_font-size));
   font-weight: 400;
-  line-height: var(--st-font-size-xl, var(--paper-font-display3_-_font-size));
+  line-height: var(--st-font-size-l, var(--paper-font-display2_-_font-size));
+  font-size: var(--st-font-size-l, var(--paper-font-display2_-_font-size));
+  @media (--vp-m) {
+    font-size: var(--st-font-size-xl, var(--paper-font-display3_-_font-size));
+    line-height: var(--st-font-size-xl, var(--paper-font-display3_-_font-size));
+  }
 
   &.updating {
     color: var(--google-red-500);

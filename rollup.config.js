@@ -21,9 +21,10 @@ export default {
     postCSS({
       plugins: [
         postCSSPresetEnv({
-          stage: 2,
+          stage: 1,
           features: {
             'nesting-rules': true,
+            'custom-media-query': true,
           },
         }),
       ],
