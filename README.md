@@ -5,6 +5,21 @@ The aim is to provide a card with simpler interactions that are easier to use an
 
 ![Example thermostat](https://github.com/nervetattoo/simple-thermostat/raw/master/thermostat-card.png)
 
+## Compact mode
+
+![Compact configuration](https://github.com/nervetattoo/simple-thermostat/raw/master/simple-thermostat-compact.png)
+
+Hide everything but sensors and temperature control:
+
+```yaml
+type: custom:simple-thermostat
+entity: climate.living_room
+step_layout: row
+name: false
+icon: false
+control: false
+```
+
 ## Requirements
 
 Home Assistant 0.84 or higher
@@ -83,9 +98,9 @@ What is worth noticing is that there is no merging of the default any more, so w
 control:
   preset:
     away: true
-none:
-  name: Not set
-hvac: true
+    none:
+      name: Not set
+  hvac: true
 ```
 
 As previously you can define both `name` and `icon` on the individual modes, including setting them to `false`. What is new is that if you want to only show icons you can hide the names on all modes for the card (or vice versa for only showing names)
@@ -119,12 +134,12 @@ cards:
         name: Min temp
     control:
       hvac:
-  	some_mode: false
-    	another_mode: false
+        some_mode: false
+        another_mode: false
         'off':
           name: Make it cold
-    	  icon: false
-      	'on':
+          icon: false
+        'on':
           name: false
           icon: mdi:whitewalker
 ```
