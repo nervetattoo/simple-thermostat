@@ -223,9 +223,15 @@ class SimpleThermostat extends LitElement {
     } else if (typeof this.config.control === 'object') {
       const { _names, _icons, _headings, ...modes } = this.config.control
 
-      this.modeOptions.names = _names
-      this.modeOptions.icons = _icons
-      this.modeOptions.headings = _headings
+      if (typeof _names === 'boolean') {
+        this.modeOptions.names = _names
+      }
+      if (typeof _icons === 'boolean') {
+        this.modeOptions.icons = _icons
+      }
+      if (typeof _headings === 'boolean') {
+        this.modeOptions.headings = _headings
+      }
 
       const entries = Object.entries(modes)
       if (entries.length > 0) {
