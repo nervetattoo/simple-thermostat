@@ -569,6 +569,9 @@ class SimpleThermostat extends LitElement {
         entity_id: this.config.entity,
         [`${type}_mode`]: mode,
       })
+      this.fire('haptic', 'light')
+    } else {
+      this.fire('haptic', 'failure')
     }
   }
 
