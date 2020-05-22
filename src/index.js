@@ -397,13 +397,13 @@ class SimpleThermostat extends LitElement {
             return html`
               <div class="main">
                 <div class="current-wrapper ${stepLayout}">
-                  <paper-icon-button
+                  <ha-icon-button
                     ?disabled=${maxTemp && value >= maxTemp}
                     class="thermostat-trigger"
                     icon=${row ? ICONS.PLUS : ICONS.UP}
                     @click="${() => this.setTemperature(this._stepSize, field)}"
                   >
-                  </paper-icon-button>
+                  </ha-icon-button>
 
                   <div
                     @click=${() => this.openEntityPopover()}
@@ -418,14 +418,14 @@ class SimpleThermostat extends LitElement {
                     </h3>
                     <span class="current--unit">${unit}</span>
                   </div>
-                  <paper-icon-button
+                  <ha-icon-button
                     ?disabled=${minTemp && value <= minTemp}
                     class="thermostat-trigger"
                     icon=${row ? ICONS.MINUS : ICONS.DOWN}
                     @click="${() =>
                       this.setTemperature(-this._stepSize, field)}"
                   >
-                  </paper-icon-button>
+                  </ha-icon-button>
                 </div>
               </div>
             `
