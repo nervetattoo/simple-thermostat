@@ -524,7 +524,7 @@ class SimpleThermostat extends LitElement {
       }
       valueCell = html`
         <div
-          class="clickable"
+          class="sensor-value clickable"
           @click="${() => this.openEntityPopover(state.entity_id)}"
         >
           ${value} ${unit || state.attributes.unit_of_measurement}
@@ -532,7 +532,7 @@ class SimpleThermostat extends LitElement {
       `
     } else {
       valueCell = html`
-        <div>${state}</div>
+        <div class="sensor-value">${state}</div>
       `
     }
 
