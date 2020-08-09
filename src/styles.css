@@ -49,12 +49,19 @@ ha-card.no-header {
     var(--paper-font-subhead_-_font-size, 16px)
   );
 }
+.sensor-value {
+  display: flex;
+  align-items: center;
+  padding-bottom: 4px;
+}
 .sensor-heading {
-  text-align: right;
   font-weight: 300;
   padding-right: 8px;
   padding-bottom: 4px;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 .sensors:empty {
   display: none;
