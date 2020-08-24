@@ -61,7 +61,8 @@ resources:
   - `_icons` _bool_: Show mode icons or not. Defaults to true
   - `_headings` _bool_: Show a heading for each mode button row. Defaults to true
   - `{type}` _object|bool_: The key of the mode type (hvac, preset, fan, swing)
-    - `_name` \_string: Override the name of the mode type
+    - `_name` _string_: Override the name of the mode type
+    - `_hide_when_off` _bool_: Hides the mode type selection row when the entity is off. Defaults to false shown
     - `{mode}` _string_: Name of mode type to conttrol
       - `name` _string|bool_: Specify a custom name or set to `false` to show only the icon
       - `icon` _string|bool_: Specify a custom icon or set to `false` to not show icon
