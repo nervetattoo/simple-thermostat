@@ -237,9 +237,10 @@ class SimpleThermostat extends LitElement {
       if (entries.length > 0) {
         controlModes = entries
           .filter(([type]) => supportedModeType(type))
-          .map(([type, { _name, ...config }]) => {
+          .map(([type, { _name, _hide_when_off, ...config }]) => {
             return {
               type,
+              hide_when_off: _hide_when_off,
               name: _name,
               list: getModeList(type, attributes, config),
             }
@@ -432,7 +433,7 @@ class SimpleThermostat extends LitElement {
           })}
         </section>
 
-        ${this.modes.map(mode => this.renderModeType(mode))}
+        ${this.modes.map(mode => this.renderModeType(entity.state, mode))}
       </ha-card>
     `
   }
@@ -458,8 +459,8 @@ class SimpleThermostat extends LitElement {
     `
   }
 
-  renderModeType({ type, mode = 'none', list, name }) {
-    if (list.length === 0) {
+  renderModeType(state, {type, hide_when_off, mode = 'none', list, name}) {
+    if (list.length === 0 || hide_when_off && state === HVAC_MODES[0]) {
       return null
     }
 
