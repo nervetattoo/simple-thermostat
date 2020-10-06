@@ -20,6 +20,7 @@ const STEP_SIZE = 0.5
 const DECIMALS = 1
 const UPDATE_PROPS = [
   'entity',
+  'toggle_entity',
   'sensors',
   '_values',
   '_updatingValues',
@@ -118,6 +119,7 @@ class SimpleThermostat extends LitElement {
       _hass: Object,
       config: Object,
       entity: Object,
+      toggle_entity: Object,
       sensors: Array,
       modes: Object,
       icon: String,
@@ -146,6 +148,7 @@ class SimpleThermostat extends LitElement {
 
     this._hass = null
     this.entity = null
+    this.toggle_entity = null
     this.icon = null
     this.sensors = []
     this._stepSize = STEP_SIZE
@@ -178,6 +181,11 @@ class SimpleThermostat extends LitElement {
     this._hass = hass
     if (this.entity !== entity) {
       this.entity = entity
+    }
+
+    const toggle_entity = hass.states[this.config.toggle_entity]
+    if (this.toggle_entity !== toggle_entity) {
+      this.toggle_entity = toggle_entity
     }
 
     const attributes = entity.attributes
@@ -455,6 +463,11 @@ class SimpleThermostat extends LitElement {
           `) ||
           ''}
         <h2 class="header__title">${this.name}</h2>
+        ${(this.toggle_entity && 
+          html`
+            <ha-entity-toggle style="margin-left: auto;" .hass="${this._hass}" .stateObj="${this.toggle_entity}"></ha-entity-toggle>
+          `) ||
+          ''}
       </header>
     `
   }
