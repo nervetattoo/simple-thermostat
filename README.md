@@ -41,6 +41,7 @@ resources:
 ## Available configuration options:
 
 - `entity` _string_: The thermostat entity id **required**
+- `toggle_entity` _string_: An entity id to create a toggle in the header for. This gives the option to control a separate entity which can be related to the thermostat entity (like a switch, or input_boolean)
 - `name` _string|false_: Override the card name, or disable showing a name at all. Default is to use the friendly_name of the thermostat provided
 - `decimals` _number_: Specify number of decimals to use: 1 or 0
 - `fallback` _string_: Specify a text to display if a valid set point can't be determined. Defaults to `N/A`
