@@ -67,7 +67,7 @@ resources:
     - `{mode}` _string_: Name of mode type to conttrol
       - `name` _string|bool_: Specify a custom name or set to `false` to show only the icon
       - `icon` _string|bool_: Specify a custom icon or set to `false` to not show icon
-- `sensors` _array_
+- `sensors` _array|false_
   - `entity` _string_: A sensor value entity id
   - `name` _string_: Specify a sensor name to use instead of the default friendly_name
   - `icon` _string_: Specify an icon to use instead of a name

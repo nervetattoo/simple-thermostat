@@ -300,7 +300,9 @@ class SimpleThermostat extends LitElement {
       this.name = entity.attributes.friendly_name
     }
 
-    if (this.config.sensors) {
+    if (this.config.sensors === false) {
+      this.sensors = false
+    } else if (this.config.sensors) {
       this.sensors = this.config.sensors.map(
         ({ name: wantedName, entity, attribute, unit = '', ...rest }) => {
           let state
@@ -360,35 +362,10 @@ class SimpleThermostat extends LitElement {
         min_temp: minTemp = null,
         max_temp: maxTemp = null,
         hvac_action: action,
-        current_temperature: current,
-        ...attributes
       },
     } = entity
 
     const unit = this._hass.config.unit_system.temperature
-
-    const sensorHtml = [
-      this.renderInfoItem(
-        _hide.temperature,
-        `${formatNumber(current, config)}${unit}`,
-        {
-          heading:
-            (this.config.label && this.config.label.temperature) ||
-            'Temperature',
-        }
-      ),
-      this.renderInfoItem(
-        _hide.state,
-        this.localize(action, 'state_attributes.climate.hvac_action.'),
-        { heading: (this.config.label && this.config.label.state) || 'State' }
-      ),
-      sensors.map(({ name, icon, state, unit }) => {
-        return (
-          state &&
-          this.renderInfoItem(false, state, { heading: name, icon, unit })
-        )
-      }) || null,
-    ].filter(it => it !== null)
 
     const stepLayout = this.config.step_layout || 'column'
     const row = stepLayout === 'row'
@@ -398,10 +375,7 @@ class SimpleThermostat extends LitElement {
       <ha-card class="${classes.join(' ')}">
         ${this.renderHeader()}
         <section class="body">
-          <div class="sensors">
-            ${sensorHtml}
-          </div>
-
+          ${this.sensors !== false ? this.renderSensors() : ''}
           ${Object.entries(_values).map(([field, value]) => {
             return html`
               <div class="main">
@@ -463,17 +437,56 @@ class SimpleThermostat extends LitElement {
           `) ||
           ''}
         <h2 class="header__title">${this.name}</h2>
-        ${(this.toggle_entity && 
+        ${(this.toggle_entity &&
           html`
-            <ha-entity-toggle style="margin-left: auto;" .hass="${this._hass}" .stateObj="${this.toggle_entity}"></ha-entity-toggle>
+            <ha-entity-toggle
+              style="margin-left: auto;"
+              .hass="${this._hass}"
+              .stateObj="${this.toggle_entity}"
+            ></ha-entity-toggle>
           `) ||
           ''}
       </header>
     `
   }
 
-  renderModeType(state, {type, hide_when_off, mode = 'none', list, name}) {
-    if (list.length === 0 || hide_when_off && state === HVAC_MODES[0]) {
+  renderSensors({ _hide, entity, sensors } = this) {
+    const {
+      state,
+      attributes: { hvac_action: action, current_temperature: current },
+    } = entity
+    const unit = this._hass.config.unit_system.temperature
+
+    const sensorHtml = [
+      this.renderInfoItem(
+        _hide.temperature,
+        `${formatNumber(current, this.config)}${unit}`,
+        {
+          heading:
+            (this.config.label && this.config.label.temperature) ||
+            'Temperature',
+        }
+      ),
+      this.renderInfoItem(
+        _hide.state,
+        this.localize(action, 'state_attributes.climate.hvac_action.'),
+        { heading: (this.config.label && this.config.label.state) || 'State' }
+      ),
+      sensors.map(({ name, icon, state, unit }) => {
+        return (
+          state &&
+          this.renderInfoItem(false, state, { heading: name, icon, unit })
+        )
+      }) || null,
+    ].filter(it => it !== null)
+
+    return html`
+      <div class="sensors">${sensorHtml}</div>
+    `
+  }
+
+  renderModeType(state, { type, hide_when_off, mode = 'none', list, name }) {
+    if (list.length === 0 || (hide_when_off && state === HVAC_MODES[0])) {
       return null
     }
 
