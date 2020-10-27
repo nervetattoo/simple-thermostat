@@ -430,24 +430,33 @@ class SimpleThermostat extends LitElement {
     }
 
     return html`
-      <header class="clickable" @click=${() => this.openEntityPopover()}>
-        ${(icon &&
-          html`
-            <ha-icon class="header__icon" .icon=${icon}></ha-icon>
-          `) ||
-          ''}
-        <h2 class="header__title">${this.name}</h2>
+      <header>
+        <header class="clickable" @click=${() => this.openEntityPopover()}>
+          ${(icon &&
+            html`
+              <ha-icon class="header__icon" .icon=${icon}></ha-icon>
+            `) ||
+            ''}
+          <h2 class="header__title">${this.name}</h2>
+        </header>
         ${(this.toggle_entity &&
           html`
-            <ha-entity-toggle
+            <ha-switch
               style="margin-left: auto;"
-              .hass="${this._hass}"
-              .stateObj="${this.toggle_entity}"
-            ></ha-entity-toggle>
+              .checked=${this.toggle_entity.state === "on"}
+              @change=${this.toggleEntityChanged}
+            ></ha-switch>
           `) ||
           ''}
       </header>
     `
+  }
+
+  toggleEntityChanged(ev) {
+    const newVal = ev.target.checked;
+    this._hass.callService('homeassistant', newVal ? 'turn_on' : 'turn_off', {
+      entity_id: this.toggle_entity.entity_id
+    });
   }
 
   renderSensors({ _hide, entity, sensors } = this) {
