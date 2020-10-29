@@ -431,14 +431,14 @@ class SimpleThermostat extends LitElement {
 
     return html`
       <header>
-        <header class="clickable" @click=${() => this.openEntityPopover()}>
+        <div style="display: flex;" class="clickable" @click=${() => this.openEntityPopover()}>
           ${(icon &&
             html`
               <ha-icon class="header__icon" .icon=${icon}></ha-icon>
             `) ||
             ''}
           <h2 class="header__title">${this.name}</h2>
-        </header>
+        </div>
         ${(this.toggle_entity &&
           html`
             <ha-switch
