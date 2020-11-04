@@ -592,7 +592,7 @@ class SimpleThermostat extends LitElement {
     this._updatingValues = true
     this._values = {
       ...this._values,
-      [field]: this._values[field] + change,
+      [field]: +formatNumber(this._values[field] + change, this.config.decimals),
     }
     this._debouncedSetTemperature({
       ...this._values,
