@@ -112,7 +112,7 @@ header {
   }
 
   &.updating {
-    color: var(--google-red-500);
+    color: var(--error-color);
   }
 }
 .current--unit {
