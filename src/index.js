@@ -366,7 +366,7 @@ class SimpleThermostat extends LitElement {
       },
     } = entity
 
-    const unit = this._hass.config.unit_system.temperature
+    const unit = this.getUnit()
 
     const stepLayout = this.config.step_layout || 'column'
     const row = stepLayout === 'row'
@@ -400,7 +400,7 @@ class SimpleThermostat extends LitElement {
                     >
                       ${formatNumber(value, config)}
                     </h3>
-                    ${!_hide.unit
+                    ${unit !== false
                       ? html`
                           <span class="current--unit">${unit}</span>
                         `
@@ -473,7 +473,7 @@ class SimpleThermostat extends LitElement {
       state,
       attributes: { hvac_action: action, current_temperature: current },
     } = entity
-    const unit = !_hide.unit ? this._hass.config.unit_system.temperature : ''
+    const unit = this.getUnit()
 
     const sensorHtml = [
       this.renderInfoItem(
@@ -644,6 +644,13 @@ class SimpleThermostat extends LitElement {
   // distribute all cards over the available columns.
   getCardSize() {
     return 3
+  }
+
+  getUnit() {
+    if (['boolean', 'string'].includes(typeof this.config.unit)) {
+      return this.config.unit
+    }
+    return this._hass.config.unit_system.temperature
   }
 }
 

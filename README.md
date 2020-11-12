@@ -43,6 +43,7 @@ resources:
 - `entity` _string_: The thermostat entity id **required**
 - `toggle_entity` _string_: An entity id to create a toggle in the header for. This gives the option to control a separate entity which can be related to the thermostat entity (like a switch, or input_boolean)
 - `name` _string|false_: Override the card name, or disable showing a name at all. Default is to use the friendly_name of the thermostat provided
+- `unit` _string|bool_: Override the unit to display. Set to false to hide unit
 - `decimals` _number_: Specify number of decimals to use: 1 or 0
 - `fallback` _string_: Specify a text to display if a valid set point can't be determined. Defaults to `N/A`
 - `icon` _string|object_: Show an icon next to the card name. You can also pass an object to specify state-specific icons. Defaults state-specific icons radiator/radiator-disabled/snowflake
@@ -57,7 +58,6 @@ resources:
 - `hide` _object_: Control specifically information fields to show. Defaults to showing everything
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
-  - `unit`: _bool_ Hide temperature unit (Default to `false`)
 - `control` _object|array_ (From 0.27)
   - `_names` _bool_: Show mode names or not. Defaults to true
   - `_icons` _bool_: Show mode icons or not. Defaults to true
