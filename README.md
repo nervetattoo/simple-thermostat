@@ -57,6 +57,7 @@ resources:
 - `hide` _object_: Control specifically information fields to show. Defaults to showing everything
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
+  - `unit`: _bool_ Hide temperature unit (Default to `false`)
 - `control` _object|array_ (From 0.27)
   - `_names` _bool_: Show mode names or not. Defaults to true
   - `_icons` _bool_: Show mode icons or not. Defaults to true

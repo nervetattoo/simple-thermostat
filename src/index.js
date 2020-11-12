@@ -70,6 +70,7 @@ const STATE_ICONS = {
 const DEFAULT_HIDE = {
   temperature: false,
   state: false,
+  unit: false,
 }
 
 function isIncluded(key, values) {
@@ -399,7 +400,11 @@ class SimpleThermostat extends LitElement {
                     >
                       ${formatNumber(value, config)}
                     </h3>
-                    <span class="current--unit">${unit}</span>
+                    ${!_hide.unit
+                      ? html`
+                          <span class="current--unit">${unit}</span>
+                        `
+                      : ''}
                   </div>
                   <ha-icon-button
                     ?disabled=${minTemp && value <= minTemp}
@@ -431,7 +436,11 @@ class SimpleThermostat extends LitElement {
 
     return html`
       <header>
-        <div style="display: flex;" class="clickable" @click=${() => this.openEntityPopover()}>
+        <div
+          style="display: flex;"
+          class="clickable"
+          @click=${() => this.openEntityPopover()}
+        >
           ${(icon &&
             html`
               <ha-icon class="header__icon" .icon=${icon}></ha-icon>
@@ -443,7 +452,7 @@ class SimpleThermostat extends LitElement {
           html`
             <ha-switch
               style="margin-left: auto;"
-              .checked=${this.toggle_entity.state === "on"}
+              .checked=${this.toggle_entity.state === 'on'}
               @change=${this.toggleEntityChanged}
             ></ha-switch>
           `) ||
@@ -453,10 +462,10 @@ class SimpleThermostat extends LitElement {
   }
 
   toggleEntityChanged(ev) {
-    const newVal = ev.target.checked;
+    const newVal = ev.target.checked
     this._hass.callService('homeassistant', newVal ? 'turn_on' : 'turn_off', {
-      entity_id: this.toggle_entity.entity_id
-    });
+      entity_id: this.toggle_entity.entity_id,
+    })
   }
 
   renderSensors({ _hide, entity, sensors } = this) {
@@ -464,7 +473,7 @@ class SimpleThermostat extends LitElement {
       state,
       attributes: { hvac_action: action, current_temperature: current },
     } = entity
-    const unit = this._hass.config.unit_system.temperature
+    const unit = !_hide.unit ? this._hass.config.unit_system.temperature : ''
 
     const sensorHtml = [
       this.renderInfoItem(
@@ -592,7 +601,10 @@ class SimpleThermostat extends LitElement {
     this._updatingValues = true
     this._values = {
       ...this._values,
-      [field]: +formatNumber(this._values[field] + change, this.config.decimals),
+      [field]: +formatNumber(
+        this._values[field] + change,
+        this.config.decimals
+      ),
     }
     this._debouncedSetTemperature({
       ...this._values,
