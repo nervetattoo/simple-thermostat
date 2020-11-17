@@ -69,8 +69,8 @@ const STATE_ICONS = {
 
 const DEFAULT_HIDE = {
   temperature: false,
+  setpoint: false,
   state: false,
-  unit: false,
 }
 
 function isIncluded(key, values) {
@@ -377,38 +377,44 @@ class SimpleThermostat extends LitElement {
         ${this.renderHeader()}
         <section class="body">
           ${this.sensors !== false ? this.renderSensors() : ''}
-          ${Object.entries(_values).map(([field, value]) => {
-            return html`
-              <div class="current-wrapper ${stepLayout}">
-                <ha-icon-button
-                  ?disabled=${maxTemp && value >= maxTemp}
-                  class="thermostat-trigger"
-                  icon=${row ? ICONS.PLUS : ICONS.UP}
-                  @click="${() => this.setTemperature(this._stepSize, field)}"
-                >
-                </ha-icon-button>
+          ${_hide.setpoint
+            ? ''
+            : Object.entries(_values).map(([field, value]) => {
+                return html`
+                  <div class="current-wrapper ${stepLayout}">
+                    <ha-icon-button
+                      ?disabled=${maxTemp && value >= maxTemp}
+                      class="thermostat-trigger"
+                      icon=${row ? ICONS.PLUS : ICONS.UP}
+                      @click="${() =>
+                        this.setTemperature(this._stepSize, field)}"
+                    >
+                    </ha-icon-button>
 
-                <h3
-                  @click=${() => this.openEntityPopover()}
-                  class="current--value ${_updatingValues ? 'updating' : ''}"
-                >
-                  ${formatNumber(value, config)}
-                  ${unit !== false
-                    ? html`
-                        <span class="current--unit">${unit}</span>
-                      `
-                    : ''}
-                </h3>
-                <ha-icon-button
-                  ?disabled=${minTemp && value <= minTemp}
-                  class="thermostat-trigger"
-                  icon=${row ? ICONS.MINUS : ICONS.DOWN}
-                  @click="${() => this.setTemperature(-this._stepSize, field)}"
-                >
-                </ha-icon-button>
-              </div>
-            `
-          })}
+                    <h3
+                      @click=${() => this.openEntityPopover()}
+                      class="current--value ${_updatingValues
+                        ? 'updating'
+                        : ''}"
+                    >
+                      ${formatNumber(value, config)}
+                      ${unit !== false
+                        ? html`
+                            <span class="current--unit">${unit}</span>
+                          `
+                        : ''}
+                    </h3>
+                    <ha-icon-button
+                      ?disabled=${minTemp && value <= minTemp}
+                      class="thermostat-trigger"
+                      icon=${row ? ICONS.MINUS : ICONS.DOWN}
+                      @click="${() =>
+                        this.setTemperature(-this._stepSize, field)}"
+                    >
+                    </ha-icon-button>
+                  </div>
+                `
+              })}
         </section>
 
         ${this.modes.map(mode => this.renderModeType(entity.state, mode))}

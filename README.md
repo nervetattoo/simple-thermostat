@@ -56,6 +56,7 @@ resources:
   - `temperature`: _string_ Override Temperature label
   - `state`: _string_ Override State label
 - `hide` _object_: Control specifically information fields to show. Defaults to showing everything
+  - `setpoint`: _bool_ (Default to `false`)
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
 - `control` _object|array_ (From 0.27)
