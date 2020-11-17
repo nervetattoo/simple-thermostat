@@ -33,12 +33,6 @@ ha-card.no-header {
   padding: 0 calc(var(--st-spacing, var(--st-default-spacing)) * 4);
   padding-bottom: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
 }
-.main {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-}
 
 .sensors {
   display: grid;
@@ -92,23 +86,24 @@ header {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  flex-wrap: wrap;
 
   &.row {
     flex-direction: row-reverse;
   }
 }
-.current--value-wrapper {
+.current--value {
   display: flex;
   align-items: center;
-}
-.current--value {
   margin: 0;
   font-weight: 400;
-  line-height: var(--st-font-size-l, var(--paper-font-display2_-_font-size));
-  font-size: var(--st-font-size-l, var(--paper-font-display2_-_font-size));
+  line-height: var(--st-font-size-l, var(--paper-font-display1_-_font-size));
+  font-size: var(--st-font-size-l, var(--paper-font-display1_-_font-size));
   @media (--vp-m) {
-    font-size: var(--st-font-size-xl, var(--paper-font-display3_-_font-size));
-    line-height: var(--st-font-size-xl, var(--paper-font-display3_-_font-size));
+    font-size: var(--st-font-size-xl, var(--paper-font-display2_-_font-size));
+    line-height: var(--st-font-size-xl, var(--paper-font-display2_-_font-size));
   }
 
   &.updating {
