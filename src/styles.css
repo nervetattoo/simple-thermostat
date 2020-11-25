@@ -169,3 +169,10 @@ header {
   --iron-icon-height: 24px;
   display: block;
 }
+.side-by-side {
+  display: flex;
+}
+.side-by-side > * {
+  flex: 1;
+  padding-right: 4px;
+}

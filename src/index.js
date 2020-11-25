@@ -7,6 +7,10 @@ import styles from './styles.css'
 import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
 
+import SimpleThermostatEditor from './editor'
+
+customElements.define('simple-thermostat-editor', SimpleThermostatEditor)
+
 function printVersion(version) {
   console.info(`%c${name}: ${version}`, 'font-weight: bold')
 }
@@ -161,6 +165,10 @@ class SimpleThermostat extends LitElement {
       icons: true,
       headings: true,
     }
+  }
+
+  static getConfigElement() {
+    return window.document.createElement('simple-thermostat-editor')
   }
 
   setConfig(config) {
@@ -654,3 +662,12 @@ class SimpleThermostat extends LitElement {
 window.customElements.define('simple-thermostat', SimpleThermostat)
 
 export default SimpleThermostat
+
+// Configures the preview in the Lovelace card picker
+window.customCards = window.customCards || []
+window.customCards.push({
+  type: 'simple-thermostat',
+  name: 'Simple Thermostat',
+  preview: false,
+  description: 'A different take on the thermostat card',
+})
