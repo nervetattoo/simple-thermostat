@@ -301,6 +301,12 @@ class SimpleThermostat extends LitElement {
       this._hide = { ...this._hide, ...this.config.hide }
     }
 
+    if (this.config.show_header === false) {
+      this.show_header = false
+    } else {
+      this.show_header = true
+    }
+
     if (typeof this.config.name === 'string') {
       this.name = this.config.name
     } else if (this.config.name === false) {
@@ -431,7 +437,7 @@ class SimpleThermostat extends LitElement {
   }
 
   renderHeader() {
-    if (this.name === false) return ''
+    if (this.show_header === false) return ''
 
     let icon = this.icon
     const { hvac_action: action } = this.entity.attributes

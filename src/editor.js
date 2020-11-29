@@ -17,6 +17,11 @@ const OptionsDecimals = ['0', '1']
 
 const OptionsStepLayout = ['column', 'row']
 
+const includeDomains = ['climate']
+
+const GithubReadMe =
+  'https://github.com/nervetattoo/simple-thermostat/blob/master/README.md'
+
 export default class SimpleThermostatEditor extends LitElement {
   static get styles() {
     return styles
@@ -30,14 +35,16 @@ export default class SimpleThermostatEditor extends LitElement {
     this.config = config
   }
 
-  get getClimateEntities() {
-    return Object.keys(this.hass.states).filter(
-      eid => eid.substr(0, eid.indexOf('.')) === 'climate'
-    )
+  _openLink() {
+    window.open(GithubReadMe)
   }
 
-  get getEntities() {
-    return Object.keys(this.hass.states)
+  get _show_header() {
+    if (this.config.show_header === false) {
+      return false
+    } else {
+      return true
+    }
   }
 
   render() {
@@ -47,66 +54,48 @@ export default class SimpleThermostatEditor extends LitElement {
       <div class="card-config">
         <div class="overall-config">
           <div class="side-by-side">
-            <paper-dropdown-menu
+            <ha-entity-picker
               label="Entity (required)"
-              .configValue="${'entity'}"
-              @value-changed="${this.valueChanged}"
-            >
-              <paper-listbox
-                slot="dropdown-content"
-                .selected="${this.getClimateEntities.indexOf(
-                  this.config.entity
-                )}"
-              >
-                ${this.getClimateEntities.map(
-                  entity =>
-                    html`
-                      <paper-item>${entity}</paper-item>
-                    `
-                )}
-              </paper-listbox>
-            </paper-dropdown-menu>
+              .hass=${this.hass}
+              .value="${this.config.entity}"
+              .configValue=${'entity'}
+              .includeDomains=${includeDomains}
+              @change="${this.valueChanged}"
+              allow-custom-entity
+            ></ha-entity-picker>
 
-            <paper-dropdown-menu
-              label="Toggle Entity"
-              .configValue="${'toggle_entity'}"
-              @value-changed="${this.valueChanged}"
-            >
-              <paper-listbox
-                slot="dropdown-content"
-                .selected="${this.getEntities.indexOf(
-                  this.config.toggle_entity
-                )}"
-              >
-                ${this.getEntities.map(
-                  entity =>
-                    html`
-                      <paper-item>${entity}</paper-item>
-                    `
-                )}
-              </paper-listbox>
-            </paper-dropdown-menu>
+            <mwc-button @click=${this._openLink}>
+              Configuration Options
+            </mwc-button>
           </div>
 
           <div class="side-by-side">
             <paper-input
-              label="Name"
+              label="Name (optional)"
               .value="${this.config.name}"
               .configValue="${'name'}"
               @value-changed="${this.valueChanged}"
             ></paper-input>
 
-            <paper-input
-              label="Icon"
+            <ha-icon-input
+              label="Icon (optional)"
               .value="${this.config.icon}"
-              .configValue="${'icon'}"
-              @value-changed="${this.valueChanged}"
-            ></paper-input>
+              .configValue=${'icon'}
+              @value-changed=${this.valueChanged}
+            ></ha-icon-input>
           </div>
+
+          <ha-formfield label="Show Name and Icon?">
+            <ha-switch
+              .checked=${this._show_header}
+              .configValue="${'show_header'}"
+              @change=${this.valueChanged}
+            ></ha-switch>
+          </ha-formfield>
 
           <div class="side-by-side">
             <paper-dropdown-menu
-              label="Decimals"
+              label="Decimals (optional)"
               .configValue=${'decimals'}
               @value-changed="${this.valueChanged}"
               class="dropdown"
@@ -127,7 +116,7 @@ export default class SimpleThermostatEditor extends LitElement {
             </paper-dropdown-menu>
 
             <paper-input
-              label="Unit"
+              label="Unit (optional)"
               .value="${this.config.unit}"
               .configValue="${'unit'}"
               @value-changed="${this.valueChanged}"
@@ -135,15 +124,26 @@ export default class SimpleThermostatEditor extends LitElement {
           </div>
 
           <div class="side-by-side">
+            <ha-entity-picker
+              label="Toggle Entity (optional)"
+              .hass=${this.hass}
+              .value="${this.toggle_entity}"
+              .configValue=${'toggle_entity'}
+              @change="${this.valueChanged}"
+              allow-custom-entity
+            ></ha-entity-picker>
+
             <paper-input
-              label="Step Size"
-              .value="${this.config.step_size}"
-              .configValue="${'step_size'}"
+              label="Fallback Text (optional)"
+              .value="${this.config.fallback}"
+              .configValue="${'fallback'}"
               @value-changed="${this.valueChanged}"
             ></paper-input>
+          </div>
 
+          <div class="side-by-side">
             <paper-dropdown-menu
-              label="Step Layout"
+              label="Step Layout (optional)"
               .configValue=${'step_layout'}
               @value-changed="${this.valueChanged}"
               class="dropdown"
@@ -162,15 +162,19 @@ export default class SimpleThermostatEditor extends LitElement {
                 )}
               </paper-listbox>
             </paper-dropdown-menu>
-          </div>
 
-          <div class="side-by-side">
-            <paper-input
-              label="Fallback"
-              .value="${this.config.fallback}"
-              .configValue="${'fallback'}"
-              @value-changed="${this.valueChanged}"
-            ></paper-input>
+            <div class="side-by-side">
+              Step Size (optional)
+              <paper-slider
+                value=${this.config.step_size}
+                .configValue=${'step_size'}
+                @value-changed=${this.valueChanged}
+                max="10"
+                step="0.1"
+                editable
+                pin
+              ></paper-slider>
+            </div>
           </div>
 
           <div>
