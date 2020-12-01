@@ -49,7 +49,7 @@ const ICONS = {
   MINUS: 'mdi:minus',
 }
 
-const modeIcons = {
+const MODE_ICONS = {
   off: 'hass:power',
   auto: 'hass:autorenew',
   heat: 'hass:fire',
@@ -102,7 +102,7 @@ function getModeList(type, attributes, config = {}) {
       const { include, ...values } =
         typeof config[name] === 'object' ? config[name] : {}
       return {
-        icon: modeIcons[name],
+        icon: MODE_ICONS[name],
         value: name,
         name,
         ...values,
