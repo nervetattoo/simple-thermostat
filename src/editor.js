@@ -15,6 +15,8 @@ const fireEvent = (node, type, detail = {}, options = {}) => {
 
 const OptionsDecimals = ['0', '1']
 
+const OptionsStepSize = ['0.5', '1']
+
 const OptionsStepLayout = ['column', 'row']
 
 const includeDomains = ['climate']
@@ -63,10 +65,6 @@ export default class SimpleThermostatEditor extends LitElement {
               @change="${this.valueChanged}"
               allow-custom-entity
             ></ha-entity-picker>
-
-            <mwc-button @click=${this._openLink}>
-              Configuration Options
-            </mwc-button>
           </div>
 
           <div class="side-by-side">
@@ -163,21 +161,33 @@ export default class SimpleThermostatEditor extends LitElement {
               </paper-listbox>
             </paper-dropdown-menu>
 
-            <div class="side-by-side">
-              Step Size (optional)
-              <paper-slider
-                value=${this.config.step_size}
-                .configValue=${'step_size'}
-                @value-changed=${this.valueChanged}
-                max="10"
-                step="0.1"
-                editable
-                pin
-              ></paper-slider>
-            </div>
+            <paper-dropdown-menu
+              label="Step Size (optional)"
+              .configValue=${'step_size'}
+              @value-changed="${this.valueChanged}"
+              class="dropdown"
+            >
+              <paper-listbox
+                slot="dropdown-content"
+                .selected=${Object.values(OptionsStepSize).indexOf(
+                  this.config.step_size
+                )}
+              >
+                ${Object.values(OptionsStepSize).map(
+                  item =>
+                    html`
+                      <paper-item>${item}</paper-item>
+                    `
+                )}
+              </paper-listbox>
+            </paper-dropdown-menu>
           </div>
 
-          <div>
+          <div class="side-by-side">
+            <mwc-button @click=${this._openLink}>
+              Configuration Options
+            </mwc-button>
+
             Settings for label, control, sensors and hiding UI elements can only
             be configured in the code editor
           </div>

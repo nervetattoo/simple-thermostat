@@ -437,7 +437,7 @@ class SimpleThermostat extends LitElement {
   }
 
   renderHeader() {
-    if (this.show_header === false) return ''
+    if (this.show_header === false || this.name === false) return ''
 
     let icon = this.icon
     const { hvac_action: action } = this.entity.attributes
