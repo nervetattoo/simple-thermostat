@@ -283,7 +283,11 @@ class SimpleThermostat extends LitElement {
     if (typeof this.config.icon !== 'undefined') {
       this.icon = this.config.icon
     } else {
-      this.icon = STATE_ICONS
+      if (this.entity.attributes.hvac_action) {
+        this.icon = STATE_ICONS
+      } else {
+        this.icon = MODE_ICONS
+      }
     }
 
     if (this.config.step_size) {
@@ -427,7 +431,7 @@ class SimpleThermostat extends LitElement {
     if (this.name === false) return ''
 
     let icon = this.icon
-    const { hvac_action: action } = this.entity.attributes
+    const action = this.entity.attributes.hvac_action || this.entity.state
     if (typeof this.icon === 'object') {
       icon = action in this.icon ? this.icon[action] : false
     }
