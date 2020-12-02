@@ -280,14 +280,16 @@ class SimpleThermostat extends LitElement {
       return { ...values, mode }
     })
 
-    if (typeof this.config.icon !== 'undefined') {
-      this.icon = this.config.icon
-    } else {
+    if (typeof this.config.icon === 'undefined') {
       if (this.entity.attributes.hvac_action) {
         this.icon = STATE_ICONS
       } else {
         this.icon = MODE_ICONS
       }
+    } else if (this.config.name === false) {
+      this.icon = false;
+    } else {
+      this.icon = this.config.icon
     }
 
     if (this.config.step_size) {
@@ -376,7 +378,7 @@ class SimpleThermostat extends LitElement {
     const stepLayout = this.config.step_layout || 'column'
     const row = stepLayout === 'row'
 
-    const classes = [!this.name && 'no-header', action].filter(cx => !!cx)
+    const classes = [(!this.name && !this.icon) && 'no-header', action].filter(cx => !!cx)
     return html`
       <ha-card class="${classes.join(' ')}">
         ${this.renderHeader()}
@@ -428,12 +430,15 @@ class SimpleThermostat extends LitElement {
   }
 
   renderHeader() {
-    if (this.name === false) return ''
+    console.log(this.name, this.icon)
+    if (this.name === false && this.icon === false) return ''
 
     let icon = this.icon
-    const action = this.entity.attributes.hvac_action || this.entity.state
-    if (typeof this.icon === 'object') {
-      icon = action in this.icon ? this.icon[action] : false
+    if (this.icon) {
+      const action = this.entity.attributes.hvac_action || this.entity.state
+      if (typeof this.icon === 'object') {
+        icon = action in this.icon ? this.icon[action] : false
+      }
     }
 
     return html`
@@ -447,8 +452,12 @@ class SimpleThermostat extends LitElement {
             html`
               <ha-icon class="header__icon" .icon=${icon}></ha-icon>
             `) ||
-            ''}
-          <h2 class="header__title">${this.name}</h2>
+          ''}
+          ${(this.name &&
+            html`
+              <h2 class="header__title">${this.name}</h2>
+            `) ||
+          ''}
         </div>
         ${(this.toggle_entity &&
           html`

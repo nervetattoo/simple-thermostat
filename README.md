@@ -46,7 +46,7 @@ resources:
 - `unit` _string|bool_: Override the unit to display. Set to false to hide unit
 - `decimals` _number_: Specify number of decimals to use: 1 or 0
 - `fallback` _string_: Specify a text to display if a valid set point can't be determined. Defaults to `N/A`
-- `icon` _string|object_: Show an icon next to the card name. You can also pass an object to specify specific icons. Current value is taken from attributes.hvac_action when available, or state as fallback.
+- `icon` _string|object|false: Show an icon next to the card name, or disable showing a icon at all. You can also pass an object to specify specific icons. Current value is taken from attributes.hvac_action when available, or state as fallback.
   - `auto`: _string_ Use this icon for hvac_action auto. Default mdi:radiator
   - `cooling`: _string_ Use this icon for hvac_action cooling. Default mdi:snowflake
   - `fan`: _string_ Use this icon for hvac_action fan. Default mdi:fan
