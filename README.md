@@ -46,10 +46,20 @@ resources:
 - `unit` _string|bool_: Override the unit to display. Set to false to hide unit
 - `decimals` _number_: Specify number of decimals to use: 1 or 0
 - `fallback` _string_: Specify a text to display if a valid set point can't be determined. Defaults to `N/A`
-- `icon` _string|object_: Show an icon next to the card name. You can also pass an object to specify state-specific icons. Defaults state-specific icons radiator/radiator-disabled/snowflake
-  - `idle`: _string_: Use this icon for state idle
-  - `heating`: _string_ Use this icon for state heating
-  - `cool`: _string_ Use this icon for state cool
+- `icon` _string|object_: Show an icon next to the card name. You can also pass an object to specify specific icons. Current value is taken from attributes.hvac_action when available, or state as fallback.
+  - `auto`: _string_ Use this icon for hvac_action auto. Default mdi:radiator
+  - `cooling`: _string_ Use this icon for hvac_action cooling. Default mdi:snowflake
+  - `fan`: _string_ Use this icon for hvac_action fan. Default mdi:fan
+  - `heating`: _string_ Use this icon for hvac_action heating. Default mdi:radiator
+  - `idle`: _string_: Use this icon for hvac_action idle. Default mdi:radiator-disabled
+  - `"off"`: _string_ Use this icon for hvac_action off. Default mdi:radiator-off
+  - `auto`: _string_ Use this icon for state auto. Default hass:autorenew
+  - `cool`: _string_ Use this icon for state cooling. Default hass:snowflake
+  - `dry`: _string_: Use this icon for state dry. Default hass:water-percent
+  - `fan_only`: _string_ Use this icon for state fan. Default hass:fan
+  - `heat`: _string_ Use this icon for state heat. Default hass:autorenew
+  - `heat_cool`: _string_: Use this icon for state heat_cool. Default hass:fire
+  - `"off"`: _string_ Use this icon for state off. Default hass:power
 - `step_size` _number_: Override the default 0.5 step size for increasing/decreasing the temperature
 - `step_layout` _string_: `row` or `column` (default). Using `row` will make the card more compact
 - `label` _object_: Override untranslated labels
