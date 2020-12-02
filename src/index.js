@@ -50,13 +50,13 @@ const ICONS = {
 }
 
 const MODE_ICONS = {
-  off: 'hass:power',
   auto: 'hass:autorenew',
-  heat: 'hass:fire',
-  heat_cool: 'hass:autorenew',
   cool: 'hass:snowflake',
-  fan_only: 'hass:fan',
   dry: 'hass:water-percent',
+  fan_only: 'hass:fan',
+  heat_cool: 'hass:autorenew',
+  heat: 'hass:fire',
+  off: 'hass:power',
 }
 
 const STATE_ICONS = {
