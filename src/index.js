@@ -53,22 +53,23 @@ const ICONS = {
   MINUS: 'mdi:minus',
 }
 
-const modeIcons = {
-  off: 'hass:power',
+const MODE_ICONS = {
   auto: 'hass:autorenew',
-  heat: 'hass:fire',
-  heat_cool: 'hass:autorenew',
   cool: 'hass:snowflake',
-  fan_only: 'hass:fan',
   dry: 'hass:water-percent',
+  fan_only: 'hass:fan',
+  heat_cool: 'hass:autorenew',
+  heat: 'hass:fire',
+  off: 'hass:power',
 }
 
 const STATE_ICONS = {
-  off: 'mdi:radiator-off',
-  idle: 'mdi:radiator-disabled',
-  heating: 'mdi:radiator',
-  cool: 'mdi:snowflake',
   auto: 'mdi:radiator',
+  cooling: 'mdi:snowflake',
+  fan: 'mdi:fan',
+  heating: 'mdi:radiator',
+  idle: 'mdi:radiator-disabled',
+  off: 'mdi:radiator-off',
 }
 
 const DEFAULT_HIDE = {
@@ -105,7 +106,7 @@ function getModeList(type, attributes, config = {}) {
       const { include, ...values } =
         typeof config[name] === 'object' ? config[name] : {}
       return {
-        icon: modeIcons[name],
+        icon: MODE_ICONS[name],
         value: name,
         name,
         ...values,
@@ -290,7 +291,11 @@ class SimpleThermostat extends LitElement {
     if (typeof this.config.icon !== 'undefined') {
       this.icon = this.config.icon
     } else {
-      this.icon = STATE_ICONS
+      if (this.entity.attributes.hvac_action) {
+        this.icon = STATE_ICONS
+      } else {
+        this.icon = MODE_ICONS
+      }
     }
 
     if (this.config.step_size) {
@@ -440,7 +445,7 @@ class SimpleThermostat extends LitElement {
     if (this.show_header === false || this.name === false) return ''
 
     let icon = this.icon
-    const { hvac_action: action } = this.entity.attributes
+    const action = this.entity.attributes.hvac_action || this.entity.state
     if (typeof this.icon === 'object') {
       icon = action in this.icon ? this.icon[action] : false
     }
