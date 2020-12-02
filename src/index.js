@@ -7,6 +7,10 @@ import styles from './styles.css'
 import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
 
+import SimpleThermostatEditor from './editor'
+
+customElements.define('simple-thermostat-editor', SimpleThermostatEditor)
+
 function printVersion(version) {
   console.info(`%c${name}: ${version}`, 'font-weight: bold')
 }
@@ -163,6 +167,10 @@ class SimpleThermostat extends LitElement {
     }
   }
 
+  static getConfigElement() {
+    return window.document.createElement('simple-thermostat-editor')
+  }
+
   setConfig(config) {
     if (!config.entity) {
       throw new Error('You need to define an entity')
@@ -291,6 +299,12 @@ class SimpleThermostat extends LitElement {
 
     if (this.config.hide) {
       this._hide = { ...this._hide, ...this.config.hide }
+    }
+
+    if (this.config.show_header === false) {
+      this.show_header = false
+    } else {
+      this.show_header = true
     }
 
     if (typeof this.config.name === 'string') {
@@ -423,7 +437,7 @@ class SimpleThermostat extends LitElement {
   }
 
   renderHeader() {
-    if (this.name === false) return ''
+    if (this.show_header === false || this.name === false) return ''
 
     let icon = this.icon
     const { hvac_action: action } = this.entity.attributes
@@ -654,3 +668,12 @@ class SimpleThermostat extends LitElement {
 window.customElements.define('simple-thermostat', SimpleThermostat)
 
 export default SimpleThermostat
+
+// Configures the preview in the Lovelace card picker
+window.customCards = window.customCards || []
+window.customCards.push({
+  type: 'simple-thermostat',
+  name: 'Simple Thermostat',
+  preview: false,
+  description: 'A different take on the thermostat card',
+})
