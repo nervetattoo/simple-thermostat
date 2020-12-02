@@ -556,7 +556,7 @@ class SimpleThermostat extends LitElement {
         ${list.map(
           ({ value, icon, name }) => html`
             <div
-              class="mode-item ${value === mode ? 'active' : ''}"
+              class="mode-item ${value === mode ? 'active ' + mode : ''}"
               @click=${() => this.setMode(type, value)}
             >
               ${maybeRenderIcon(icon)} ${maybeRenderName(name)}
