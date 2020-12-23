@@ -27,6 +27,15 @@ Home Assistant 0.84 or higher
 
 ## Installation
 
+1. Install via [HACS](https://hacs.xyz/).
+2. Add to resources:
+    ```yaml
+   url: /local/community/simple-thermostat.js?v=1
+   type: module
+    ```
+
+<details>
+   <summary>Manual install</summary>
 1. Download the `simple-thermostat.js` from the [latest release](https://github.com/nervetattoo/simple-thermostat/releases/latest) and store it in your `configuration/www` folder.
    _Previously you could download the source file from Github but starting from the 0.14 release that is no longer possible. If you try to do so it will crash_
 2. Configure Lovelace to load the card:
@@ -36,6 +45,7 @@ resources:
   - url: /local/simple-thermostat.js?v=1
     type: module
 ```
+</details>
 
 ## Available configuration options:
 
