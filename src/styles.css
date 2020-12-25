@@ -37,7 +37,7 @@ ha-card.no-header {
 .body {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 1fr;
+  grid-auto-columns: auto;
   place-items: center;
   padding: 0 calc(var(--st-spacing, var(--st-default-spacing)) * 4);
   padding-bottom: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
@@ -45,7 +45,7 @@ ha-card.no-header {
 
 .sensors {
   display: grid;
-  grid: auto-flow / 1fr 2fr;
+  grid: auto-flow / auto auto;
   grid-gap: var(--st-spacing, var(--st-default-spacing));
   font-size: var(
     --st-font-size-sensors,
