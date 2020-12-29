@@ -99,8 +99,8 @@ function isIncluded(key, values) {
 
 function getModeList(type, attributes, config = {}) {
   return attributes[`${type}_modes`]
-    .filter(name => isIncluded(name, config))
-    .map(name => {
+    .filter((name) => isIncluded(name, config))
+    .map((name) => {
       // Grab all values sans the possible include prop
       // and stuff it into an  object
       const { include, ...values } =
@@ -141,7 +141,7 @@ class SimpleThermostat extends LitElement {
     super()
 
     this._debouncedSetTemperature = debounce(
-      values => {
+      (values) => {
         this._hass.callService('climate', 'set_temperature', {
           entity_id: this.config.entity,
           ...values,
@@ -224,10 +224,10 @@ class SimpleThermostat extends LitElement {
       this._values = values
     }
 
-    const supportedModeType = type =>
+    const supportedModeType = (type) =>
       MODE_TYPES.includes(type) && attributes[`${type}_modes`]
-    const buildBasicModes = items => {
-      return items.filter(supportedModeType).map(type => ({
+    const buildBasicModes = (items) => {
+      return items.filter(supportedModeType).map((type) => ({
         type,
         list: getModeList(type, attributes, {}),
       }))
@@ -271,10 +271,10 @@ class SimpleThermostat extends LitElement {
     }
 
     // Decorate mode types with active value and set to this.modes
-    this.modes = controlModes.map(values => {
+    this.modes = controlModes.map((values) => {
       if (values.type === 'hvac') {
         const sortedList = []
-        values.list.forEach(item => {
+        values.list.forEach((item) => {
           const index = HVAC_MODES.indexOf(item.value)
           sortedList[index] = item
         })
@@ -299,7 +299,7 @@ class SimpleThermostat extends LitElement {
     }
 
     if (this.config.step_size) {
-      this._stepSize = this.config.step_size
+      this._stepSize = +this.config.step_size
     }
 
     if (this.config.hide) {
@@ -343,7 +343,7 @@ class SimpleThermostat extends LitElement {
 
           return {
             ...rest,
-            name: name.find(n => !!n),
+            name: name.find((n) => !!n),
             state,
             entity,
             unit,
@@ -354,7 +354,7 @@ class SimpleThermostat extends LitElement {
   }
 
   shouldUpdate(changedProps) {
-    return UPDATE_PROPS.some(prop => changedProps.has(prop))
+    return UPDATE_PROPS.some((prop) => changedProps.has(prop))
   }
 
   localize(label, prefix = '') {
@@ -370,9 +370,7 @@ class SimpleThermostat extends LitElement {
   ) {
     if (!entity) {
       return html`
-        <hui-warning>
-          Entity not available: ${config.entity}
-        </hui-warning>
+        <hui-warning> Entity not available: ${config.entity} </hui-warning>
       `
     }
 
@@ -390,7 +388,9 @@ class SimpleThermostat extends LitElement {
     const stepLayout = this.config.step_layout || 'column'
     const row = stepLayout === 'row'
 
-    const classes = [!this.show_header && 'no-header', action].filter(cx => !!cx)
+    const classes = [!this.show_header && 'no-header', action].filter(
+      (cx) => !!cx
+    )
     return html`
       <ha-card class="${classes.join(' ')}">
         ${this.renderHeader()}
@@ -418,9 +418,7 @@ class SimpleThermostat extends LitElement {
                     >
                       ${formatNumber(value, config)}
                       ${unit !== false
-                        ? html`
-                            <span class="current--unit">${unit}</span>
-                          `
+                        ? html` <span class="current--unit">${unit}</span> `
                         : ''}
                     </h3>
                     <ha-icon-button
@@ -436,7 +434,7 @@ class SimpleThermostat extends LitElement {
               })}
         </section>
 
-        ${this.modes.map(mode => this.renderModeType(entity.state, mode))}
+        ${this.modes.map((mode) => this.renderModeType(entity.state, mode))}
       </ha-card>
     `
   }
@@ -458,10 +456,8 @@ class SimpleThermostat extends LitElement {
           @click=${() => this.openEntityPopover()}
         >
           ${(icon &&
-            html`
-              <ha-icon class="header__icon" .icon=${icon}></ha-icon>
-            `) ||
-            ''}
+            html` <ha-icon class="header__icon" .icon=${icon}></ha-icon> `) ||
+          ''}
           <h2 class="header__title">${this.name}</h2>
         </div>
         ${(this.toggle_entity &&
@@ -472,7 +468,7 @@ class SimpleThermostat extends LitElement {
               @change=${this.toggleEntityChanged}
             ></ha-switch>
           `) ||
-          ''}
+        ''}
       </header>
     `
   }
@@ -512,11 +508,9 @@ class SimpleThermostat extends LitElement {
           this.renderInfoItem(false, state, { heading: name, icon, unit })
         )
       }) || null,
-    ].filter(it => it !== null)
+    ].filter((it) => it !== null)
 
-    return html`
-      <div class="sensors">${sensorHtml}</div>
-    `
+    return html` <div class="sensors">${sensorHtml}</div> `
   }
 
   renderModeType(state, { type, hide_when_off, mode = 'none', list, name }) {
@@ -529,17 +523,15 @@ class SimpleThermostat extends LitElement {
       localizePrefix = `state.climate.`
     }
 
-    const maybeRenderName = name => {
+    const maybeRenderName = (name) => {
       if (name === false) return null
       if (this.modeOptions.names === false) return null
       return this.localize(name, localizePrefix)
     }
-    const maybeRenderIcon = icon => {
+    const maybeRenderIcon = (icon) => {
       if (!icon) return null
       if (this.modeOptions.icons === false) return null
-      return html`
-        <ha-icon class="mode-icon" .icon=${icon}></ha-icon>
-      `
+      return html` <ha-icon class="mode-icon" .icon=${icon}></ha-icon> `
     }
 
     const str = type == 'hvac' ? 'operation' : `${type}_mode`
@@ -548,11 +540,7 @@ class SimpleThermostat extends LitElement {
 
     return html`
       <div class="modes ${headings ? 'heading' : ''}">
-        ${headings
-          ? html`
-              <div class="mode-title">${title}</div>
-            `
-          : null}
+        ${headings ? html` <div class="mode-title">${title}</div> ` : null}
         ${list.map(
           ({ value, icon, name }) => html`
             <div
@@ -592,20 +580,14 @@ class SimpleThermostat extends LitElement {
         </div>
       `
     } else {
-      valueCell = html`
-        <div class="sensor-value">${state}</div>
-      `
+      valueCell = html` <div class="sensor-value">${state}</div> `
     }
 
     let headingCell
     if (icon) {
-      heading = html`
-        <ha-icon icon="${icon}"></ha-icon>
-      `
+      heading = html` <ha-icon icon="${icon}"></ha-icon> `
     } else {
-      heading = html`
-        ${heading}:
-      `
+      heading = html` ${heading}: `
     }
     return html`
       <div class="sensor-heading">${heading}</div>
