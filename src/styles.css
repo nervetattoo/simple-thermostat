@@ -28,12 +28,6 @@ ha-card.no-header {
   padding: calc(var(--st-spacing, var(--st-default-spacing)) * 4) 0;
 }
 
-.not-found {
-  flex: 1;
-  background-color: yellow;
-  padding: calc(var(--st-spacing, var(--st-default-spacing)) * 4);
-}
-
 .body {
   display: grid;
   grid-auto-flow: column;
