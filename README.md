@@ -30,7 +30,7 @@ Home Assistant 0.84 or higher
 1. Install via [HACS](https://hacs.xyz/).
 2. Add to resources:
     ```yaml
-   url: /local/community/simple-thermostat.js?v=1
+   url: /hacsfiles/simple-thermostat/simple-thermostat.js
    type: module
     ```
 
