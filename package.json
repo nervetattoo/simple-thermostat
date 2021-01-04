@@ -16,6 +16,7 @@
     "@babel/core": "^7.12.10",
     "@rollup/plugin-commonjs": "^17.0.0",
     "ava": "^3.13.0",
+    "cross-env": "^7.0.3",
     "husky": "^4.3.6",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.2.1",
@@ -33,7 +34,7 @@
   "scripts": {
     "release": "release-it",
     "test": "ava",
-    "build": "NODE_ENV=production rollup -c",
+    "build": "cross-env NODE_ENV=production rollup -c",
     "dist": "yarn build && cp simple-thermostat.js $HA_MOUNT/www/simple-thermostat.js"
   },
   "husky": {
