@@ -29,10 +29,10 @@ Home Assistant 0.84 or higher
 
 1. Install via [HACS](https://hacs.xyz/).
 2. Add to resources:
-    ```yaml
+   ```yaml
    url: /hacsfiles/simple-thermostat/simple-thermostat.js
    type: module
-    ```
+   ```
 
 <details>
    <summary>Manual install</summary>
@@ -45,6 +45,7 @@ resources:
   - url: /local/simple-thermostat.js?v=1
     type: module
 ```
+
 </details>
 
 ## Available configuration options:
@@ -97,6 +98,10 @@ resources:
   - `icon` _string_: Specify an icon to use instead of a name
   - `attribute` _string_: The key for an attribute to use instead of state. If this sensor has no entity it will use the main entity's attributes
   - `unit` _string_: When specifying an attribute you can manually set the unit to display
+- `faults` _array|false_: Show fault conditions as active/inactive icons in the header
+  - `entity` _string_: A binary sensor entity id
+  - `icon` _string_: Override the entity icon
+  - `hide_inactive` _bool_: Hide the fault icon when inactive (Default to `false`)
 
 ## Usage of the control config
 
@@ -160,6 +165,10 @@ cards:
         name: Energy today
       - attribute: min_temp
         name: Min temp
+    faults:
+      - entity: binary_sensor.my_room_communications_fault
+      - entity: binary_sensor.my_room_low_battery_fault
+        icon: mdi:battery-low
     toggle_entity: switch.pump_relay
     control:
       hvac:
@@ -202,6 +211,8 @@ The card uses the following CSS variables:
 | --st-mode-background        | #dff4fd                                 | Background color for inactive mode button            |
 | --st-toggle-label-color     | var(--text-primary-color)               | Text color for toggle label                          |
 | --st-font-size-toggle-label | var(--paper-font-subhead\_-_font-size)  | Font size for toggle label                           |
+| --st-fault-inactive-color   | var(--secondary-background-color)       | Icon color for inactive faults                       |
+| --st-fault-active-color     | var(--accent-color)                     | Icon color for active faults                         |
 
 These variables can be changed globally in the current theme or on each card via card-mod.
 

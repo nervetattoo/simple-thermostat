@@ -105,10 +105,7 @@ export default class SimpleThermostatEditor extends LitElement {
                 )}
               >
                 ${Object.values(OptionsDecimals).map(
-                  item =>
-                    html`
-                      <paper-item>${item}</paper-item>
-                    `
+                  (item) => html` <paper-item>${item}</paper-item> `
                 )}
               </paper-listbox>
             </paper-dropdown-menu>
@@ -153,10 +150,7 @@ export default class SimpleThermostatEditor extends LitElement {
                 )}
               >
                 ${Object.values(OptionsStepLayout).map(
-                  item =>
-                    html`
-                      <paper-item>${item}</paper-item>
-                    `
+                  (item) => html` <paper-item>${item}</paper-item> `
                 )}
               </paper-listbox>
             </paper-dropdown-menu>
@@ -174,10 +168,7 @@ export default class SimpleThermostatEditor extends LitElement {
                 )}
               >
                 ${Object.values(OptionsStepSize).map(
-                  item =>
-                    html`
-                      <paper-item>${item}</paper-item>
-                    `
+                  (item) => html` <paper-item>${item}</paper-item> `
                 )}
               </paper-listbox>
             </paper-dropdown-menu>
@@ -188,8 +179,8 @@ export default class SimpleThermostatEditor extends LitElement {
               Configuration Options
             </mwc-button>
 
-            Settings for label, control, sensors and hiding UI elements can only
-            be configured in the code editor
+            Settings for label, control, sensors, faults and hiding UI elements
+            can only be configured in the code editor
           </div>
         </div>
       </div>
