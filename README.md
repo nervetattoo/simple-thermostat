@@ -50,7 +50,9 @@ resources:
 ## Available configuration options:
 
 - `entity` _string_: The thermostat entity id **required**
-- `toggle_entity` _string_: An entity id to create a toggle in the header for. This gives the option to control a separate entity which can be related to the thermostat entity (like a switch, or input_boolean)
+- `toggle_entity` _string|object_: An entity id to create a toggle in the header for. This gives the option to control a separate entity which can be related to the thermostat entity (like a switch, or input_boolean)
+  - `entity_id` _string_: The entity id to create the header for
+  - `name` _string|bool_: Set the label to be shown to the left of the toggle. Set to true to show the friendly name of the toggle_entity
 - `name` _string_: Override the card name. Default is to use the friendly_name of the thermostat provided
 - `show_header` _bool_: Set to false to hide card name and icon
 - `unit` _string|bool_: Override the unit to display. Set to false to hide unit
@@ -158,6 +160,7 @@ cards:
         name: Energy today
       - attribute: min_temp
         name: Min temp
+    toggle_entity: switch.pump_relay
     control:
       hvac:
         some_mode: false
@@ -168,6 +171,18 @@ cards:
         'on':
           name: false
           icon: mdi:whitewalker
+```
+
+```yaml
+cards:
+  - type: 'custom:simple-thermostat'
+    entity: climate.my_room
+    step_size: 1
+    sensors:
+      - entity: sensor.fibaro_system_fgwpef_wall_plug_gen5_energy
+    toggle_entity:
+      entity_id: switch.pump_relay
+      name: Control the pump
 ```
 
 ## CSS vars for theming
@@ -185,6 +200,8 @@ The card uses the following CSS variables:
 | --st-mode-active-background | var(--primary-color)                    | Background color for active mode button              |
 | --st-mode-active-color      | var(--text-primary-color, #fff)         | Text color for active mode button                    |
 | --st-mode-background        | #dff4fd                                 | Background color for inactive mode button            |
+| --st-toggle-label-color     | var(--text-primary-color)               | Text color for toggle label                          |
+| --st-font-size-toggle-label | var(--paper-font-subhead\_-_font-size)  | Font size for toggle label                           |
 
 These variables can be changed globally in the current theme or on each card via card-mod.
 

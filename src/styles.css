@@ -37,6 +37,15 @@ ha-card.no-header {
   padding-bottom: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
 }
 
+.toggle-label {
+  color: var(--st-toggle-label-color, var(--primary-text-color));
+  margin-right: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
+  font-size: var(
+    --st-font-size-toggle-label,
+    var(--paper-font-subhead_-_font-size, 16px)
+  );
+}
+
 .sensors {
   display: grid;
   grid: auto-flow / auto auto;

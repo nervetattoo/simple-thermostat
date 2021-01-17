@@ -155,6 +155,7 @@ class SimpleThermostat extends LitElement {
     this._hass = null
     this.entity = null
     this.toggle_entity = null
+    this.toggle_entity_label = null
     this.icon = null
     this.sensors = []
     this._stepSize = STEP_SIZE
@@ -193,9 +194,26 @@ class SimpleThermostat extends LitElement {
       this.entity = entity
     }
 
-    const toggle_entity = hass.states[this.config.toggle_entity]
-    if (this.toggle_entity !== toggle_entity) {
-      this.toggle_entity = toggle_entity
+    if (typeof this.config.toggle_entity === 'string') {
+      const toggle_entity = hass.states[this.config.toggle_entity]
+      if (this.toggle_entity !== toggle_entity) {
+        this.toggle_entity = toggle_entity
+      }
+    }
+    else if (typeof this.config.toggle_entity === 'object') {
+      const toggle_entity = hass.states[this.config.toggle_entity.entity_id]
+       
+      if (this.toggle_entity !== toggle_entity) {
+        this.toggle_entity = toggle_entity
+      }
+
+      if (typeof this.config.toggle_entity.name === 'string') {
+        this.toggle_entity_label = this.config.toggle_entity.name
+      } else if (this.config.toggle_entity.name === true) {
+        this.toggle_entity_label = this.toggle_entity.attributes.name
+      } else {
+        this.toggle_entity_label = undefined
+      }
     }
 
     const attributes = entity.attributes
@@ -460,15 +478,7 @@ class SimpleThermostat extends LitElement {
           ''}
           <h2 class="header__title">${this.name}</h2>
         </div>
-        ${(this.toggle_entity &&
-          html`
-            <ha-switch
-              style="margin-left: auto;"
-              .checked=${this.toggle_entity.state === 'on'}
-              @change=${this.toggleEntityChanged}
-            ></ha-switch>
-          `) ||
-        ''}
+        ${this.toggle_entity ? this.renderToggle() : ''}
       </header>
     `
   }
@@ -511,6 +521,22 @@ class SimpleThermostat extends LitElement {
     ].filter((it) => it !== null)
 
     return html` <div class="sensors">${sensorHtml}</div> `
+  }
+
+  renderToggle({ _hide, entity, faults } = this) {
+    return html`
+    <div style="margin-left: auto;">
+      <span
+        class="clickable toggle-label"
+        @click="${() => this.openEntityPopover(this.toggle_entity.entity_id)}"
+        >${this.toggle_entity_label}
+      </span>
+      <ha-switch
+        .checked=${this.toggle_entity.state === 'on'}
+        @change=${this.toggleEntityChanged}
+      ></ha-switch>
+      </div>
+    `;
   }
 
   renderModeType(state, { type, hide_when_off, mode = 'none', list, name }) {
