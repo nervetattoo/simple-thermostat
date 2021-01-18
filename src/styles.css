@@ -46,6 +46,23 @@ ha-card.no-header {
   );
 }
 
+.faults {
+  display: flex;
+  flex-direction: row;
+  margin-left: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
+}
+.fault-icon {
+  padding: 2px;
+  cursor: pointer;
+  color: var(--st-fault-inactive-color, var(--secondary-background-color));
+  &.active {
+    color: var(--st-fault-active-color, var(--accent-color));
+  }
+  &.hide {
+    display: none;
+  }
+}
+
 .sensors {
   display: grid;
   grid: auto-flow / auto auto;
@@ -197,7 +214,6 @@ header {
   &.active.fan_only {
     background: var(--fan_only-color);
   }
-
 }
 .mode-icon {
   --iron-icon-width: 24px;

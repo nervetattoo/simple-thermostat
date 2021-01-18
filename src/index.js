@@ -26,6 +26,7 @@ const UPDATE_PROPS = [
   'entity',
   'toggle_entity',
   'sensors',
+  'faults',
   '_values',
   '_updatingValues',
   'modes',
@@ -127,6 +128,7 @@ class SimpleThermostat extends LitElement {
       entity: Object,
       toggle_entity: Object,
       sensors: Array,
+      faults: Array,
       modes: Object,
       icon: String,
       _values: Object,
@@ -158,6 +160,7 @@ class SimpleThermostat extends LitElement {
     this.toggle_entity_label = null
     this.icon = null
     this.sensors = []
+    this.faults = []
     this._stepSize = STEP_SIZE
     this._values = {}
     this._updatingValues = false
@@ -176,6 +179,9 @@ class SimpleThermostat extends LitElement {
   setConfig(config) {
     if (!config.entity) {
       throw new Error('You need to define an entity')
+    }
+    if (config.show_header === false && config.faults) {
+      throw new Error('Faults are not supported when header is hidden')
     }
     this.config = {
       decimals: DECIMALS,
@@ -199,10 +205,9 @@ class SimpleThermostat extends LitElement {
       if (this.toggle_entity !== toggle_entity) {
         this.toggle_entity = toggle_entity
       }
-    }
-    else if (typeof this.config.toggle_entity === 'object') {
+    } else if (typeof this.config.toggle_entity === 'object') {
       const toggle_entity = hass.states[this.config.toggle_entity.entity_id]
-       
+
       if (this.toggle_entity !== toggle_entity) {
         this.toggle_entity = toggle_entity
       }
@@ -369,6 +374,18 @@ class SimpleThermostat extends LitElement {
         }
       )
     }
+
+    if (this.config.faults === false) {
+      this.faults = false
+    } else if (this.config.faults) {
+      this.faults = this.config.faults.map(({ entity, ...rest }) => {
+        return {
+          ...rest,
+          state: hass.states[entity],
+          entity,
+        }
+      })
+    }
   }
 
   shouldUpdate(changedProps) {
@@ -384,7 +401,16 @@ class SimpleThermostat extends LitElement {
   }
 
   render(
-    { _hass, _hide, _values, _updatingValues, config, entity, sensors } = this
+    {
+      _hass,
+      _hide,
+      _values,
+      _updatingValues,
+      config,
+      entity,
+      sensors,
+      faults,
+    } = this
   ) {
     if (!entity) {
       return html`
@@ -478,6 +504,7 @@ class SimpleThermostat extends LitElement {
           ''}
           <h2 class="header__title">${this.name}</h2>
         </div>
+        ${this.faults !== false ? this.renderFaults() : ''}
         ${this.toggle_entity ? this.renderToggle() : ''}
       </header>
     `
@@ -525,18 +552,34 @@ class SimpleThermostat extends LitElement {
 
   renderToggle({ _hide, entity, faults } = this) {
     return html`
-    <div style="margin-left: auto;">
-      <span
-        class="clickable toggle-label"
-        @click="${() => this.openEntityPopover(this.toggle_entity.entity_id)}"
-        >${this.toggle_entity_label}
-      </span>
-      <ha-switch
-        .checked=${this.toggle_entity.state === 'on'}
-        @change=${this.toggleEntityChanged}
-      ></ha-switch>
+      <div style="margin-left: auto;">
+        <span
+          class="clickable toggle-label"
+          @click="${() => this.openEntityPopover(this.toggle_entity.entity_id)}"
+          >${this.toggle_entity_label}
+        </span>
+        <ha-switch
+          .checked=${this.toggle_entity.state === 'on'}
+          @change=${this.toggleEntityChanged}
+        ></ha-switch>
       </div>
-    `;
+    `
+  }
+
+  renderFaults({ _hide, entity, faults } = this) {
+    const faultHtml = faults.map(({ icon, hide_inactive, state }) => {
+      return html` <ha-icon
+        class="fault-icon ${state.state === 'on'
+          ? 'active'
+          : hide_inactive
+          ? ' hide'
+          : ''}"
+        icon="${icon || state.attributes.icon}"
+        @click="${() => this.openEntityPopover(state.entity_id)}"
+      ></ha-icon>`
+    })
+
+    return html` <div class="faults">${faultHtml}</div>`
   }
 
   renderModeType(state, { type, hide_when_off, mode = 'none', list, name }) {
