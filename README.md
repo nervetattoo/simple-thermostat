@@ -1,6 +1,7 @@
 # Lovelace simple thermostat card
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
+<a href="https://www.buymeacoffee.com/nervetattoo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-blue.png" alt="Buy Me A Coffee" height="28" width="119"></a>
 
 A different take on the thermostat card for Home Assistant Lovelace UI.
 The aim is to provide a card with simpler interactions that are easier to use and take up less space, as well as provide more modularity to tweak the card. For example the abiltity to embed sensor values that are relevant to your thermostat (like humidity, energy usage, hours on +++).
