@@ -1,15 +1,13 @@
-import { LitElement, html, property, customElement } from 'lit-element'
+import { LitElement, html, property } from 'lit-element'
 import debounce from 'debounce-fn'
+import { name as CARD_NAME } from '../package.json'
+
 import isEqual from './isEqual'
-import { name as CARD_NAME, version } from '../package.json'
 import styles from './styles.css'
 
 import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
 import fireEvent from './fireEvent'
-
-import SimpleThermostatEditor from './editor'
-customElements.define(`${CARD_NAME}-editor`, SimpleThermostatEditor)
 
 import {
   CardConfig,
@@ -24,8 +22,6 @@ import {
   HASS,
   EntityValue,
 } from './types'
-
-console.info(`%c${CARD_NAME}: ${version}`, 'font-weight: bold')
 
 const DUAL = 'dual'
 const DEBOUNCE_TIMEOUT = 1000
@@ -125,8 +121,7 @@ function getModeList(type: string, attributes: any, config: any = {}) {
     })
 }
 
-@customElement(CARD_NAME)
-class SimpleThermostat extends LitElement {
+export default class SimpleThermostat extends LitElement {
   static get styles() {
     return styles
   }
@@ -712,13 +707,3 @@ class SimpleThermostat extends LitElement {
     return this._hass.config.unit_system.temperature
   }
 }
-
-export default SimpleThermostat
-
-;(window as any).customCards = (window as any).customCards || []
-;(window as any).customCards.push({
-  type: CARD_NAME,
-  name: 'Simple Thermostat',
-  preview: false,
-  description: 'A different take on the thermostat card',
-})

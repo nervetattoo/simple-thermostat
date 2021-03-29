@@ -2,7 +2,7 @@
   "name": "simple-thermostat",
   "version": "0.42.0",
   "description": "A different take on the thermostat card for Home Assistant Lovelace UI",
-  "main": "dist/index.js",
+  "main": "dist/simple-thermostat.js",
   "repository": "git@github.com:nervetattoo/simple-thermostat.git",
   "author": "Raymond Julin <raymond.julin@gmail.com>",
   "license": "MIT",
@@ -81,7 +81,7 @@
   },
   "size-limit": [
     {
-      "path": "dist/index.js",
+      "path": "dist/simple-thermostat.js",
       "limit": "15 KB"
     }
   ],

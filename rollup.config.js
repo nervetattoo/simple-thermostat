@@ -9,7 +9,7 @@ import postCSSLit from 'rollup-plugin-postcss-lit'
 import postCSSPresetEnv from 'postcss-preset-env'
 
 export default {
-  input: 'src/index.ts',
+  input: 'src/simple-thermostat.ts',
   output: {
     dir: 'dist',
     format: 'es',
