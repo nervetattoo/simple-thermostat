@@ -42,5 +42,10 @@ export default {
       },
     }),
     filesize(),
+    terser({
+      output: {
+        comments: false,
+      },
+    }),
   ],
 }
