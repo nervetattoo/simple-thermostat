@@ -51,6 +51,7 @@
     "dev": "concurrently 'npm:dev:*'",
     "dev:build": "tsc --watch",
     "dev:test": "jest --watch",
+    "size-build": "yarn build",
     "size": "size-limit",
     "analyze": "size-limit --why"
   },
