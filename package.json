@@ -3,8 +3,6 @@
   "version": "0.42.0",
   "description": "A different take on the thermostat card for Home Assistant Lovelace UI",
   "main": "dist/index.js",
-  "module": "dist/ts-test.esm.js",
-  "typings": "dist/index.d.ts",
   "repository": "git@github.com:nervetattoo/simple-thermostat.git",
   "author": "Raymond Julin <raymond.julin@gmail.com>",
   "license": "MIT",
@@ -24,7 +22,7 @@
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
     "@rollup/plugin-typescript": "^8.2.1",
-    "@size-limit/preset-small-lib": "^4.10.1",
+    "@size-limit/file": "^4.10.1",
     "@types/jest": "^26.0.22",
     "@types/lodash.isequal": "^4.5.5",
     "ava": "^3.13.0",
@@ -84,12 +82,8 @@
   },
   "size-limit": [
     {
-      "path": "dist/ts-test.cjs.production.min.js",
-      "limit": "50 KB"
-    },
-    {
-      "path": "dist/ts-test.esm.js",
-      "limit": "50 KB"
+      "path": "dist/index.js",
+      "limit": "15 KB"
     }
   ],
   "ava": {
