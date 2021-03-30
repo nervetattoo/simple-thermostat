@@ -13,6 +13,8 @@ import renderHeader from './components/header'
 import renderSensors from './components/sensors'
 import renderModeType from './components/modeType'
 
+import parseHeader, { HeaderData, MODE_ICONS } from './config/header'
+
 import {
   CardConfig,
   HAState,
@@ -47,25 +49,6 @@ const ICONS = {
 
 type ModeIcons = {
   [key: string]: string
-}
-
-const MODE_ICONS: ModeIcons = {
-  auto: 'hass:autorenew',
-  cool: 'hass:snowflake',
-  dry: 'hass:water-percent',
-  fan_only: 'hass:fan',
-  heat_cool: 'hass:autorenew',
-  heat: 'hass:fire',
-  off: 'hass:power',
-}
-
-const STATE_ICONS = {
-  auto: 'mdi:radiator',
-  cooling: 'mdi:snowflake',
-  fan: 'mdi:fan',
-  heating: 'mdi:radiator',
-  idle: 'mdi:radiator-disabled',
-  off: 'mdi:radiator-off',
 }
 
 const DEFAULT_HIDE = {
@@ -116,7 +99,9 @@ export default class SimpleThermostat extends LitElement {
   }
 
   @property()
-  config: CardConfig = {}
+  config: CardConfig
+  @property()
+  header: false | HeaderData
   @property()
   modes: Array<ControlMode> = []
   @property()
@@ -124,21 +109,11 @@ export default class SimpleThermostat extends LitElement {
   @property()
   entity: LooseObject = {}
   @property()
-  toggle_entity: HAState | null = null
-  @property()
-  toggle_entity_label: any = null
-  @property()
   entityType: any
-  @property()
-  icon: any = null
   @property()
   sensors: Array<Sensor> = []
   @property()
   showSensors: boolean = true
-  @property()
-  faults: Array<Fault> = []
-  @property()
-  show_header: boolean
   @property()
   name: string | false = ''
   _stepSize = STEP_SIZE
@@ -175,9 +150,6 @@ export default class SimpleThermostat extends LitElement {
     if (!config.entity) {
       throw new Error('You need to define an entity')
     }
-    if (config.show_header === false && config.faults) {
-      throw new Error('Faults are not supported when header is hidden')
-    }
     this.config = <CardConfig>{
       decimals: DECIMALS,
       ...config,
@@ -195,27 +167,7 @@ export default class SimpleThermostat extends LitElement {
       this.entity = entity
     }
 
-    if (typeof this.config.toggle_entity === 'string') {
-      const toggle_entity: HAState = hass.states[this.config.toggle_entity]
-      if (this.toggle_entity !== toggle_entity) {
-        this.toggle_entity = toggle_entity
-      }
-    } else if (typeof this.config.toggle_entity === 'object') {
-      const toggle_entity: HAState =
-        hass.states[this.config.toggle_entity.entity_id]
-
-      if (this.toggle_entity !== toggle_entity) {
-        this.toggle_entity = toggle_entity
-      }
-
-      if (typeof this.config.toggle_entity.name === 'string') {
-        this.toggle_entity_label = this.config.toggle_entity.name
-      } else if (this.config.toggle_entity.name === true) {
-        this.toggle_entity_label = this.toggle_entity.attributes.name
-      } else {
-        this.toggle_entity_label = undefined
-      }
-    }
+    this.header = parseHeader(this.config.header, entity, hass)
 
     const attributes = entity.attributes
 
@@ -313,32 +265,12 @@ export default class SimpleThermostat extends LitElement {
       return { ...values, mode }
     })
 
-    if (typeof this.config.icon !== 'undefined') {
-      this.icon = this.config.icon
-    } else {
-      if (this.entity.attributes.hvac_action) {
-        this.icon = STATE_ICONS
-      } else {
-        this.icon = MODE_ICONS
-      }
-    }
-
     if (this.config.step_size) {
       this._stepSize = +this.config.step_size
     }
 
     if (this.config.hide) {
       this._hide = { ...this._hide, ...this.config.hide }
-    }
-
-    this.show_header = this.config?.show_header ?? true
-
-    if (typeof this.config.name === 'string') {
-      this.name = this.config.name
-    } else if (this.config.name === false) {
-      this.name = false
-    } else {
-      this.name = entity.attributes.friendly_name
     }
 
     if (this.config.sensors === false) {
@@ -372,18 +304,6 @@ export default class SimpleThermostat extends LitElement {
         }
       )
     }
-
-    if (this.config.faults === false) {
-      this.faults = []
-    } else if (this.config.faults) {
-      this.faults = this.config.faults.map(({ entity, ...rest }: Fault) => {
-        return {
-          ...rest,
-          state: hass.states[entity],
-          entity,
-        }
-      })
-    }
   }
 
   localize = (label: string, prefix = '') => {
@@ -414,23 +334,15 @@ export default class SimpleThermostat extends LitElement {
     const stepLayout = this.config.step_layout || 'column'
     const row = stepLayout === 'row'
 
-    const classes = [!this.show_header && 'no-header', action].filter(
-      (cx) => !!cx
-    )
+    const classes = [!this.header && 'no-header', action].filter((cx) => !!cx)
     return html`
       <ha-card class="${classes.join(' ')}">
-        ${this.show_header
-          ? renderHeader({
-              name: this.name,
-              icon: this.icon,
-              faults: this.faults,
-              toggle_entity: this.toggle_entity,
-              toggle_entity_label: this.toggle_entity_label,
-              toggleEntityChanged: this.toggleEntityChanged,
-              entity: this.entity,
-              openEntityPopover: this.openEntityPopover,
-            })
-          : nothing}
+        ${renderHeader({
+          header: this.header,
+          toggleEntityChanged: this.toggleEntityChanged,
+          entity: this.entity,
+          openEntityPopover: this.openEntityPopover,
+        })}
         <section class="body">
           ${this.showSensors
             ? renderSensors({
@@ -495,10 +407,11 @@ export default class SimpleThermostat extends LitElement {
   }
 
   toggleEntityChanged(ev: Event) {
+    if (!this.header) return
     const el = ev.target as HTMLInputElement
     const newVal = el.checked
     this._hass.callService('homeassistant', newVal ? 'turn_on' : 'turn_off', {
-      entity_id: this.toggle_entity?.entity_id,
+      entity_id: this.header?.toggle?.entity,
     })
   }
 

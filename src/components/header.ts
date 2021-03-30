@@ -1,29 +1,27 @@
-import { html } from 'lit-element'
+import { html, nothing } from 'lit-html'
 import { LooseObject } from '../types'
+import { HeaderData } from '../config/header'
 
 type HeaderOptions = {
-  name: string | boolean
-  icon: string | LooseObject
-  faults
-  toggle_entity
+  header: false | HeaderData
   entity: LooseObject
   openEntityPopover
-  toggle_entity_label
   toggleEntityChanged
 }
 
 export default function renderHeader({
-  name,
-  icon,
-  faults,
-  toggle_entity,
-  toggle_entity_label,
+  header,
   toggleEntityChanged,
   entity,
   openEntityPopover,
 }: HeaderOptions) {
+  if (header === false) {
+    return nothing
+  }
+
   const action = entity.attributes.hvac_action || entity.state
-  if (typeof icon === 'object') {
+  let icon = header.icon
+  if (typeof header.icon === 'object') {
     icon = icon?.[action] ?? false
   }
 
@@ -37,14 +35,13 @@ export default function renderHeader({
         ${(icon &&
           html` <ha-icon class="header__icon" .icon=${icon}></ha-icon> `) ||
         ''}
-        <h2 class="header__title">${name}</h2>
+        <h2 class="header__title">${header?.name}</h2>
       </div>
-      ${faults ? renderFaults({ faults, openEntityPopover }) : ''}
-      ${toggle_entity
+      ${renderFaults({ faults: header.faults, openEntityPopover })}
+      ${header.toggle
         ? renderToggle({
+            toggle: header.toggle,
             openEntityPopover,
-            toggle_entity,
-            toggle_entity_label,
             toggleEntityChanged,
           })
         : ''}
@@ -57,6 +54,9 @@ type FaultsOptions = {
   openEntityPopover
 }
 function renderFaults({ faults, openEntityPopover }: FaultsOptions) {
+  if (faults.length === 0) {
+    return nothing
+  }
   const faultHtml = faults.map(({ icon, hide_inactive, state }) => {
     return html` <ha-icon
       class="fault-icon ${state.state === 'on'
@@ -74,25 +74,23 @@ function renderFaults({ faults, openEntityPopover }: FaultsOptions) {
 
 type ToggleOptions = {
   openEntityPopover
-  toggle_entity
-  toggle_entity_label
+  toggle
   toggleEntityChanged
 }
 function renderToggle({
-  openEntityPopover,
-  toggle_entity,
-  toggle_entity_label,
+  toggle,
   toggleEntityChanged,
+  openEntityPopover,
 }: ToggleOptions) {
   return html`
     <div style="margin-left: auto;">
       <span
         class="clickable toggle-label"
-        @click="${() => openEntityPopover(toggle_entity?.entity_id)}"
-        >${toggle_entity_label}
+        @click="${() => openEntityPopover(toggle.entity)}"
+        >${toggle.label}
       </span>
       <ha-switch
-        .checked=${toggle_entity?.state === 'on'}
+        .checked=${toggle.entity?.state === 'on'}
         @change=${toggleEntityChanged}
       ></ha-switch>
     </div>

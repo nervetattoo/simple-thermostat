@@ -1,3 +1,5 @@
+import { HeaderConfig } from './config/header'
+
 export interface LooseObject {
   [key: string]: any
 }
@@ -42,23 +44,15 @@ export interface Sensor extends ConfigSensor {
   state: any
 }
 
-export interface ConfigFault {
+export interface Fault {
   entity: string
   icon?: string
   hide_inactive?: boolean
 }
 
-export interface Fault extends ConfigFault {
-  state: HAState
-}
-
 export interface CardConfig {
   entity?: string
-  name?: string | false
-  icon?: LooseObject
-  show_header?: boolean
-  faults?: Array<any> | false
-  toggle_entity?: string | { entity_id: string; name: string; state: string }
+  header: false | HeaderConfig
   control?: false | ControlObject | ControlList
   decimals?: number
   step_size?: number
@@ -85,10 +79,6 @@ export interface HAState {
   last_updated?: string
 }
 
-export interface ControlModeValue {
-  [key: string]: any
-}
-
 export interface HASS {
   states?: LooseObject
   [key: string]: any
@@ -99,7 +89,7 @@ export interface ControlMode {
   mode?: any
   name?: string | boolean
   hide_when_off?: boolean
-  list: Array<ControlModeValue>
+  list: Array<LooseObject>
 }
 
 export interface HAEvent extends Event {

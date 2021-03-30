@@ -57,28 +57,10 @@ resources:
 ## Available configuration options:
 
 - `entity` _string_: The thermostat entity id **required**
-- `toggle_entity` _string|object_: An entity id to create a toggle in the header for. This gives the option to control a separate entity which can be related to the thermostat entity (like a switch, or input_boolean)
-  - `entity_id` _string_: The entity id to create the header for
-  - `name` _string|bool_: Set the label to be shown to the left of the toggle. Set to true to show the friendly name of the toggle_entity
-- `name` _string_: Override the card name. Default is to use the friendly_name of the thermostat provided
-- `show_header` _bool_: Set to false to hide card name and icon
+- `header` _false|Header object_: See section about header config
 - `unit` _string|bool_: Override the unit to display. Set to false to hide unit
 - `decimals` _number_: Specify number of decimals to use: 1 or 0
 - `fallback` _string_: Specify a text to display if a valid set point can't be determined. Defaults to `N/A`
-- `icon` _string|object_: Show an icon next to the card name. You can also pass an object to specify specific icons. Current value is taken from attributes.hvac_action when available, or state as fallback.
-  - `auto`: _string_ Use this icon for hvac_action auto. Default mdi:radiator
-  - `cooling`: _string_ Use this icon for hvac_action cooling. Default mdi:snowflake
-  - `fan`: _string_ Use this icon for hvac_action fan. Default mdi:fan
-  - `heating`: _string_ Use this icon for hvac_action heating. Default mdi:radiator
-  - `idle`: _string_: Use this icon for hvac_action idle. Default mdi:radiator-disabled
-  - `"off"`: _string_ Use this icon for hvac_action off. Default mdi:radiator-off
-  - `auto`: _string_ Use this icon for state auto. Default hass:autorenew
-  - `cool`: _string_ Use this icon for state cooling. Default hass:snowflake
-  - `dry`: _string_: Use this icon for state dry. Default hass:water-percent
-  - `fan_only`: _string_ Use this icon for state fan. Default hass:fan
-  - `heat`: _string_ Use this icon for state heat. Default hass:autorenew
-  - `heat_cool`: _string_: Use this icon for state heat_cool. Default hass:fire
-  - `"off"`: _string_ Use this icon for state off. Default hass:power
 - `step_size` _number_: Override the default 0.5 step size for increasing/decreasing the temperature
 - `step_layout` _string_: `row` or `column` (default). Using `row` will make the card more compact
 - `label` _object_: Override untranslated labels
@@ -104,10 +86,48 @@ resources:
   - `icon` _string_: Specify an icon to use instead of a name
   - `attribute` _string_: The key for an attribute to use instead of state. If this sensor has no entity it will use the main entity's attributes
   - `unit` _string_: When specifying an attribute you can manually set the unit to display
+
+## Header config
+
+> New in 2.0. Old ways of defining toggle_entity, faults, name and icon are no longer supported
+
+Hiding the entire header is done with `header: false`
+If you pass an object you can pass any of the following keys.
+Example:
+
+```yaml
+header:
+  name: Overriden name
+  toggle:
+    entity: switch.light
+    name: Light
+  icon: mdi:sofa
+  faults:
+    - entity: switch.light
+```
+
+- `name` _string_: Override the card name. Default is to use the friendly_name of the thermostat provided
+- `toggle` _object_: An entity id to create a toggle in the header for. This gives the option to control a separate entity which can be related to the thermostat entity (like a switch, or input_boolean)
+  - `entity` _string_: The entity id to create the header for
+  - `name` _string|bool_: Set the label to be shown to the left of the toggle. Set to true to show the friendly name of the toggle_entity
 - `faults` _array|false_: Show fault conditions as active/inactive icons in the header
   - `entity` _string_: A binary sensor entity id
   - `icon` _string_: Override the entity icon
   - `hide_inactive` _bool_: Hide the fault icon when inactive (Default to `false`)
+- `icon` _string|object_: Show an icon next to the card name. You can also pass an object to specify specific icons. Current value is taken from attributes.hvac_action when available, or state as fallback.
+  - `auto`: _string_ Use this icon for hvac_action auto. Default mdi:radiator
+  - `cooling`: _string_ Use this icon for hvac_action cooling. Default mdi:snowflake
+  - `fan`: _string_ Use this icon for hvac_action fan. Default mdi:fan
+  - `heating`: _string_ Use this icon for hvac_action heating. Default mdi:radiator
+  - `idle`: _string_: Use this icon for hvac_action idle. Default mdi:radiator-disabled
+  - `"off"`: _string_ Use this icon for hvac_action off. Default mdi:radiator-off
+  - `auto`: _string_ Use this icon for state auto. Default hass:autorenew
+  - `cool`: _string_ Use this icon for state cooling. Default hass:snowflake
+  - `dry`: _string_: Use this icon for state dry. Default hass:water-percent
+  - `fan_only`: _string_ Use this icon for state fan. Default hass:fan
+  - `heat`: _string_ Use this icon for state heat. Default hass:autorenew
+  - `heat_cool`: _string_: Use this icon for state heat_cool. Default hass:fire
+  - `"off"`: _string_ Use this icon for state off. Default hass:power
 
 ## Usage of the control config
 
