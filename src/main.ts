@@ -8,6 +8,9 @@ import styles from './styles.css'
 import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
 import fireEvent from './fireEvent'
+import renderHeader from './components/header'
+import renderSensors from './components/sensors'
+import renderModeType from './components/modeType'
 
 import {
   CardConfig,
@@ -52,12 +55,6 @@ const ICONS = {
 
 type ModeIcons = {
   [key: string]: string
-}
-
-interface InfoItemDetails {
-  heading?: string
-  icon?: string
-  unit?: string
 }
 
 const MODE_ICONS: ModeIcons = {
@@ -400,7 +397,7 @@ export default class SimpleThermostat extends LitElement {
     }
   }
 
-  localize(label: string, prefix = '') {
+  localize = (label: string, prefix = '') => {
     const lang = this._hass.selectedLanguage || this._hass.language
     const key = `${prefix}${label}`
     const translations = this._hass.resources[lang]
@@ -433,9 +430,28 @@ export default class SimpleThermostat extends LitElement {
     )
     return html`
       <ha-card class="${classes.join(' ')}">
-        ${this.renderHeader()}
+        ${renderHeader({
+          name: this.name,
+          icon: this.icon,
+          faults: this.faults,
+          toggle_entity: this.toggle_entity,
+          toggle_entity_label: this.toggle_entity_label,
+          toggleEntityChanged: this.toggleEntityChanged,
+          entity: this.entity,
+          openEntityPopover: this.openEntityPopover,
+        })}
         <section class="body">
-          ${this.showSensors ? this.renderSensors() : ''}
+          ${this.showSensors
+            ? renderSensors({
+                _hide: this._hide,
+                unit,
+                entity: this.entity,
+                sensors: this.sensors,
+                config: this.config,
+                localize: this.localize,
+                openEntityPopover: this.openEntityPopover,
+              })
+            : ''}
           ${_hide.setpoint
             ? ''
             : Object.entries(_values).map(([field, value]) => {
@@ -474,35 +490,16 @@ export default class SimpleThermostat extends LitElement {
               })}
         </section>
 
-        ${this.modes.map((mode) => this.renderModeType(entity.state, mode))}
+        ${this.modes.map((mode) =>
+          renderModeType({
+            state: entity.state,
+            mode,
+            localize: this.localize,
+            modeOptions: this.modeOptions,
+            setMode: this.setMode,
+          })
+        )}
       </ha-card>
-    `
-  }
-
-  renderHeader() {
-    if (this.show_header === false || this.name === false) return ''
-
-    let icon = this.icon
-    const action = this.entity.attributes.hvac_action || this.entity.state
-    if (typeof this.icon === 'object') {
-      icon = action in this.icon ? this.icon[action] : false
-    }
-
-    return html`
-      <header>
-        <div
-          style="display: flex;"
-          class="clickable"
-          @click=${() => this.openEntityPopover()}
-        >
-          ${(icon &&
-            html` <ha-icon class="header__icon" .icon=${icon}></ha-icon> `) ||
-          ''}
-          <h2 class="header__title">${this.name}</h2>
-        </div>
-        ${this.faults ? this.renderFaults() : ''}
-        ${this.toggle_entity ? this.renderToggle() : ''}
-      </header>
     `
   }
 
@@ -512,157 +509,6 @@ export default class SimpleThermostat extends LitElement {
     this._hass.callService('homeassistant', newVal ? 'turn_on' : 'turn_off', {
       entity_id: this.toggle_entity?.entity_id,
     })
-  }
-
-  renderSensors({ _hide, entity, sensors } = this) {
-    const {
-      attributes: { hvac_action: action, current_temperature: current },
-    } = entity
-    const unit = this.getUnit()
-
-    const sensorHtml = [
-      this.renderInfoItem(
-        _hide.temperature,
-        `${formatNumber(current, this.config)}${unit}`,
-        {
-          heading:
-            (this.config.label && this.config.label.temperature) ||
-            'Temperature',
-        }
-      ),
-      this.renderInfoItem(
-        _hide.state,
-        this.localize(action, 'state_attributes.climate.hvac_action.'),
-        { heading: (this.config.label && this.config.label.state) || 'State' }
-      ),
-      sensors.map(({ name, icon, state, unit }) => {
-        return (
-          state &&
-          this.renderInfoItem(false, state, { heading: name, icon, unit })
-        )
-      }) || null,
-    ].filter((it) => it !== null)
-
-    return html` <div class="sensors">${sensorHtml}</div> `
-  }
-
-  renderToggle() {
-    return html`
-      <div style="margin-left: auto;">
-        <span
-          class="clickable toggle-label"
-          @click="${() =>
-            this.openEntityPopover(this.toggle_entity?.entity_id)}"
-          >${this.toggle_entity_label}
-        </span>
-        <ha-switch
-          .checked=${this.toggle_entity?.state === 'on'}
-          @change=${this.toggleEntityChanged}
-        ></ha-switch>
-      </div>
-    `
-  }
-
-  renderFaults({ faults } = this) {
-    const faultHtml = faults.map(({ icon, hide_inactive, state }) => {
-      return html` <ha-icon
-        class="fault-icon ${state.state === 'on'
-          ? 'active'
-          : hide_inactive
-          ? ' hide'
-          : ''}"
-        icon="${icon || state.attributes.icon}"
-        @click="${() => this.openEntityPopover(state.entity_id)}"
-      ></ha-icon>`
-    })
-
-    return html` <div class="faults">${faultHtml}</div>`
-  }
-
-  renderModeType(
-    state: string,
-    { type, hide_when_off, mode = 'none', list, name }: ControlMode
-  ) {
-    if (list.length === 0 || (hide_when_off && state === HVAC_MODES[0])) {
-      return null
-    }
-
-    let localizePrefix = `state_attributes.climate.${type}_mode.`
-    if (type === 'hvac') {
-      localizePrefix = `state.climate.`
-    }
-
-    const maybeRenderName = (name: string | false) => {
-      if (name === false) return null
-      if (this.modeOptions.names === false) return null
-      return this.localize(name, localizePrefix)
-    }
-    const maybeRenderIcon = (icon: string) => {
-      if (!icon) return null
-      if (this.modeOptions.icons === false) return null
-      return html` <ha-icon class="mode-icon" .icon=${icon}></ha-icon> `
-    }
-
-    const str = type == 'hvac' ? 'operation' : `${type}_mode`
-    const title = name || this.localize(`ui.card.climate.${str}`)
-    const { headings } = this.modeOptions
-
-    return html`
-      <div class="modes ${headings ? 'heading' : ''}">
-        ${headings ? html` <div class="mode-title">${title}</div> ` : null}
-        ${list.map(
-          ({ value, icon, name }) => html`
-            <div
-              class="mode-item ${value === mode ? 'active ' + mode : ''}"
-              @click=${() => this.setMode(type, value)}
-            >
-              ${maybeRenderIcon(icon)} ${maybeRenderName(name)}
-            </div>
-          `
-        )}
-      </div>
-    `
-  }
-
-  // Preset mode can be  one of: none, eco, away, boost, comfort, home, sleep, activity
-  // See https://github.com/home-assistant/home-assistant/blob/dev/homeassistant/components/climate/const.py#L36-L57
-
-  renderInfoItem(
-    hide: boolean,
-    state: any,
-    { heading, icon, unit }: InfoItemDetails
-  ) {
-    if (hide || !state) return
-
-    let valueCell
-    if (typeof state === 'object') {
-      let value = state.state
-      if ('device_class' in state.attributes) {
-        const [type] = state.entity_id.split('.')
-        const prefix = ['state', type, state.attributes.device_class, ''].join(
-          '.'
-        )
-        value = this.localize(state.state, prefix)
-      }
-      valueCell = html`
-        <div
-          class="sensor-value clickable"
-          @click="${() => this.openEntityPopover(state.entity_id)}"
-        >
-          ${value} ${unit || state.attributes.unit_of_measurement}
-        </div>
-      `
-    } else {
-      valueCell = html` <div class="sensor-value">${state}</div> `
-    }
-
-    const headingResult = icon
-      ? html` <ha-icon icon="${icon}"></ha-icon> `
-      : html` ${heading}: `
-    return html`
-      <div class="sensor-heading">${headingResult}</div>
-      ${valueCell}
-    `
   }
 
   setTemperature(change: number, field = 'temperature') {
@@ -678,7 +524,7 @@ export default class SimpleThermostat extends LitElement {
     })
   }
 
-  setMode(type: string, mode: string) {
+  setMode = (type: string, mode: string) => {
     if (type && mode) {
       this._hass.callService('climate', `set_${type}_mode`, {
         entity_id: this.config.entity,
@@ -690,8 +536,10 @@ export default class SimpleThermostat extends LitElement {
     }
   }
 
-  openEntityPopover(entityId = this.config.entity) {
-    fireEvent(this, 'hass-more-info', { entityId })
+  openEntityPopover = (entityId = null) => {
+    fireEvent(this, 'hass-more-info', {
+      entityId: entityId || this.config.entity,
+    })
   }
 
   // The height of your card. Home Assistant uses this to automatically
