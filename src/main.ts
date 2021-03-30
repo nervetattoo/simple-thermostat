@@ -9,6 +9,7 @@ import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
 import fireEvent from './fireEvent'
 import renderHeader from './components/header'
+import renderInfoItem from './components/infoItem'
 
 import {
   CardConfig,
@@ -53,12 +54,6 @@ const ICONS = {
 
 type ModeIcons = {
   [key: string]: string
-}
-
-interface InfoItemDetails {
-  heading?: string
-  icon?: string
-  unit?: string
 }
 
 const MODE_ICONS: ModeIcons = {
@@ -504,26 +499,30 @@ export default class SimpleThermostat extends LitElement {
     const unit = this.getUnit()
 
     const sensorHtml = [
-      this.renderInfoItem(
-        _hide.temperature,
-        `${formatNumber(current, this.config)}${unit}`,
-        {
-          heading:
-            (this.config.label && this.config.label.temperature) ||
-            'Temperature',
-        }
-      ),
-      this.renderInfoItem(
-        _hide.state,
-        this.localize(action, 'state_attributes.climate.hvac_action.'),
-        { heading: (this.config.label && this.config.label.state) || 'State' }
-      ),
-      sensors.map(({ name, icon, state, unit }) => {
+      renderInfoItem({
+        hide: _hide.temperature,
+        state: `${formatNumber(current, this.config)}${unit}`,
+        details: {
+          heading: this?.config?.label?.temperature ?? 'Temperature',
+        },
+      }),
+      renderInfoItem({
+        hide: _hide.state,
+        state: this.localize(action, 'state_attributes.climate.hvac_action.'),
+        details: {
+          heading: this?.config?.label?.state ?? 'State',
+        },
+      }),
+      ...(sensors.map(({ name, icon, state, unit }) => {
         return (
           state &&
-          this.renderInfoItem(false, state, { heading: name, icon, unit })
+          renderInfoItem({
+            hide: false,
+            state,
+            details: { heading: name, icon, unit },
+          })
         )
-      }) || null,
+      }) || null),
     ].filter((it) => it !== null)
 
     return html` <div class="sensors">${sensorHtml}</div> `
@@ -571,47 +570,6 @@ export default class SimpleThermostat extends LitElement {
           `
         )}
       </div>
-    `
-  }
-
-  // Preset mode can be  one of: none, eco, away, boost, comfort, home, sleep, activity
-  // See https://github.com/home-assistant/home-assistant/blob/dev/homeassistant/components/climate/const.py#L36-L57
-
-  renderInfoItem(
-    hide: boolean,
-    state: any,
-    { heading, icon, unit }: InfoItemDetails
-  ) {
-    if (hide || !state) return
-
-    let valueCell
-    if (typeof state === 'object') {
-      let value = state.state
-      if ('device_class' in state.attributes) {
-        const [type] = state.entity_id.split('.')
-        const prefix = ['state', type, state.attributes.device_class, ''].join(
-          '.'
-        )
-        value = this.localize(state.state, prefix)
-      }
-      valueCell = html`
-        <div
-          class="sensor-value clickable"
-          @click="${() => this.openEntityPopover(state.entity_id)}"
-        >
-          ${value} ${unit || state.attributes.unit_of_measurement}
-        </div>
-      `
-    } else {
-      valueCell = html` <div class="sensor-value">${state}</div> `
-    }
-
-    const headingResult = icon
-      ? html` <ha-icon icon="${icon}"></ha-icon> `
-      : html` ${heading}: `
-    return html`
-      <div class="sensor-heading">${headingResult}</div>
-      ${valueCell}
     `
   }
 
