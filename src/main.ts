@@ -24,6 +24,8 @@ import {
   Fault,
   HASS,
   EntityValue,
+  HVAC_MODES,
+  MODES,
 } from './types'
 
 const DUAL = 'dual'
@@ -31,20 +33,9 @@ const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
 const DECIMALS = 1
 
-const MODE_TYPES = ['hvac', 'fan', 'preset', 'swing']
+const MODE_TYPES: Array<string> = Object.values(MODES)
 
-// Sorted list of HVAC modes
-const HVAC_MODES = [
-  'off',
-  'heat',
-  'cool',
-  'heat_cool',
-  'auto',
-  'dry',
-  'fan_only',
-]
-
-const DEFAULT_CONTROL = ['hvac', 'preset']
+const DEFAULT_CONTROL = [MODES.HVAC, MODES.PRESET]
 
 const ICONS = {
   UP: 'hass:chevron-up',
@@ -304,10 +295,11 @@ export default class SimpleThermostat extends LitElement {
 
     // Decorate mode types with active value and set to this.modes
     this.modes = controlModes.map((values) => {
-      if (values.type === 'hvac') {
+      if (values.type === MODES.HVAC) {
         const sortedList: Array<any> = []
+        const hvacModeValues = Object.values(HVAC_MODES)
         values.list.forEach((item: LooseObject) => {
-          const index = HVAC_MODES.indexOf(item.value)
+          const index = hvacModeValues.indexOf(item.value)
           sortedList[index] = item
         })
         return {

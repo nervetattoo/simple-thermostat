@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macOS-latest
 
     steps:
       - uses: actions/checkout@master
@@ -22,3 +22,5 @@ jobs:
         run: |
           yarn install
           yarn test
+        env:
+          CI: true
