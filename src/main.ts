@@ -8,6 +8,7 @@ import styles from './styles.css'
 import formatNumber from './formatNumber'
 import getEntityType from './getEntityType'
 import fireEvent from './fireEvent'
+import renderHeader from './components/header'
 
 import {
   CardConfig,
@@ -433,7 +434,16 @@ export default class SimpleThermostat extends LitElement {
     )
     return html`
       <ha-card class="${classes.join(' ')}">
-        ${this.renderHeader()}
+        ${renderHeader({
+          name: this.name,
+          icon: this.icon,
+          faults: this.faults,
+          toggle_entity: this.toggle_entity,
+          toggle_entity_label: this.toggle_entity_label,
+          toggleEntityChanged: this.toggleEntityChanged,
+          entity: this.entity,
+          openEntityPopover: this.openEntityPopover,
+        })}
         <section class="body">
           ${this.showSensors ? this.renderSensors() : ''}
           ${_hide.setpoint
@@ -479,33 +489,6 @@ export default class SimpleThermostat extends LitElement {
     `
   }
 
-  renderHeader() {
-    if (this.show_header === false || this.name === false) return ''
-
-    let icon = this.icon
-    const action = this.entity.attributes.hvac_action || this.entity.state
-    if (typeof this.icon === 'object') {
-      icon = action in this.icon ? this.icon[action] : false
-    }
-
-    return html`
-      <header>
-        <div
-          style="display: flex;"
-          class="clickable"
-          @click=${() => this.openEntityPopover()}
-        >
-          ${(icon &&
-            html` <ha-icon class="header__icon" .icon=${icon}></ha-icon> `) ||
-          ''}
-          <h2 class="header__title">${this.name}</h2>
-        </div>
-        ${this.faults ? this.renderFaults() : ''}
-        ${this.toggle_entity ? this.renderToggle() : ''}
-      </header>
-    `
-  }
-
   toggleEntityChanged(ev: Event) {
     const el = ev.target as HTMLInputElement
     const newVal = el.checked
@@ -544,39 +527,6 @@ export default class SimpleThermostat extends LitElement {
     ].filter((it) => it !== null)
 
     return html` <div class="sensors">${sensorHtml}</div> `
-  }
-
-  renderToggle() {
-    return html`
-      <div style="margin-left: auto;">
-        <span
-          class="clickable toggle-label"
-          @click="${() =>
-            this.openEntityPopover(this.toggle_entity?.entity_id)}"
-          >${this.toggle_entity_label}
-        </span>
-        <ha-switch
-          .checked=${this.toggle_entity?.state === 'on'}
-          @change=${this.toggleEntityChanged}
-        ></ha-switch>
-      </div>
-    `
-  }
-
-  renderFaults({ faults } = this) {
-    const faultHtml = faults.map(({ icon, hide_inactive, state }) => {
-      return html` <ha-icon
-        class="fault-icon ${state.state === 'on'
-          ? 'active'
-          : hide_inactive
-          ? ' hide'
-          : ''}"
-        icon="${icon || state.attributes.icon}"
-        @click="${() => this.openEntityPopover(state.entity_id)}"
-      ></ha-icon>`
-    })
-
-    return html` <div class="faults">${faultHtml}</div>`
   }
 
   renderModeType(
