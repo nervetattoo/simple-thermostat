@@ -1,6 +1,5 @@
 {
   "compilerOptions": {
-    "module": "es6",
     "target": "es6",
     "declaration": true,
     "moduleResolution": "node",
@@ -9,6 +8,7 @@
     "experimentalDecorators": true,
     "rootDir": "./src",
     "outDir": "./dist",
+    "types": ["node", "jest"],
     "typeRoots": ["./node_modules/@types", "./typings"]
   },
   "include": ["./src"]

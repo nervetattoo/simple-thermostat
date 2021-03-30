@@ -1,6 +1,7 @@
-import { html } from 'lit-element'
+import { html } from 'lit-html'
+import { LooseObject } from '../types'
 
-interface InfoItemDetails {
+interface InfoItemDetails extends LooseObject {
   heading?: string
   icon?: string
   unit?: string
@@ -9,6 +10,8 @@ interface InfoItemDetails {
 interface InfoItemOptions {
   hide: boolean
   state: any
+  localize?
+  openEntityPopover?
   details: InfoItemDetails
 }
 
@@ -19,6 +22,8 @@ export default function renderInfoItem({
   hide,
   state,
   details,
+  localize,
+  openEntityPopover,
 }: InfoItemOptions) {
   if (hide || !state) return
 
@@ -32,12 +37,12 @@ export default function renderInfoItem({
       const prefix = ['state', type, state.attributes.device_class, ''].join(
         '.'
       )
-      value = this.localize(state.state, prefix)
+      value = localize(state.state, prefix)
     }
     valueCell = html`
       <div
         class="sensor-value clickable"
-        @click="${() => this.openEntityPopover(state.entity_id)}"
+        @click="${() => openEntityPopover(state.entity_id)}"
       >
         ${value} ${unit || state.attributes.unit_of_measurement}
       </div>

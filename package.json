@@ -11,7 +11,6 @@
     "src"
   ],
   "dependencies": {
-    "@types/node": "^14.14.37",
     "debounce-fn": "^5.0.0",
     "lit-element": "^2.4.0"
   },
@@ -24,11 +23,13 @@
     "@rollup/plugin-typescript": "^8.2.1",
     "@size-limit/file": "^4.10.1",
     "@types/jest": "^26.0.22",
-    "@types/lodash.isequal": "^4.5.5",
+    "@types/node": "^14.14.37",
     "concurrently": "^6.0.0",
     "cross-env": "^7.0.3",
     "husky": "^4.3.6",
     "jest": "^26.6.3",
+    "jest-electron": "^0.1.11",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
     "postcss": "^8.2.8",
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.2.1",

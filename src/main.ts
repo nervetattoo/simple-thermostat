@@ -396,7 +396,7 @@ export default class SimpleThermostat extends LitElement {
     }
   }
 
-  localize(label: string, prefix = '') {
+  localize = (label: string, prefix = '') => {
     const lang = this._hass.selectedLanguage || this._hass.language
     const key = `${prefix}${label}`
     const translations = this._hass.resources[lang]
@@ -502,6 +502,8 @@ export default class SimpleThermostat extends LitElement {
       renderInfoItem({
         hide: _hide.temperature,
         state: `${formatNumber(current, this.config)}${unit}`,
+        localize: this.localize,
+        openEntityPopover: this.openEntityPopover,
         details: {
           heading: this?.config?.label?.temperature ?? 'Temperature',
         },
@@ -509,6 +511,8 @@ export default class SimpleThermostat extends LitElement {
       renderInfoItem({
         hide: _hide.state,
         state: this.localize(action, 'state_attributes.climate.hvac_action.'),
+        localize: this.localize,
+        openEntityPopover: this.openEntityPopover,
         details: {
           heading: this?.config?.label?.state ?? 'State',
         },
@@ -519,6 +523,8 @@ export default class SimpleThermostat extends LitElement {
           renderInfoItem({
             hide: false,
             state,
+            localize: this.localize,
+            openEntityPopover: this.openEntityPopover,
             details: { heading: name, icon, unit },
           })
         )
@@ -598,8 +604,10 @@ export default class SimpleThermostat extends LitElement {
     }
   }
 
-  openEntityPopover(entityId = this.config.entity) {
-    fireEvent(this, 'hass-more-info', { entityId })
+  openEntityPopover = (entityId = null) => {
+    fireEvent(this, 'hass-more-info', {
+      entityId: entityId || this.config.entity,
+    })
   }
 
   // The height of your card. Home Assistant uses this to automatically

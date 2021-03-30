@@ -4,7 +4,20 @@ module.exports = {
     '**/__tests__/**/*.+(ts|tsx|js)',
     '**/?(*.)+(spec|test).+(ts|tsx|js)',
   ],
+  preset: 'ts-jest',
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest',
+    '^.+\\.(j|t)s?$': 'ts-jest',
+  },
+  transformIgnorePatterns: ['node_modules/(?!(lit-html))'],
+  runner: 'jest-electron/runner',
+  testEnvironment: 'jest-electron/environment',
+  globals: {
+    'ts-jest': {
+      tsconfig: {
+        // allow js in typescript
+        allowJs: true,
+        rootDir: './',
+      },
+    },
   },
 }
