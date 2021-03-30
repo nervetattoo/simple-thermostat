@@ -22,6 +22,11 @@ show_header: false
 control: false
 ```
 
+## Note about 1.0 release
+
+The 1.0 release only includes a rewrite to Typescript and a change of release management.
+It does not include bug fixes or new features, in fact, due to the Typescript release I expect the 1.0 package to be less stable than 0.42.
+
 ## Requirements
 
 Home Assistant 0.84 or higher
