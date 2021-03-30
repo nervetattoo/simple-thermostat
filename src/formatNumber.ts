@@ -1,6 +1,13 @@
-const NA = 'N/A'
+type Input = number | null | undefined | boolean | string
+type Options = {
+  decimals?: number
+  fallback?: string
+}
 
-function formatNumber(number, { decimals = 1, fallback = 'N/A' } = {}) {
+function formatNumber(
+  number: Input,
+  { decimals = 1, fallback = 'N/A' }: Options = {}
+): string {
   const type = typeof number
   if (
     number === null ||

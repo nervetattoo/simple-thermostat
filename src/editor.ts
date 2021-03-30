@@ -1,17 +1,9 @@
 import { LitElement, html } from 'lit-element'
 import styles from './styles.css'
+import fireEvent from './fireEvent'
+import { name } from '../package.json'
 
-const fireEvent = (node, type, detail = {}, options = {}) => {
-  const event = new Event(type, {
-    bubbles: options.bubbles === undefined ? true : options.bubbles,
-    cancelable: Boolean(options.cancelable),
-    composed: options.composed === undefined ? true : options.composed,
-  })
-
-  event.detail = detail
-  node.dispatchEvent(event)
-  return event
-}
+import { CardConfig, HASS } from './types'
 
 const OptionsDecimals = ['0', '1']
 
@@ -25,6 +17,10 @@ const GithubReadMe =
   'https://github.com/nervetattoo/simple-thermostat/blob/master/README.md'
 
 export default class SimpleThermostatEditor extends LitElement {
+  config: CardConfig
+  hass: HASS
+  toggle_entity: string
+
   static get styles() {
     return styles
   }
@@ -101,7 +97,7 @@ export default class SimpleThermostatEditor extends LitElement {
               <paper-listbox
                 slot="dropdown-content"
                 .selected=${Object.values(OptionsDecimals).indexOf(
-                  this.config.decimals
+                  String(this.config.decimals)
                 )}
               >
                 ${Object.values(OptionsDecimals).map(
@@ -164,7 +160,7 @@ export default class SimpleThermostatEditor extends LitElement {
               <paper-listbox
                 slot="dropdown-content"
                 .selected=${Object.values(OptionsStepSize).indexOf(
-                  this.config.step_size
+                  String(this.config.step_size)
                 )}
               >
                 ${Object.values(OptionsStepSize).map(
