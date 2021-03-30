@@ -1,4 +1,5 @@
 import { LitElement, html, property } from 'lit-element'
+import { nothing } from 'lit-html'
 import debounce from 'debounce-fn'
 import { name as CARD_NAME } from '../package.json'
 
@@ -137,7 +138,7 @@ export default class SimpleThermostat extends LitElement {
   @property()
   faults: Array<Fault> = []
   @property()
-  show_header: boolean = true
+  show_header: boolean
   @property()
   name: string | false = ''
   _stepSize = STEP_SIZE
@@ -330,11 +331,7 @@ export default class SimpleThermostat extends LitElement {
       this._hide = { ...this._hide, ...this.config.hide }
     }
 
-    if (this.config.show_header === false) {
-      this.show_header = false
-    } else {
-      this.show_header = true
-    }
+    this.show_header = this.config?.show_header ?? true
 
     if (typeof this.config.name === 'string') {
       this.name = this.config.name
@@ -422,16 +419,18 @@ export default class SimpleThermostat extends LitElement {
     )
     return html`
       <ha-card class="${classes.join(' ')}">
-        ${renderHeader({
-          name: this.name,
-          icon: this.icon,
-          faults: this.faults,
-          toggle_entity: this.toggle_entity,
-          toggle_entity_label: this.toggle_entity_label,
-          toggleEntityChanged: this.toggleEntityChanged,
-          entity: this.entity,
-          openEntityPopover: this.openEntityPopover,
-        })}
+        ${this.show_header
+          ? renderHeader({
+              name: this.name,
+              icon: this.icon,
+              faults: this.faults,
+              toggle_entity: this.toggle_entity,
+              toggle_entity_label: this.toggle_entity_label,
+              toggleEntityChanged: this.toggleEntityChanged,
+              entity: this.entity,
+              openEntityPopover: this.openEntityPopover,
+            })
+          : nothing}
         <section class="body">
           ${this.showSensors
             ? renderSensors({
