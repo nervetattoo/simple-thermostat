@@ -105,3 +105,20 @@ export interface ControlMode {
 export interface HAEvent extends Event {
   detail?: string | LooseObject
 }
+
+export enum MODES {
+  HVAC = 'hvac',
+  FAN = 'fan',
+  PRESET = 'preset',
+  SWING = 'swing',
+}
+
+export enum HVAC_MODES {
+  OFF = 'off',
+  HEAT = 'heat',
+  COOL = 'cool',
+  HEAT_COOL = 'heat_cool',
+  AUTO = 'auto',
+  DRY = 'dry',
+  FAN_ONLY = 'fan_only',
+}

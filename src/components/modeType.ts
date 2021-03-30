@@ -1,5 +1,5 @@
 import { html } from 'lit-html'
-import { ControlMode } from '../types'
+import { ControlMode, HVAC_MODES } from '../types'
 
 interface ModeTypeOptions {
   state: string
@@ -9,16 +9,6 @@ interface ModeTypeOptions {
   setMode
 }
 
-const HVAC_MODES = [
-  'off',
-  'heat',
-  'cool',
-  'heat_cool',
-  'auto',
-  'dry',
-  'fan_only',
-]
-
 export default function renderModeType({
   state,
   mode: options,
@@ -27,7 +17,7 @@ export default function renderModeType({
   setMode,
 }: ModeTypeOptions) {
   const { type, hide_when_off, mode = 'none', list, name } = options
-  if (list.length === 0 || (hide_when_off && state === HVAC_MODES[0])) {
+  if (list.length === 0 || (hide_when_off && state === HVAC_MODES.OFF)) {
     return null
   }
 
