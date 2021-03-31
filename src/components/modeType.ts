@@ -23,7 +23,7 @@ export default function renderModeType({
 
   let localizePrefix = `state_attributes.climate.${type}_mode.`
   if (type === 'hvac') {
-    localizePrefix = `state.climate.`
+    localizePrefix = `component.climate.state._.`
   }
 
   const maybeRenderName = (name: string | false) => {

@@ -31,14 +31,15 @@ export default function renderInfoItem({
 
   let valueCell
   if (typeof state === 'object') {
-    let value = state.state
-    if ('device_class' in state.attributes) {
-      const [type] = state.entity_id.split('.')
-      const prefix = ['state', type, state.attributes.device_class, ''].join(
-        '.'
-      )
-      value = localize(state.state, prefix)
-    }
+    const [domain] = state.entity_id.split('.')
+    const prefix = [
+      'component',
+      domain,
+      'state',
+      state.attributes?.device_class ?? '_',
+      '',
+    ].join('.')
+    const value = localize(state.state, prefix)
     valueCell = html`
       <div
         class="sensor-value clickable"

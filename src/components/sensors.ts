@@ -18,19 +18,18 @@ export default function renderSensors({
     renderInfoItem({
       hide: _hide.temperature,
       state: `${formatNumber(current, config)}${unit}`,
-      localize,
-      openEntityPopover,
       details: {
-        heading: config?.label?.temperature ?? 'Temperature',
+        heading:
+          config?.label?.temperature ?? localize('ui.card.climate.currently'),
       },
     }),
     renderInfoItem({
       hide: _hide.state,
       state: localize(action, 'state_attributes.climate.hvac_action.'),
-      localize,
-      openEntityPopover,
       details: {
-        heading: config?.label?.state ?? 'State',
+        heading:
+          config?.label?.state ??
+          localize('ui.panel.lovelace.editor.card.generic.state'),
       },
     }),
     ...(sensors.map(({ name, icon, state, unit }) => {

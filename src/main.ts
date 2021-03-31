@@ -280,9 +280,7 @@ export default class SimpleThermostat extends LitElement {
           const names = [name]
           if (entity) {
             state = hass.states[entity]
-            names.push(
-              state && state.attributes && state.attributes.friendly_name
-            )
+            names.push(state?.attributes?.friendly_name)
             if (attribute) {
               state = state.attributes[attribute] + unit
             }
@@ -309,7 +307,7 @@ export default class SimpleThermostat extends LitElement {
     const key = `${prefix}${label}`
     const translations = this._hass.resources[lang]
 
-    return key in translations ? translations[key] : label
+    return translations?.[key] ?? label
   }
 
   render({ _hide, _values, _updatingValues, config, entity } = this) {
