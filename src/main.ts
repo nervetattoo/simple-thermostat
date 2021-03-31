@@ -15,6 +15,7 @@ import renderModeType from './components/modeType'
 
 import parseHeader, { HeaderData, MODE_ICONS } from './config/header'
 import parseSetpoints from './config/setpoints'
+import parseService from './config/service'
 
 import {
   CardConfig,
@@ -31,6 +32,7 @@ import {
   EntityValue,
   HVAC_MODES,
   MODES,
+  Service,
 } from './types'
 
 const DEBOUNCE_TIMEOUT = 1000
@@ -107,6 +109,8 @@ export default class SimpleThermostat extends LitElement {
   @property()
   header: false | HeaderData
   @property()
+  service: Service
+  @property()
   modes: Array<ControlMode> = []
   @property()
   _hass: HASS = {}
@@ -134,8 +138,10 @@ export default class SimpleThermostat extends LitElement {
 
   _debouncedSetTemperature = debounce(
     (values: object) => {
-      this._hass.callService('climate', 'set_temperature', {
+      const { domain, service, data = {} } = this.service
+      this._hass.callService(domain, service, {
         entity_id: this.config.entity,
+        ...data,
         ...values,
       })
     },
@@ -170,6 +176,7 @@ export default class SimpleThermostat extends LitElement {
     }
 
     this.header = parseHeader(this.config.header, entity, hass)
+    this.service = parseService(this.config?.service ?? false)
 
     const attributes = entity.attributes
 

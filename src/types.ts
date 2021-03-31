@@ -64,6 +64,14 @@ export interface Setpoint {
 
 export type Setpoints = Record<string, Setpoint>
 
+export interface Service {
+  domain: string
+  service: string
+  data?: {
+    [key: string]: string
+  }
+}
+
 export interface CardConfig {
   entity?: string
   header: false | HeaderConfig
@@ -75,6 +83,7 @@ export interface CardConfig {
   step_layout?: 'row' | 'column'
   unit?: boolean | string
   fallback?: string
+  service?: Service
   hide?: {
     setpoint?: boolean
     temperature?: boolean

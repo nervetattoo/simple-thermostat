@@ -59,6 +59,10 @@ resources:
 - `entity` _string_: The thermostat entity id **required**
 - `header` _false|Header object_: See section about header config
 - `setpoints` _false|Setpoints object_: See section about header config
+- `service` _object_: Must specify both domain+service if overriding
+  - `domain` _string_: Override the service call domain
+  - `service` _string_: Override the service call name
+  - `data` _object_: Send extra data with the service call
 - `unit` _string|bool_: Override the unit to display. Set to false to hide unit
 - `decimals` _number_: Specify number of decimals to use: 1 or 0
 - `fallback` _string_: Specify a text to display if a valid set point can't be determined. Defaults to `N/A`
