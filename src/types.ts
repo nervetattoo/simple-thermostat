@@ -19,14 +19,22 @@ export interface Entity extends LooseObject {
 }
 
 export interface ControlField {
-  name: string
-  icon: string
+  _name: string
   _hide_when_off: boolean
-  [key: string]: string | boolean
+  icon: string
+  [key: string]:
+    | string
+    | boolean
+    | {
+        name: string | boolean
+        icon: string | boolean
+      }
 }
 
 export interface ControlObject {
-  _name: string
+  _names?: boolean
+  _icons?: boolean
+  _headings?: boolean
   [key: string]: boolean | string | ControlField
 }
 
@@ -50,13 +58,20 @@ export interface Fault {
   hide_inactive?: boolean
 }
 
+export interface Setpoint {
+  hide?: boolean
+}
+
+export type Setpoints = Record<string, Setpoint>
+
 export interface CardConfig {
   entity?: string
   header: false | HeaderConfig
   control?: false | ControlObject | ControlList
+  sensors?: false | Array<ConfigSensor>
+  setpoints?: Setpoints
   decimals?: number
   step_size?: number
-  sensors?: false | Array<ConfigSensor>
   step_layout?: 'row' | 'column'
   unit?: boolean | string
   fallback?: string

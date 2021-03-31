@@ -5,7 +5,7 @@ type Options = {
 }
 
 function formatNumber(
-  number: Input,
+  number,
   { decimals = 1, fallback = 'N/A' }: Options = {}
 ): string {
   const type = typeof number

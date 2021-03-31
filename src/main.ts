@@ -14,6 +14,7 @@ import renderSensors from './components/sensors'
 import renderModeType from './components/modeType'
 
 import parseHeader, { HeaderData, MODE_ICONS } from './config/header'
+import parseSetpoints from './config/setpoints'
 
 import {
   CardConfig,
@@ -22,6 +23,7 @@ import {
   ControlMode,
   ControlField,
   LooseObject,
+  Setpoints,
   ConfigSensor,
   Sensor,
   Fault,
@@ -31,7 +33,6 @@ import {
   MODES,
 } from './types'
 
-const DUAL = 'dual'
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
 const DECIMALS = 1
@@ -53,7 +54,6 @@ type ModeIcons = {
 
 const DEFAULT_HIDE = {
   temperature: false,
-  setpoint: false,
   state: false,
 }
 
@@ -93,6 +93,10 @@ function getModeList(type: string, attributes: any, config: any = {}) {
     })
 }
 
+type Values = {
+  [key: string]: number | string
+}
+
 export default class SimpleThermostat extends LitElement {
   static get styles() {
     return styles
@@ -109,8 +113,6 @@ export default class SimpleThermostat extends LitElement {
   @property()
   entity: LooseObject = {}
   @property()
-  entityType: any
-  @property()
   sensors: Array<Sensor> = []
   @property()
   showSensors: boolean = true
@@ -118,7 +120,7 @@ export default class SimpleThermostat extends LitElement {
   name: string | false = ''
   _stepSize = STEP_SIZE
   @property()
-  _values: EntityValue
+  _values: Values
   @property()
   _updatingValues = false
   @property()
@@ -171,18 +173,7 @@ export default class SimpleThermostat extends LitElement {
 
     const attributes = entity.attributes
 
-    this.entityType = getEntityType(attributes)
-    let values
-    if (this.entityType === DUAL) {
-      values = {
-        target_temp_low: attributes.target_temp_low,
-        target_temp_high: attributes.target_temp_high,
-      }
-    } else {
-      values = {
-        temperature: attributes.temperature,
-      }
-    }
+    let values = parseSetpoints(this.config?.setpoints ?? false, attributes)
 
     // If we are updating the values, and they are now equal
     // we can safely assume we've been able to update the set points
@@ -355,42 +346,38 @@ export default class SimpleThermostat extends LitElement {
                 openEntityPopover: this.openEntityPopover,
               })
             : ''}
-          ${_hide.setpoint
-            ? ''
-            : Object.entries(_values).map(([field, value]) => {
-                return html`
-                  <div class="current-wrapper ${stepLayout}">
-                    <ha-icon-button
-                      ?disabled=${maxTemp && value >= maxTemp}
-                      class="thermostat-trigger"
-                      icon=${row ? ICONS.PLUS : ICONS.UP}
-                      @click="${() =>
-                        this.setTemperature(this._stepSize, field)}"
-                    >
-                    </ha-icon-button>
+          ${Object.entries(_values).map(([field, value]) => {
+            return html`
+              <div class="current-wrapper ${stepLayout}">
+                <ha-icon-button
+                  ?disabled=${maxTemp && value >= maxTemp}
+                  class="thermostat-trigger"
+                  icon=${row ? ICONS.PLUS : ICONS.UP}
+                  @click="${() => this.setTemperature(this._stepSize, field)}"
+                >
+                </ha-icon-button>
 
-                    <h3
-                      @click=${() => this.openEntityPopover()}
-                      class="current--value ${_updatingValues
-                        ? 'updating'
-                        : ''}"
-                    >
-                      ${formatNumber(value, config)}
-                      ${unit !== false
-                        ? html` <span class="current--unit">${unit}</span> `
-                        : ''}
-                    </h3>
-                    <ha-icon-button
-                      ?disabled=${minTemp && value <= minTemp}
-                      class="thermostat-trigger"
-                      icon=${row ? ICONS.MINUS : ICONS.DOWN}
-                      @click="${() =>
-                        this.setTemperature(-this._stepSize, field)}"
-                    >
-                    </ha-icon-button>
-                  </div>
-                `
-              })}
+                <h3
+                  @click=${() => this.openEntityPopover()}
+                  class="current--value ${_updatingValues
+                    ? 'updating'
+                    : nothing}"
+                >
+                  ${formatNumber(value as number, config)}
+                  ${unit !== false
+                    ? html` <span class="current--unit">${unit}</span> `
+                    : nothing}
+                </h3>
+                <ha-icon-button
+                  ?disabled=${minTemp && value <= minTemp}
+                  class="thermostat-trigger"
+                  icon=${row ? ICONS.MINUS : ICONS.DOWN}
+                  @click="${() => this.setTemperature(-this._stepSize, field)}"
+                >
+                </ha-icon-button>
+              </div>
+            `
+          })}
         </section>
 
         ${this.modes.map((mode) =>
@@ -415,17 +402,14 @@ export default class SimpleThermostat extends LitElement {
     })
   }
 
-  setTemperature(change: number, field = 'temperature') {
+  setTemperature(change: number, field: string) {
     this._updatingValues = true
-    this._values = {
-      ...this._values,
-      [field]: +formatNumber(this._values[field] + change, {
-        decimals: this.config.decimals,
-      }),
-    }
-    this._debouncedSetTemperature({
-      ...this._values,
-    })
+    const previousValue = this._values[field] as number
+    const newValue = previousValue + change
+    const { decimals } = this.config
+
+    this._values[field] = +formatNumber(newValue, { decimals })
+    this._debouncedSetTemperature(this._values)
   }
 
   setMode = (type: string, mode: string) => {

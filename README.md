@@ -58,6 +58,7 @@ resources:
 
 - `entity` _string_: The thermostat entity id **required**
 - `header` _false|Header object_: See section about header config
+- `setpoints` _false|Setpoints object_: See section about header config
 - `unit` _string|bool_: Override the unit to display. Set to false to hide unit
 - `decimals` _number_: Specify number of decimals to use: 1 or 0
 - `fallback` _string_: Specify a text to display if a valid set point can't be determined. Defaults to `N/A`
@@ -67,7 +68,6 @@ resources:
   - `temperature`: _string_ Override Temperature label
   - `state`: _string_ Override State label
 - `hide` _object_: Control specifically information fields to show. Defaults to showing everything
-  - `setpoint`: _bool_ (Default to `false`)
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
 - `control` _object|array_ (From 0.27)
@@ -128,6 +128,41 @@ header:
   - `heat`: _string_ Use this icon for state heat. Default hass:autorenew
   - `heat_cool`: _string_: Use this icon for state heat_cool. Default hass:fire
   - `"off"`: _string_ Use this icon for state off. Default hass:power
+
+## Setpoints config
+
+> New in 2.0. Old ways of hiding setpoints is deprecated
+
+If you specify setpoints manually you must include all setpoints you want included.
+Normally there are only two possibilities here; `temperature` or `target_temp_high` + `target_temp_low`. Single or dual thermostats. But, theoretically there could be multiple setpoints and this aims to support any permutation.
+The new feature in 2.0 is the ability to hide one of the two setpoints for dual thermostats.
+
+To manually specify to use the `temperature` attribute as a setpoint you do:
+
+```yaml
+setpoints:
+  temperature:
+```
+
+For dual thermostats:
+
+```yaml
+setpoints:
+  target_temp_low:
+  target_temp_high:
+```
+
+To hide one of the dual setpoints:
+
+```yaml
+setpoints:
+  target_temp_low:
+    hide: true
+  target_temp_high:
+```
+
+For climate devices supporting more setpoints you can include as many as you like.
+Automatic detection of set points only work for the single/dual cases.
 
 ## Usage of the control config
 
