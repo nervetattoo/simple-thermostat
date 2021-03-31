@@ -354,6 +354,8 @@ export default class SimpleThermostat extends LitElement {
               })
             : ''}
           ${Object.entries(_values).map(([field, value]) => {
+            const hasValue = ['string', 'number'].includes(typeof value)
+            const showUnit = unit !== false && hasValue
             return html`
               <div class="current-wrapper ${stepLayout}">
                 <ha-icon-button
@@ -370,9 +372,9 @@ export default class SimpleThermostat extends LitElement {
                     ? 'updating'
                     : nothing}"
                 >
-                  ${formatNumber(value as number, config)}
-                  ${unit !== false
-                    ? html` <span class="current--unit">${unit}</span> `
+                  ${formatNumber(value, config)}
+                  ${showUnit
+                    ? html`<span class="current--unit">${unit}</span>`
                     : nothing}
                 </h3>
                 <ha-icon-button
