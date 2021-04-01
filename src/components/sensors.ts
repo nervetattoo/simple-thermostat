@@ -1,4 +1,4 @@
-import { html } from 'lit-html'
+import { html, nothing } from 'lit-html'
 import formatNumber from '../formatNumber'
 import renderInfoItem from './infoItem'
 
@@ -17,7 +17,7 @@ export default function renderSensors({
   const sensorHtml = [
     renderInfoItem({
       hide: _hide.temperature,
-      state: `${formatNumber(current, config)}${unit}`,
+      state: `${formatNumber(current, config)}${unit || nothing}`,
       details: {
         heading:
           config?.label?.temperature ?? localize('ui.card.climate.currently'),
