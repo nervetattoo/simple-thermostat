@@ -15,8 +15,6 @@
     "lit-element": "^2.4.0"
   },
   "devDependencies": {
-    "@ava/babel": "^1.0.1",
-    "@babel/core": "^7.12.10",
     "@rollup/plugin-commonjs": "^17.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.2.1",
@@ -37,7 +35,6 @@
     "postcss-preset-env": "^6.7.0",
     "prettier": "^2.2.1",
     "pretty-quick": "^3.1.0",
-    "release-it": "^14.2.2",
     "rollup": "^2.32.0",
     "rollup-plugin-minify-html-literals": "^1.2.5",
     "rollup-plugin-node-resolve": "^5.2.0",
@@ -51,7 +48,6 @@
     "typescript": "^4.2.3"
   },
   "scripts": {
-    "release": "release-it",
     "test": "jest",
     "build": "cross-env NODE_ENV=production rollup -c",
     "dev": "concurrently 'npm:dev:*'",
@@ -67,18 +63,6 @@
       "pre-commit": "pretty-quick --staged"
     }
   },
-  "release-it": {
-    "github": {
-      "release": true,
-      "assets": [
-        "simple-thermostat.*"
-      ]
-    },
-    "hooks": {
-      "before:init": "yarn build",
-      "after:release": "rm simple-thermostat.js"
-    }
-  },
   "prettier": {
     "printWidth": 80,
     "semi": false,
@@ -90,12 +74,5 @@
       "path": "dist/simple-thermostat.js",
       "limit": "15 KB"
     }
-  ],
-  "ava": {
-    "babel": {
-      "compileAsTests": [
-        "src/**/*"
-      ]
-    }
-  }
+  ]
 }
