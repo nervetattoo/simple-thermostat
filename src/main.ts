@@ -7,7 +7,6 @@ import isEqual from './isEqual'
 import styles from './styles.css'
 
 import formatNumber from './formatNumber'
-import getEntityType from './getEntityType'
 import fireEvent from './fireEvent'
 import renderHeader from './components/header'
 import renderSensors from './components/sensors'
@@ -19,17 +18,12 @@ import parseService from './config/service'
 
 import {
   CardConfig,
-  HAState,
-  HAEvent,
   ControlMode,
   ControlField,
   LooseObject,
-  Setpoints,
   ConfigSensor,
   Sensor,
-  Fault,
   HASS,
-  EntityValue,
   HVAC_MODES,
   MODES,
   Service,

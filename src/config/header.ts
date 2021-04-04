@@ -1,4 +1,18 @@
-import { HASS, HAState, LooseObject, Fault } from '../types'
+import { HASS, LooseObject } from '../types'
+
+export interface HAState {
+  state: string | number
+  entity_id: string
+  attributes: LooseObject
+  last_changed?: string
+  last_updated?: string
+}
+
+export interface Fault {
+  entity: string
+  icon?: string
+  hide_inactive?: boolean
+}
 
 export const STATE_ICONS = {
   auto: 'mdi:radiator',

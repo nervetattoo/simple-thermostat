@@ -4,20 +4,6 @@ export interface LooseObject {
   [key: string]: any
 }
 
-export interface SingleEntityValue {
-  temperature: number
-}
-export interface DualEntityValue {
-  target_temp_low: number
-  target_temp_hight: number
-}
-
-export type EntityValue = SingleEntityValue | DualEntityValue
-
-export interface Entity extends LooseObject {
-  attributes: LooseObject
-}
-
 export interface ControlField {
   _name: string
   _hide_when_off: boolean
@@ -52,12 +38,6 @@ export interface Sensor extends ConfigSensor {
   state: any
 }
 
-export interface Fault {
-  entity: string
-  icon?: string
-  hide_inactive?: boolean
-}
-
 export interface Setpoint {
   hide?: boolean
 }
@@ -81,11 +61,16 @@ export interface CardConfig {
   decimals?: number
   step_size?: number
   step_layout?: 'row' | 'column'
+  layout?: {
+    sensors: {
+      type: 'table'
+    }
+    step: 'row' | 'column'
+  }
   unit?: boolean | string
   fallback?: string
   service?: Service
   hide?: {
-    setpoint?: boolean
     temperature?: boolean
     state?: boolean
   }
@@ -93,14 +78,6 @@ export interface CardConfig {
     temperature?: string
     state?: string
   }
-}
-
-export interface HAState {
-  state: string | number
-  entity_id: string
-  attributes: LooseObject
-  last_changed?: string
-  last_updated?: string
 }
 
 export interface HASS {
@@ -114,10 +91,6 @@ export interface ControlMode {
   name?: string | boolean
   hide_when_off?: boolean
   list: Array<LooseObject>
-}
-
-export interface HAEvent extends Event {
-  detail?: string | LooseObject
 }
 
 export enum MODES {
