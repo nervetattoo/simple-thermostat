@@ -3,7 +3,8 @@ import styles from './styles.css'
 import fireEvent from './fireEvent'
 import { name } from '../package.json'
 
-import { CardConfig, HASS } from './types'
+import { CardConfig } from './config/card'
+import { HASS } from './types'
 
 function setValue(obj, path, value) {
   const a = path.split('.')

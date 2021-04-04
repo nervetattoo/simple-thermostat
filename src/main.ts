@@ -14,19 +14,17 @@ import renderModeType from './components/modeType'
 
 import parseHeader, { HeaderData, MODE_ICONS } from './config/header'
 import parseSetpoints from './config/setpoints'
-import parseService from './config/service'
+import parseService, { Service } from './config/service'
+
+import { CardConfig, ControlField } from './config/card'
 
 import {
-  CardConfig,
   ControlMode,
-  ControlField,
   LooseObject,
-  ConfigSensor,
   Sensor,
   HASS,
   HVAC_MODES,
   MODES,
-  Service,
 } from './types'
 
 const DEBOUNCE_TIMEOUT = 1000
@@ -269,7 +267,7 @@ export default class SimpleThermostat extends LitElement {
       this.showSensors = false
     } else if (this.config.sensors) {
       this.sensors = this.config.sensors.map(
-        ({ name, entity, attribute, unit = '', ...rest }: ConfigSensor) => {
+        ({ name, entity, attribute, unit = '', ...rest }) => {
           let state
           const names = [name]
           if (entity) {

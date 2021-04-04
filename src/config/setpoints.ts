@@ -1,6 +1,11 @@
-import { Setpoints } from '../types'
 import getEntityType from '../getEntityType'
 const DUAL = 'dual' as const
+
+export interface Setpoint {
+  hide?: boolean
+}
+
+export type Setpoints = Record<string, Setpoint>
 
 export default function parseSetpoints(
   setpoints: Setpoints | false,
