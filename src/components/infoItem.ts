@@ -2,7 +2,7 @@ import { html } from 'lit-html'
 import { LooseObject } from '../types'
 
 interface InfoItemDetails extends LooseObject {
-  heading?: string
+  heading?: string | false
   icon?: string
   unit?: string
 }
@@ -50,6 +50,10 @@ export default function renderInfoItem({
     `
   } else {
     valueCell = html` <div class="sensor-value">${state}</div> `
+  }
+
+  if (heading === false) {
+    return valueCell
   }
 
   const headingResult = icon

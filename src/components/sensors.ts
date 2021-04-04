@@ -1,4 +1,4 @@
-import { html, nothing } from 'lit-html'
+import { html } from 'lit-html'
 import formatNumber from '../formatNumber'
 import renderInfoItem from './infoItem'
 
@@ -14,22 +14,29 @@ export default function renderSensors({
   const {
     attributes: { hvac_action: action, current_temperature: current },
   } = entity
+
+  const { type, labels: showLabels } = config?.layout?.sensors ?? {
+    type: 'table',
+    labels: true,
+  }
   const sensorHtml = [
     renderInfoItem({
       hide: _hide.temperature,
-      state: `${formatNumber(current, config)}${unit || nothing}`,
+      state: `${formatNumber(current, config)}${unit || ''}`,
       details: {
-        heading:
-          config?.label?.temperature ?? localize('ui.card.climate.currently'),
+        heading: showLabels
+          ? config?.label?.temperature ?? localize('ui.card.climate.currently')
+          : false,
       },
     }),
     renderInfoItem({
       hide: _hide.state,
       state: localize(action, 'state_attributes.climate.hvac_action.'),
       details: {
-        heading:
-          config?.label?.state ??
-          localize('ui.panel.lovelace.editor.card.generic.state'),
+        heading: showLabels
+          ? config?.label?.state ??
+            localize('ui.panel.lovelace.editor.card.generic.state')
+          : false,
       },
     }),
     ...(sensors.map(({ name, icon, state, unit }) => {
@@ -40,11 +47,19 @@ export default function renderSensors({
           state,
           localize,
           openEntityPopover,
-          details: { heading: name, icon, unit },
+          details: {
+            heading: showLabels && name,
+            icon,
+            unit,
+          },
         })
       )
     }) || null),
   ].filter((it) => it !== null)
 
-  return html` <div class="sensors">${sensorHtml}</div> `
+  const classes = [
+    showLabels ? 'with-labels' : 'without-labels',
+    type === 'list' ? 'as-list' : 'as-table',
+  ]
+  return html` <div class="sensors ${classes.join(' ')}">${sensorHtml}</div> `
 }

@@ -46,6 +46,12 @@ type ModeIcons = {
   [key: string]: string
 }
 
+interface ModeOptions {
+  names: boolean
+  icons: boolean
+  headings: boolean
+}
+
 const DEFAULT_HIDE = {
   temperature: false,
   state: false,
@@ -70,14 +76,18 @@ function isIncluded(key: string, values: any) {
   return true
 }
 
-function getModeList(type: string, attributes: any, config: any = {}) {
+function getModeList(
+  type: string,
+  attributes: LooseObject,
+  config: LooseObject = {}
+) {
   return attributes[`${type}_modes`]
-    .filter((name: string) => isIncluded(name, config))
-    .map((name: string) => {
+    .filter((name) => isIncluded(name, config))
+    .map((name) => {
       // Grab all values sans the possible include prop
       // and stuff it into an  object
-      const { include, ...values } =
-        typeof config[name] === 'object' ? config[name] : ({} as any)
+      const values = typeof config[name] === 'object' ? config[name] : {}
+      delete values.include
       return {
         icon: MODE_ICONS[name],
         value: name,
@@ -118,11 +128,11 @@ export default class SimpleThermostat extends LitElement {
   @property()
   _values: Values
   @property()
-  _updatingValues = false
+  _updatingValues: boolean = false
   @property()
   _hide = DEFAULT_HIDE
   @property()
-  modeOptions = {
+  modeOptions: ModeOptions = {
     names: true,
     icons: true,
     headings: true,
@@ -150,14 +160,14 @@ export default class SimpleThermostat extends LitElement {
     if (!config.entity) {
       throw new Error('You need to define an entity')
     }
-    this.config = <CardConfig>{
+    this.config = {
       decimals: DECIMALS,
       ...config,
     }
   }
 
   set hass(hass: any) {
-    const entity = hass.states[this.config.entity as string]
+    const entity = hass.states[this.config.entity]
     if (typeof entity === undefined) {
       return
     }
@@ -216,12 +226,8 @@ export default class SimpleThermostat extends LitElement {
       if (entries.length > 0) {
         controlModes = entries
           .filter(([type]) => supportedModeType(type))
-          .map(([type, definition]) => {
-            const {
-              _name,
-              _hide_when_off,
-              ...config
-            } = definition as ControlField
+          .map(([type, definition]: [string, ControlField]) => {
+            const { _name, _hide_when_off, ...config } = definition
             return {
               type,
               hide_when_off: _hide_when_off,
@@ -319,7 +325,7 @@ export default class SimpleThermostat extends LitElement {
 
     const unit = this.getUnit()
 
-    const stepLayout = this.config.step_layout || 'column'
+    const stepLayout = this.config?.layout?.step ?? 'column'
     const row = stepLayout === 'row'
 
     const classes = [!this.header && 'no-header', action].filter((cx) => !!cx)

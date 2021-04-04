@@ -18,15 +18,17 @@ Hide everything but sensors and temperature control:
 ```yaml
 type: custom:simple-thermostat
 entity: climate.hvac
-step_layout: row
-show_header: false
+layout:
+  step: row
+header: false
 control: false
 ```
 
-## Note about 1.0 release
+## Note about 2.0 release
 
-The 1.0 release only includes a rewrite to Typescript and a change of release management.
-It does not include bug fixes or new features, in fact, due to the Typescript release I expect the 1.0 package to be less stable than 0.42.
+The 2.0 release is most likely a breaking change for the majority of users.
+Make sure you read the release notes and inspect the new configuration format.
+It offers more flexibility and features as well as a number of bug fixes.
 
 ## Requirements
 
@@ -60,6 +62,11 @@ resources:
 - `entity` _string_: The thermostat entity id **required**
 - `header` _false|Header object_: See section about header config
 - `setpoints` _false|Setpoints object_: See section about header config
+- `layout` _Layout object_:
+  - `step` _row|column_: Where to render the setpoint up/down buttons
+  - `sensors`: _object_
+    - `type`: _list|table_: How to render the sensors
+    - `labels`: _boolean_: Whether to show labels/headings or not. Hiding here overrides hiding under root level `sensors` config
 - `service` _object_: Must specify both domain+service if overriding
   - `domain` _string_: Override the service call domain
   - `service` _string_: Override the service call name
@@ -68,7 +75,6 @@ resources:
 - `decimals` _number_: Specify number of decimals to use: 1 or 0
 - `fallback` _string_: Specify a text to display if a valid set point can't be determined. Defaults to `N/A`
 - `step_size` _number_: Override the default 0.5 step size for increasing/decreasing the temperature
-- `step_layout` _string_: `row` or `column` (default). Using `row` will make the card more compact
 - `label` _object_: Override untranslated labels
   - `temperature`: _string_ Override Temperature label
   - `state`: _string_ Override State label

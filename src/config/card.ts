@@ -36,7 +36,8 @@ export interface CardConfig {
   step_layout?: 'row' | 'column'
   layout?: {
     sensors: {
-      type: 'table'
+      type: 'table' | 'list'
+      labels: boolean
     }
     step: 'row' | 'column'
   }
