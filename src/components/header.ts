@@ -25,6 +25,8 @@ export default function renderHeader({
     icon = icon?.[action] ?? false
   }
 
+  const name = header?.name ?? false
+
   return html`
     <header>
       <div
@@ -35,7 +37,7 @@ export default function renderHeader({
         ${(icon &&
           html` <ha-icon class="header__icon" .icon=${icon}></ha-icon> `) ||
         ''}
-        <h2 class="header__title">${header?.name}</h2>
+        ${name ? html`<h2 class="header__title">${name}</h2>` : nothing}
       </div>
       ${renderFaults({ faults: header.faults, openEntityPopover })}
       ${header.toggle
