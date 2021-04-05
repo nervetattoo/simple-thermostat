@@ -1,8 +1,6 @@
 import { HeaderConfig } from './config/header'
 
-export interface LooseObject {
-  [key: string]: any
-}
+export type LooseObject = Record<string, any>
 
 export interface ConfigSensor {
   entity: string
@@ -17,23 +15,8 @@ export interface Sensor extends ConfigSensor {
 }
 
 export interface HASS {
-  states?: LooseObject
+  states?: Record<string, any>
   [key: string]: any
-}
-
-export interface ControlMode {
-  type: string
-  mode?: any
-  name?: string | boolean
-  hide_when_off?: boolean
-  list: Array<LooseObject>
-}
-
-export enum MODES {
-  HVAC = 'hvac',
-  FAN = 'fan',
-  PRESET = 'preset',
-  SWING = 'swing',
 }
 
 export enum HVAC_MODES {
@@ -44,4 +27,12 @@ export enum HVAC_MODES {
   AUTO = 'auto',
   DRY = 'dry',
   FAN_ONLY = 'fan_only',
+}
+
+export interface ControlMode {
+  type: string
+  mode?: any
+  name?: string | boolean
+  hide_when_off?: boolean
+  list: Array<Record<string, any>>
 }

@@ -40,9 +40,9 @@ type ModeIcons = {
 }
 
 interface ModeOptions {
-  names: boolean
-  icons: boolean
-  headings: boolean
+  names?: boolean
+  icons?: boolean
+  headings?: boolean
 }
 
 const DEFAULT_HIDE = {
@@ -124,12 +124,6 @@ export default class SimpleThermostat extends LitElement {
   _updatingValues: boolean = false
   @property()
   _hide = DEFAULT_HIDE
-  @property()
-  modeOptions: ModeOptions = {
-    names: true,
-    icons: true,
-    headings: true,
-  }
 
   _debouncedSetTemperature = debounce(
     (values: object) => {
@@ -203,18 +197,6 @@ export default class SimpleThermostat extends LitElement {
     } else if (Array.isArray(this.config.control)) {
       controlModes = buildBasicModes(this.config.control)
     } else if (typeof this.config.control === 'object') {
-      const { names, icons, headings } = this.config?.layout?.mode
-
-      if (typeof names === 'boolean') {
-        this.modeOptions.names = names
-      }
-      if (typeof icons === 'boolean') {
-        this.modeOptions.icons = icons
-      }
-      if (typeof headings === 'boolean') {
-        this.modeOptions.headings = headings
-      }
-
       const entries = Object.entries(this.config.control)
       if (entries.length > 0) {
         controlModes = entries
@@ -383,7 +365,7 @@ export default class SimpleThermostat extends LitElement {
             state: entity.state,
             mode,
             localize: this.localize,
-            modeOptions: this.modeOptions,
+            modeOptions: this.config?.layout?.mode ?? {},
             setMode: this.setMode,
           })
         )}
