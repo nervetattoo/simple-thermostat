@@ -64,6 +64,10 @@ resources:
 - `setpoints` _false|Setpoints object_: See section about header config
 - `layout` _Layout object_:
   - `step` _row|column_: Where to render the setpoint up/down buttons
+  - `mode` _object_: Disable elements for all modes
+    - `names` _object_
+    - `icons` _object_
+    - `headings` _object_
   - `sensors`: _object_
     - `type`: _list|table_: How to render the sensors
     - `labels`: _boolean_: Whether to show labels/headings or not. Hiding here overrides hiding under root level `sensors` config
