@@ -34,28 +34,25 @@ export default function renderHeader({
         class="clickable"
         @click=${() => openEntityPopover()}
       >
-        ${(icon &&
-          html` <ha-icon class="header__icon" .icon=${icon}></ha-icon> `) ||
-        ''}
-        ${name ? html`<h2 class="header__title">${name}</h2>` : nothing}
+        ${renderIcon(icon)} ${renderName(name)}
       </div>
-      ${renderFaults({ faults: header.faults, openEntityPopover })}
-      ${header.toggle
-        ? renderToggle({
-            toggle: header.toggle,
-            openEntityPopover,
-            toggleEntityChanged,
-          })
-        : ''}
+      ${renderFaults(header.faults, openEntityPopover)}
+      ${renderToggle(header.toggle, openEntityPopover, toggleEntityChanged)}
     </header>
   `
 }
 
-type FaultsOptions = {
-  faults
-  openEntityPopover
+function renderIcon(icon) {
+  return icon
+    ? html` <ha-icon class="header__icon" .icon=${icon}></ha-icon> `
+    : nothing
 }
-function renderFaults({ faults, openEntityPopover }: FaultsOptions) {
+
+function renderName(name) {
+  return name ? html`<h2 class="header__title">${name}</h2>` : nothing
+}
+
+function renderFaults(faults, openEntityPopover) {
   if (faults.length === 0) {
     return nothing
   }
@@ -74,16 +71,9 @@ function renderFaults({ faults, openEntityPopover }: FaultsOptions) {
   return html` <div class="faults">${faultHtml}</div>`
 }
 
-type ToggleOptions = {
-  openEntityPopover
-  toggle
-  toggleEntityChanged
-}
-function renderToggle({
-  toggle,
-  toggleEntityChanged,
-  openEntityPopover,
-}: ToggleOptions) {
+function renderToggle(toggle, toggleEntityChanged, openEntityPopover) {
+  if (!toggle) return nothing
+
   return html`
     <div style="margin-left: auto;">
       <span
