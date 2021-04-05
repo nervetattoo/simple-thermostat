@@ -3,38 +3,46 @@ import { LooseObject, ConfigSensor } from '../types'
 import { Service } from './service'
 import { Setpoints } from './setpoints'
 
-export interface ControlField {
+export enum MODES {
+  HVAC = 'hvac',
+  FAN = 'fan',
+  PRESET = 'preset',
+  SWING = 'swing',
+}
+
+type ControlItem =
+  | boolean
+  | {
+      name?: string | false
+      icon?: string | false
+    }
+
+export type ControlField = Record<string, ControlItem> & {
   _name: string
   _hide_when_off: boolean
-  icon: string
-  [key: string]:
-    | string
-    | boolean
-    | {
-        name: string | boolean
-        icon: string | boolean
-      }
 }
 
-export interface ControlObject {
-  _names?: boolean
-  _icons?: boolean
-  _headings?: boolean
-  [key: string]: boolean | string | ControlField
+type ControlObject = {
+  hvac: boolean | ControlField
+  fan: boolean | ControlField
+  preset: boolean | ControlField
+  swing: boolean | ControlField
 }
 
-export type ControlList = Array<string>
-
-export interface CardConfig {
+interface CardConfig {
   entity?: string
   header: false | HeaderConfig
-  control?: false | ControlObject | ControlList
+  control?: false | ControlObject | string[]
   sensors?: false | Array<ConfigSensor>
   setpoints?: Setpoints
   decimals?: number
   step_size?: number
-  step_layout?: 'row' | 'column'
   layout?: {
+    mode: {
+      names: boolean
+      icons: boolean
+      headings: boolean
+    }
     sensors: {
       type: 'table' | 'list'
       labels: boolean
@@ -53,3 +61,5 @@ export interface CardConfig {
     state?: string
   }
 }
+
+export { CardConfig }

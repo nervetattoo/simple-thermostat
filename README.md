@@ -82,9 +82,6 @@ resources:
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
 - `control` _object|array_ (From 0.27)
-  - `_names` _bool_: Show mode names or not. Defaults to true
-  - `_icons` _bool_: Show mode icons or not. Defaults to true
-  - `_headings` _bool_: Show a heading for each mode button row. Defaults to true
   - `{type}` _object|bool_: The key of the mode type (hvac, preset, fan, swing)
     - `_name` _string_: Override the name of the mode type
     - `_hide_when_off` _bool_: Hides the mode type selection row when the entity is off. Defaults to false shown

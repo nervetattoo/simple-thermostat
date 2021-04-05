@@ -16,16 +16,9 @@ import parseHeader, { HeaderData, MODE_ICONS } from './config/header'
 import parseSetpoints from './config/setpoints'
 import parseService, { Service } from './config/service'
 
-import { CardConfig, ControlField } from './config/card'
+import { CardConfig, ControlField, MODES } from './config/card'
 
-import {
-  ControlMode,
-  LooseObject,
-  Sensor,
-  HASS,
-  HVAC_MODES,
-  MODES,
-} from './types'
+import { ControlMode, LooseObject, Sensor, HASS, HVAC_MODES } from './types'
 
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
@@ -210,19 +203,19 @@ export default class SimpleThermostat extends LitElement {
     } else if (Array.isArray(this.config.control)) {
       controlModes = buildBasicModes(this.config.control)
     } else if (typeof this.config.control === 'object') {
-      const { _names, _icons, _headings, ...modes } = this.config.control
+      const { names, icons, headings } = this.config?.layout?.mode
 
-      if (typeof _names === 'boolean') {
-        this.modeOptions.names = _names
+      if (typeof names === 'boolean') {
+        this.modeOptions.names = names
       }
-      if (typeof _icons === 'boolean') {
-        this.modeOptions.icons = _icons
+      if (typeof icons === 'boolean') {
+        this.modeOptions.icons = icons
       }
-      if (typeof _headings === 'boolean') {
-        this.modeOptions.headings = _headings
+      if (typeof headings === 'boolean') {
+        this.modeOptions.headings = headings
       }
 
-      const entries = Object.entries(modes)
+      const entries = Object.entries(this.config.control)
       if (entries.length > 0) {
         controlModes = entries
           .filter(([type]) => supportedModeType(type))

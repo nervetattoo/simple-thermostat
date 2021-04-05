@@ -171,14 +171,14 @@ export default class SimpleThermostatEditor extends LitElement {
           <div class="side-by-side">
             <paper-dropdown-menu
               label="Step Layout (optional)"
-              .configValue=${'step_layout'}
+              .configValue=${'layout.step'}
               @value-changed="${this.valueChanged}"
               class="dropdown"
             >
               <paper-listbox
                 slot="dropdown-content"
                 .selected=${Object.values(OptionsStepLayout).indexOf(
-                  this.config.step_layout
+                  this.config.layout?.step
                 )}
               >
                 ${Object.values(OptionsStepLayout).map(
