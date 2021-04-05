@@ -31,7 +31,7 @@ ha-card.no-header {
 .body {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: auto;
+  grid-auto-columns: minmax(min-content, auto);
   place-items: center;
   padding: 0 calc(var(--st-spacing, var(--st-default-spacing)) * 4);
   padding-bottom: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
@@ -65,13 +65,28 @@ ha-card.no-header {
 
 .sensors {
   display: grid;
-  grid: auto-flow / auto auto;
   grid-gap: var(--st-spacing, var(--st-default-spacing));
   font-size: var(
     --st-font-size-sensors,
     var(--paper-font-subhead_-_font-size, 16px)
   );
 }
+.sensors.as-list {
+  grid-auto-flow: column;
+  grid-template-columns: min-content;
+}
+
+.sensors.as-table {
+  &.without-labels {
+    grid: auto-flow / 100%;
+    place-items: start;
+  }
+  &.with-labels {
+    grid: auto-flow / auto auto;
+    place-items: start;
+  }
+}
+
 .sensor-value {
   display: flex;
   align-items: center;

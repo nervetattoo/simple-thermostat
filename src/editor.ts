@@ -3,7 +3,19 @@ import styles from './styles.css'
 import fireEvent from './fireEvent'
 import { name } from '../package.json'
 
-import { CardConfig, HASS } from './types'
+import { CardConfig } from './config/card'
+import { HASS } from './types'
+
+function setValue(obj, path, value) {
+  const a = path.split('.')
+  let o = obj
+  while (a.length - 1) {
+    var n = a.shift()
+    if (!(n in o)) o[n] = {}
+    o = o[n]
+  }
+  o[a[0]] = value
+}
 
 const OptionsDecimals = ['0', '1']
 
@@ -19,7 +31,6 @@ const GithubReadMe =
 export default class SimpleThermostatEditor extends LitElement {
   config: CardConfig
   hass: HASS
-  toggle_entity: string
 
   static get styles() {
     return styles
@@ -27,6 +38,10 @@ export default class SimpleThermostatEditor extends LitElement {
 
   static get properties() {
     return { hass: {}, config: {} }
+  }
+
+  static getStubConfig() {
+    return { header: {} }
   }
 
   setConfig(config) {
@@ -38,10 +53,19 @@ export default class SimpleThermostatEditor extends LitElement {
   }
 
   get _show_header() {
-    if (this.config.show_header === false) {
+    if (this.config.header === false) {
       return false
     } else {
       return true
+    }
+  }
+
+  set _show_header(val) {
+    console.log('set show header', val)
+    if (val) {
+      this.config.header = {}
+    } else {
+      this.config.header = false
     }
   }
 
@@ -63,29 +87,59 @@ export default class SimpleThermostatEditor extends LitElement {
             ></ha-entity-picker>
           </div>
 
-          <div class="side-by-side">
-            <paper-input
-              label="Name (optional)"
-              .value="${this.config.name}"
-              .configValue="${'name'}"
-              @value-changed="${this.valueChanged}"
-            ></paper-input>
-
-            <ha-icon-input
-              label="Icon (optional)"
-              .value="${this.config.icon}"
-              .configValue=${'icon'}
-              @value-changed=${this.valueChanged}
-            ></ha-icon-input>
-          </div>
-
-          <ha-formfield label="Show Name and Icon?">
+          <ha-formfield label="Show header?">
             <ha-switch
-              .checked=${this._show_header}
-              .configValue="${'show_header'}"
-              @change=${this.valueChanged}
+              .checked=${this.config.header !== false}
+              .configValue="${'header'}"
+              @change=${this.toggleHeader}
             ></ha-switch>
           </ha-formfield>
+          ${this.config.header !== false
+            ? html`
+                <div class="side-by-side">
+                  <paper-input
+                    label="Name (optional)"
+                    .value="${this.config.header?.name}"
+                    .configValue="${'header.name'}"
+                    @value-changed="${this.valueChanged}"
+                  ></paper-input>
+
+                  <ha-icon-input
+                    label="Icon (optional)"
+                    .value="${this.config.header?.icon}"
+                    .configValue=${'header.icon'}
+                    @value-changed=${this.valueChanged}
+                  ></ha-icon-input>
+                </div>
+
+                <div class="side-by-side">
+                  <ha-entity-picker
+                    label="Toggle Entity (optional)"
+                    .hass=${this.hass}
+                    .value="${this.config?.header?.toggle?.entity}"
+                    .configValue=${'header.toggle.entity'}
+                    @change="${this.valueChanged}"
+                    allow-custom-entity
+                  ></ha-entity-picker>
+
+                  <paper-input
+                    label="Toggle entity label"
+                    .value="${this.config?.header?.toggle?.name}"
+                    .configValue="${'header.toggle.name'}"
+                    @value-changed="${this.valueChanged}"
+                  ></paper-input>
+                </div>
+              `
+            : ''}
+
+          <div class="side-by-side">
+            <paper-input
+              label="Fallback Text (optional)"
+              .value="${this.config.fallback}"
+              .configValue="${'fallback'}"
+              @value-changed="${this.valueChanged}"
+            ></paper-input>
+          </div>
 
           <div class="side-by-side">
             <paper-dropdown-menu
@@ -115,34 +169,16 @@ export default class SimpleThermostatEditor extends LitElement {
           </div>
 
           <div class="side-by-side">
-            <ha-entity-picker
-              label="Toggle Entity (optional)"
-              .hass=${this.hass}
-              .value="${this.toggle_entity}"
-              .configValue=${'toggle_entity'}
-              @change="${this.valueChanged}"
-              allow-custom-entity
-            ></ha-entity-picker>
-
-            <paper-input
-              label="Fallback Text (optional)"
-              .value="${this.config.fallback}"
-              .configValue="${'fallback'}"
-              @value-changed="${this.valueChanged}"
-            ></paper-input>
-          </div>
-
-          <div class="side-by-side">
             <paper-dropdown-menu
               label="Step Layout (optional)"
-              .configValue=${'step_layout'}
+              .configValue=${'layout.step'}
               @value-changed="${this.valueChanged}"
               class="dropdown"
             >
               <paper-listbox
                 slot="dropdown-content"
                 .selected=${Object.values(OptionsStepLayout).indexOf(
-                  this.config.step_layout
+                  this.config.layout?.step
                 )}
               >
                 ${Object.values(OptionsStepLayout).map(
@@ -188,20 +224,22 @@ export default class SimpleThermostatEditor extends LitElement {
       return
     }
     const { target } = ev
-    if (this[`_${target.configValue}`] === target.value) {
-      return
-    }
     if (target.configValue) {
       if (target.value === '') {
         delete this.config[target.configValue]
       } else {
-        this.config = {
-          ...this.config,
-          [target.configValue]:
-            target.checked !== undefined ? target.checked : target.value,
-        }
+        setValue(
+          this.config,
+          target.configValue,
+          target.checked !== undefined ? target.checked : target.value
+        )
       }
     }
+    fireEvent(this, 'config-changed', { config: this.config })
+  }
+
+  toggleHeader(ev) {
+    this.config.header = ev.target.checked ? {} : false
     fireEvent(this, 'config-changed', { config: this.config })
   }
 }

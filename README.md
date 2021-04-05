@@ -1,10 +1,11 @@
 # Lovelace simple thermostat card
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=for-the-badge)](https://github.com/custom-components/hacs)
-<a href="https://www.buymeacoffee.com/nervetattoo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-blue.png" alt="Buy Me A Coffee" height="28" width="119"></a>
 
 A different take on the thermostat card for Home Assistant Lovelace UI.
 The aim is to provide a card with simpler interactions that are easier to use and take up less space, as well as provide more modularity to tweak the card. For example the abiltity to embed sensor values that are relevant to your thermostat (like humidity, energy usage, hours on +++).
+
+<a href="https://www.buymeacoffee.com/nervetattoo"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=nervetattoo&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff"></a>
 
 ![Example thermostat](https://github.com/nervetattoo/simple-thermostat/raw/master/thermostat-card.png)
 
@@ -17,15 +18,17 @@ Hide everything but sensors and temperature control:
 ```yaml
 type: custom:simple-thermostat
 entity: climate.hvac
-step_layout: row
-show_header: false
+layout:
+  step: row
+header: false
 control: false
 ```
 
-## Note about 1.0 release
+## Note about 2.0 release
 
-The 1.0 release only includes a rewrite to Typescript and a change of release management.
-It does not include bug fixes or new features, in fact, due to the Typescript release I expect the 1.0 package to be less stable than 0.42.
+The 2.0 release is most likely a breaking change for the majority of users.
+Make sure you read the release notes and inspect the new configuration format.
+It offers more flexibility and features as well as a number of bug fixes.
 
 ## Requirements
 
@@ -57,14 +60,68 @@ resources:
 ## Available configuration options:
 
 - `entity` _string_: The thermostat entity id **required**
-- `toggle_entity` _string|object_: An entity id to create a toggle in the header for. This gives the option to control a separate entity which can be related to the thermostat entity (like a switch, or input_boolean)
-  - `entity_id` _string_: The entity id to create the header for
-  - `name` _string|bool_: Set the label to be shown to the left of the toggle. Set to true to show the friendly name of the toggle_entity
-- `name` _string_: Override the card name. Default is to use the friendly_name of the thermostat provided
-- `show_header` _bool_: Set to false to hide card name and icon
+- `header` _false|Header object_: See section about header config
+- `setpoints` _false|Setpoints object_: See section about header config
+- `layout` _Layout object_:
+  - `step` _row|column_: Where to render the setpoint up/down buttons
+  - `sensors`: _object_
+    - `type`: _list|table_: How to render the sensors
+    - `labels`: _boolean_: Whether to show labels/headings or not. Hiding here overrides hiding under root level `sensors` config
+- `service` _object_: Must specify both domain+service if overriding
+  - `domain` _string_: Override the service call domain
+  - `service` _string_: Override the service call name
+  - `data` _object_: Send extra data with the service call
 - `unit` _string|bool_: Override the unit to display. Set to false to hide unit
 - `decimals` _number_: Specify number of decimals to use: 1 or 0
 - `fallback` _string_: Specify a text to display if a valid set point can't be determined. Defaults to `N/A`
+- `step_size` _number_: Override the default 0.5 step size for increasing/decreasing the temperature
+- `label` _object_: Override untranslated labels
+  - `temperature`: _string_ Override Temperature label
+  - `state`: _string_ Override State label
+- `hide` _object_: Control specifically information fields to show. Defaults to showing everything
+  - `temperature`: _bool_ (Default to `false`)
+  - `state`: _bool_ (Default to `false`)
+- `control` _object|array_ (From 0.27)
+  - `hvac|fan|preset|swing` _object|bool_: The key of the mode type (hvac, preset, fan, swing)
+    - `_name` _string_: Override the name of the mode type
+    - `_hide_when_off` _bool_: Hides the mode type selection row when the entity is off. Defaults to false shown
+    - `{mode}` _string_: Name of mode type to conttrol
+      - `name` _string|bool_: Specify a custom name or set to `false` to show only the icon
+      - `icon` _string|bool_: Specify a custom icon or set to `false` to not show icon
+- `sensors` _array|false_
+  - `entity` _string_: A sensor value entity id
+  - `name` _string_: Specify a sensor name to use instead of the default friendly_name
+  - `icon` _string_: Specify an icon to use instead of a name
+  - `attribute` _string_: The key for an attribute to use instead of state. If this sensor has no entity it will use the main entity's attributes
+  - `unit` _string_: When specifying an attribute you can manually set the unit to display
+
+## Header config
+
+> New in 2.0. Old ways of defining toggle_entity, faults, name and icon are no longer supported
+
+Hiding the entire header is done with `header: false`
+If you pass an object you can pass any of the following keys.
+Example:
+
+```yaml
+header:
+  name: Overriden name
+  toggle:
+    entity: switch.light
+    name: Light
+  icon: mdi:sofa
+  faults:
+    - entity: switch.light
+```
+
+- `name` _string_: Override the card name. Default is to use the friendly_name of the thermostat provided
+- `toggle` _object_: An entity id to create a toggle in the header for. This gives the option to control a separate entity which can be related to the thermostat entity (like a switch, or input_boolean)
+  - `entity` _string_: The entity id to create the header for
+  - `name` _string|bool_: Set the label to be shown to the left of the toggle. Set to true to show the friendly name of the toggle_entity
+- `faults` _array|false_: Show fault conditions as active/inactive icons in the header
+  - `entity` _string_: A binary sensor entity id
+  - `icon` _string_: Override the entity icon
+  - `hide_inactive` _bool_: Hide the fault icon when inactive (Default to `false`)
 - `icon` _string|object_: Show an icon next to the card name. You can also pass an object to specify specific icons. Current value is taken from attributes.hvac_action when available, or state as fallback.
   - `auto`: _string_ Use this icon for hvac_action auto. Default mdi:radiator
   - `cooling`: _string_ Use this icon for hvac_action cooling. Default mdi:snowflake
@@ -79,35 +136,41 @@ resources:
   - `heat`: _string_ Use this icon for state heat. Default hass:autorenew
   - `heat_cool`: _string_: Use this icon for state heat_cool. Default hass:fire
   - `"off"`: _string_ Use this icon for state off. Default hass:power
-- `step_size` _number_: Override the default 0.5 step size for increasing/decreasing the temperature
-- `step_layout` _string_: `row` or `column` (default). Using `row` will make the card more compact
-- `label` _object_: Override untranslated labels
-  - `temperature`: _string_ Override Temperature label
-  - `state`: _string_ Override State label
-- `hide` _object_: Control specifically information fields to show. Defaults to showing everything
-  - `setpoint`: _bool_ (Default to `false`)
-  - `temperature`: _bool_ (Default to `false`)
-  - `state`: _bool_ (Default to `false`)
-- `control` _object|array_ (From 0.27)
-  - `_names` _bool_: Show mode names or not. Defaults to true
-  - `_icons` _bool_: Show mode icons or not. Defaults to true
-  - `_headings` _bool_: Show a heading for each mode button row. Defaults to true
-  - `{type}` _object|bool_: The key of the mode type (hvac, preset, fan, swing)
-    - `_name` _string_: Override the name of the mode type
-    - `_hide_when_off` _bool_: Hides the mode type selection row when the entity is off. Defaults to false shown
-    - `{mode}` _string_: Name of mode type to conttrol
-      - `name` _string|bool_: Specify a custom name or set to `false` to show only the icon
-      - `icon` _string|bool_: Specify a custom icon or set to `false` to not show icon
-- `sensors` _array|false_
-  - `entity` _string_: A sensor value entity id
-  - `name` _string_: Specify a sensor name to use instead of the default friendly_name
-  - `icon` _string_: Specify an icon to use instead of a name
-  - `attribute` _string_: The key for an attribute to use instead of state. If this sensor has no entity it will use the main entity's attributes
-  - `unit` _string_: When specifying an attribute you can manually set the unit to display
-- `faults` _array|false_: Show fault conditions as active/inactive icons in the header
-  - `entity` _string_: A binary sensor entity id
-  - `icon` _string_: Override the entity icon
-  - `hide_inactive` _bool_: Hide the fault icon when inactive (Default to `false`)
+
+## Setpoints config
+
+> New in 2.0. Old ways of hiding setpoints is deprecated
+
+If you specify setpoints manually you must include all setpoints you want included.
+Normally there are only two possibilities here; `temperature` or `target_temp_high` + `target_temp_low`. Single or dual thermostats. But, theoretically there could be multiple setpoints and this aims to support any permutation.
+The new feature in 2.0 is the ability to hide one of the two setpoints for dual thermostats.
+
+To manually specify to use the `temperature` attribute as a setpoint you do:
+
+```yaml
+setpoints:
+  temperature:
+```
+
+For dual thermostats:
+
+```yaml
+setpoints:
+  target_temp_low:
+  target_temp_high:
+```
+
+To hide one of the dual setpoints:
+
+```yaml
+setpoints:
+  target_temp_low:
+    hide: true
+  target_temp_high:
+```
+
+For climate devices supporting more setpoints you can include as many as you like.
+Automatic detection of set points only work for the single/dual cases.
 
 ## Usage of the control config
 

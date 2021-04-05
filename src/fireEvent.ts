@@ -1,5 +1,9 @@
 import { LitElement } from 'lit-element'
-import { HAEvent, LooseObject } from './types'
+import { LooseObject } from './types'
+
+export interface HAEvent extends Event {
+  detail?: string | LooseObject
+}
 
 export default function fireEvent(
   node: LitElement,
