@@ -16,9 +16,16 @@ import parseHeader, { HeaderData, MODE_ICONS } from './config/header'
 import parseSetpoints from './config/setpoints'
 import parseService, { Service } from './config/service'
 
-import { CardConfig, ControlField, MODES } from './config/card'
+import { CardConfig, ModeValue, ModeControlObject, MODES } from './config/card'
 
-import { ControlMode, LooseObject, Sensor, HASS, HVAC_MODES } from './types'
+import {
+  ControlMode,
+  ControlModeOption,
+  LooseObject,
+  Sensor,
+  HASS,
+  HVAC_MODES,
+} from './types'
 
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
@@ -50,42 +57,30 @@ const DEFAULT_HIDE = {
   state: false,
 }
 
-function isIncluded(key: string, values: any) {
-  if (typeof values === 'undefined') {
-    return true
+function shouldShowModeControl(
+  modeOption: string,
+  config: Partial<ModeControlObject>
+) {
+  if (typeof config[modeOption] === 'object') {
+    const obj = config[modeOption] as ModeValue
+    return obj.include !== false
   }
 
-  if (Array.isArray(values)) {
-    return values.includes(key)
-  }
-
-  const type = typeof values[key]
-  if (type === 'boolean') {
-    return values[key]
-  } else if (type === 'object') {
-    return values[key].include !== false
-  }
-
-  return true
+  return config?.[modeOption] ?? true
 }
 
 function getModeList(
   type: string,
   attributes: LooseObject,
-  config: LooseObject = {}
+  specification: Partial<ModeControlObject> = {}
 ) {
   return attributes[`${type}_modes`]
-    .filter((name) => isIncluded(name, config))
-    .map((name) => {
-      // Grab all values sans the possible include prop
-      // and stuff it into an  object
-      const values = typeof config[name] === 'object' ? config[name] : {}
-      delete values.include
+    .filter((modeOption) => shouldShowModeControl(modeOption, specification))
+    .map((modeOption) => {
       return {
-        icon: MODE_ICONS[name],
-        value: name,
-        name,
-        ...values,
+        icon: MODE_ICONS[modeOption],
+        value: modeOption,
+        name: modeOption,
       }
     })
 }
@@ -187,11 +182,12 @@ export default class SimpleThermostat extends LitElement {
     const buildBasicModes = (items: any) => {
       return items.filter(supportedModeType).map((type: string) => ({
         type,
-        list: getModeList(type, attributes, {}),
+        hide_when_off: false,
+        list: getModeList(type, attributes),
       }))
     }
 
-    let controlModes: Array<ControlMode> = []
+    let controlModes: Array<Partial<ControlMode>> = []
     if (this.config.control === false) {
       controlModes = []
     } else if (Array.isArray(this.config.control)) {
@@ -201,13 +197,13 @@ export default class SimpleThermostat extends LitElement {
       if (entries.length > 0) {
         controlModes = entries
           .filter(([type]) => supportedModeType(type))
-          .map(([type, definition]: [string, ControlField]) => {
-            const { _name, _hide_when_off, ...config } = definition
+          .map(([type, definition]: [string, ModeControlObject]) => {
+            const { _name, _hide_when_off, ...controlField } = definition
             return {
               type,
               hide_when_off: _hide_when_off,
               name: _name,
-              list: getModeList(type, attributes, config),
+              list: getModeList(type, attributes, controlField),
             }
           })
       } else {
@@ -220,9 +216,9 @@ export default class SimpleThermostat extends LitElement {
     // Decorate mode types with active value and set to this.modes
     this.modes = controlModes.map((values) => {
       if (values.type === MODES.HVAC) {
-        const sortedList: Array<any> = []
-        const hvacModeValues = Object.values(HVAC_MODES)
-        values.list.forEach((item: LooseObject) => {
+        const sortedList: Array<Partial<ControlMode>> = []
+        const hvacModeValues = Object.values(HVAC_MODES) as Array<string>
+        values.list.forEach((item: ControlModeOption) => {
           const index = hvacModeValues.indexOf(item.value)
           sortedList[index] = item
         })
@@ -230,10 +226,10 @@ export default class SimpleThermostat extends LitElement {
           ...values,
           list: sortedList,
           mode: entity.state,
-        }
+        } as ControlMode
       }
       const mode = attributes[`${values.type}_mode`]
-      return { ...values, mode }
+      return { ...values, mode } as ControlMode
     })
 
     if (this.config.step_size) {
@@ -416,10 +412,10 @@ export default class SimpleThermostat extends LitElement {
     return 3
   }
 
-  getUnit(): string | boolean | undefined {
+  getUnit(): string | boolean {
     if (['boolean', 'string'].includes(typeof this.config.unit)) {
       return this.config?.unit
     }
-    return this._hass.config.unit_system.temperature
+    return this._hass.config?.unit_system?.temperature ?? false
   }
 }

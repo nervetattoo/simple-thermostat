@@ -29,10 +29,15 @@ export enum HVAC_MODES {
   FAN_ONLY = 'fan_only',
 }
 
+export interface ControlModeOption {
+  value: string
+  name: string
+  icon: string
+}
 export interface ControlMode {
   type: string
-  mode?: any
+  mode: any
   name?: string | boolean
   hide_when_off?: boolean
-  list: Array<Record<string, any>>
+  list: Array<ControlModeOption>
 }

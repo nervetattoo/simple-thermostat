@@ -10,29 +10,40 @@ export enum MODES {
   SWING = 'swing',
 }
 
-type ControlItem =
-  | boolean
-  | {
-      name?: string | false
-      icon?: string | false
-    }
+export type ModeValue = {
+  name?: string | false
+  icon?: string | false
+  include?: boolean
+}
 
-export type ControlField = Record<string, ControlItem> & {
+/**
+ * Represents the available mode values for a mode
+ *
+ */
+export type ModeControlObject = Record<string, boolean | ModeValue> & {
   _name: string
   _hide_when_off: boolean
 }
 
-type ControlObject = {
-  hvac: boolean | ControlField
-  fan: boolean | ControlField
-  preset: boolean | ControlField
-  swing: boolean | ControlField
+/**
+ * Modes (hvac, fac, preset, swing)
+ * that might exist as attributes on a climate entity.
+ * Modes can be set to a value based on a list of options
+ * that are provided in the attributes of the entity.
+ *
+ */
+export type ModeControlValue = boolean | ModeControlObject
+type ModeControl = {
+  hvac: ModeControlValue
+  fan: ModeControlValue
+  preset: ModeControlValue
+  swing: ModeControlValue
 }
 
 interface CardConfig {
   entity?: string
   header: false | HeaderConfig
-  control?: false | ControlObject | string[]
+  control?: false | ModeControl | string[]
   sensors?: false | Array<ConfigSensor>
   setpoints?: Setpoints
   decimals?: number
