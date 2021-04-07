@@ -46,7 +46,7 @@ export default function renderSensors({
           : false,
       },
     }),
-    ...(sensors.map(({ name, icon, state, unit }) => {
+    ...(sensors.map(({ name, state, ...rest }) => {
       return (
         state &&
         renderInfoItem({
@@ -55,9 +55,8 @@ export default function renderSensors({
           localize,
           openEntityPopover,
           details: {
+            ...rest,
             heading: showLabels && name,
-            icon,
-            unit,
           },
         })
       )

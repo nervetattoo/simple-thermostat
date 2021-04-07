@@ -1,10 +1,12 @@
 import { html } from 'lit-html'
+import formatNumber from '../formatNumber'
 import { LooseObject } from '../types'
 
 interface InfoItemDetails extends LooseObject {
   heading?: string | false
   icon?: string
   unit?: string
+  decimals?: number
 }
 
 interface InfoItemOptions {
@@ -27,7 +29,7 @@ export default function renderInfoItem({
 }: InfoItemOptions) {
   if (hide || !state) return
 
-  const { heading, icon, unit } = details
+  const { heading, icon, unit, decimals } = details
 
   let valueCell
   if (typeof state === 'object') {
@@ -39,7 +41,10 @@ export default function renderInfoItem({
       state.attributes?.device_class ?? '_',
       '',
     ].join('.')
-    const value = localize(state.state, prefix)
+    let value = localize(state.state, prefix)
+    if (typeof decimals === 'number') {
+      value = formatNumber(value, { decimals })
+    }
     valueCell = html`
       <div
         class="sensor-value clickable"
@@ -49,7 +54,9 @@ export default function renderInfoItem({
       </div>
     `
   } else {
-    valueCell = html` <div class="sensor-value">${state}</div> `
+    let value =
+      typeof decimals === 'number' ? formatNumber(state, { decimals }) : state
+    valueCell = html` <div class="sensor-value">${value}${unit}</div> `
   }
 
   if (heading === false) {

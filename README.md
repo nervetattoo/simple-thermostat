@@ -98,6 +98,7 @@ resources:
   - `icon` _string_: Specify an icon to use instead of a name
   - `attribute` _string_: The key for an attribute to use instead of state. If this sensor has no entity it will use the main entity's attributes
   - `unit` _string_: When specifying an attribute you can manually set the unit to display
+  - `decimals` _number_: If you know your sensors has a numeric value you can round it to a number of decimals.
 
 ## Header config
 
