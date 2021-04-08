@@ -111,13 +111,15 @@ Example:
 ```yaml
 header:
   name: Overriden name
+  icon: mdi:sofa
   toggle:
     entity: switch.light
     name: Light
-  icon: mdi:sofa
   faults:
     - entity: switch.light
 ```
+
+Full header config spec:
 
 - `name` _string_: Override the card name. Default is to use the friendly_name of the thermostat provided
 - `toggle` _object_: An entity id to create a toggle in the header for. This gives the option to control a separate entity which can be related to the thermostat entity (like a switch, or input_boolean)
@@ -210,13 +212,6 @@ control:
   hvac: true
 ```
 
-As previously you can define both `name` and `icon` on the individual modes, including setting them to `false`. What is new is that if you want to only show icons you can hide the names on all modes for the card (or vice versa for only showing names)
-
-```yaml
-control:
-  _names: false
-```
-
 Please note that you need to quote off/on mode keys to not have them interprented as true/false.
 
 ```yaml
@@ -239,11 +234,13 @@ cards:
         name: Energy today
       - attribute: min_temp
         name: Min temp
-    faults:
-      - entity: binary_sensor.my_room_communications_fault
-      - entity: binary_sensor.my_room_low_battery_fault
-        icon: mdi:battery-low
-    toggle_entity: switch.pump_relay
+    header:
+      faults:
+        - entity: binary_sensor.my_room_communications_fault
+        - entity: binary_sensor.my_room_low_battery_fault
+          icon: mdi:battery-low
+      toggle:
+        entity: switch.pump_relay
     control:
       hvac:
         some_mode: false
@@ -263,9 +260,10 @@ cards:
     step_size: 1
     sensors:
       - entity: sensor.fibaro_system_fgwpef_wall_plug_gen5_energy
-    toggle_entity:
-      entity_id: switch.pump_relay
-      name: Control the pump
+    header:
+      toggle:
+        entity: switch.pump_relay
+        name: Control the pump
 ```
 
 ## CSS vars for theming
