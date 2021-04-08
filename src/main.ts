@@ -77,10 +77,12 @@ function getModeList(
   return attributes[`${type}_modes`]
     .filter((modeOption) => shouldShowModeControl(modeOption, specification))
     .map((modeOption) => {
+      const values = typeof specification[modeOption] === 'object' ? specification[modeOption] : {} as {}
       return {
         icon: MODE_ICONS[modeOption],
         value: modeOption,
         name: modeOption,
+        ...values,
       }
     })
 }
@@ -251,10 +253,10 @@ export default class SimpleThermostat extends LitElement {
             state = hass.states[entity]
             names.push(state?.attributes?.friendly_name)
             if (attribute) {
-              state = state.attributes[attribute] + unit
+              state = state.attributes[attribute]
             }
           } else if (attribute && attribute in this.entity.attributes) {
-            state = this.entity.attributes[attribute] + unit
+            state = this.entity.attributes[attribute]
             names.push(attribute)
           }
           names.push(entity)

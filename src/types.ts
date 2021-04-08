@@ -8,6 +8,7 @@ export interface ConfigSensor {
   icon?: string
   attribute?: string
   unit?: string
+  decimals?: number
 }
 
 export interface Sensor extends ConfigSensor {

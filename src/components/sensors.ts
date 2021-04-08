@@ -12,6 +12,7 @@ export default function renderSensors({
   openEntityPopover,
 }) {
   const {
+    state,
     attributes: { hvac_action: action, current_temperature: current },
   } = entity
 
@@ -19,6 +20,12 @@ export default function renderSensors({
     type: 'table',
     labels: true,
   }
+  const stateString = [
+    localize(action, 'state_attributes.climate.hvac_action.'),
+    ' (',
+    localize(state, 'component.climate.state._.'),
+    ')',
+  ].join('')
   const sensorHtml = [
     renderInfoItem({
       hide: _hide.temperature,
@@ -31,7 +38,7 @@ export default function renderSensors({
     }),
     renderInfoItem({
       hide: _hide.state,
-      state: localize(action, 'state_attributes.climate.hvac_action.'),
+      state: stateString,
       details: {
         heading: showLabels
           ? config?.label?.state ??
@@ -39,7 +46,7 @@ export default function renderSensors({
           : false,
       },
     }),
-    ...(sensors.map(({ name, icon, state, unit }) => {
+    ...(sensors.map(({ name, state, ...rest }) => {
       return (
         state &&
         renderInfoItem({
@@ -48,9 +55,8 @@ export default function renderSensors({
           localize,
           openEntityPopover,
           details: {
+            ...rest,
             heading: showLabels && name,
-            icon,
-            unit,
           },
         })
       )

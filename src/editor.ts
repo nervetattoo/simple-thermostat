@@ -41,7 +41,12 @@ export default class SimpleThermostatEditor extends LitElement {
   }
 
   static getStubConfig() {
-    return { header: {} }
+    return {
+      header: {},
+      layout: {
+        modes: {},
+      },
+    }
   }
 
   setConfig(config) {
@@ -94,6 +99,28 @@ export default class SimpleThermostatEditor extends LitElement {
               @change=${this.toggleHeader}
             ></ha-switch>
           </ha-formfield>
+          <ha-formfield label="Show mode names?">
+            <ha-switch
+              .checked=${this.config?.layout?.mode?.names !== false}
+              .configValue="${'layout.mode.names'}"
+              @change=${this.valueChanged}
+            ></ha-switch>
+          </ha-formfield>
+          <ha-formfield label="Show mode icons?">
+            <ha-switch
+              .checked=${this.config?.layout?.mode?.icons !== false}
+              .configValue="${'layout.mode.icons'}"
+              @change=${this.valueChanged}
+            ></ha-switch>
+          </ha-formfield>
+          <ha-formfield label="Show mode headings?">
+            <ha-switch
+              .checked=${this.config?.layout?.mode?.headings !== false}
+              .configValue="${'layout.mode.headings'}"
+              @change=${this.valueChanged}
+            ></ha-switch>
+          </ha-formfield>
+
           ${this.config.header !== false
             ? html`
                 <div class="side-by-side">
