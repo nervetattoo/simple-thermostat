@@ -77,10 +77,12 @@ function getModeList(
   return attributes[`${type}_modes`]
     .filter((modeOption) => shouldShowModeControl(modeOption, specification))
     .map((modeOption) => {
+      const values = typeof specification[modeOption] === 'object' ? specification[modeOption] : {} as {}
       return {
         icon: MODE_ICONS[modeOption],
         value: modeOption,
         name: modeOption,
+        ...values,
       }
     })
 }
