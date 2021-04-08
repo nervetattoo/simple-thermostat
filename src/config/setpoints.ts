@@ -11,6 +11,10 @@ export default function parseSetpoints(
   setpoints: Setpoints | false,
   attributes: any
 ) {
+  if (setpoints === false) {
+    return {}
+  }
+
   if (setpoints) {
     const def = Object.keys(setpoints)
     return def.reduce((result, name: string) => {

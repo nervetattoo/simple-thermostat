@@ -77,7 +77,10 @@ function getModeList(
   return attributes[`${type}_modes`]
     .filter((modeOption) => shouldShowModeControl(modeOption, specification))
     .map((modeOption) => {
-      const values = typeof specification[modeOption] === 'object' ? specification[modeOption] : {} as {}
+      const values =
+        typeof specification[modeOption] === 'object'
+          ? specification[modeOption]
+          : ({} as {})
       return {
         icon: MODE_ICONS[modeOption],
         value: modeOption,
@@ -166,7 +169,7 @@ export default class SimpleThermostat extends LitElement {
 
     const attributes = entity.attributes
 
-    let values = parseSetpoints(this.config?.setpoints ?? false, attributes)
+    let values = parseSetpoints(this.config?.setpoints ?? null, attributes)
 
     // If we are updating the values, and they are now equal
     // we can safely assume we've been able to update the set points
