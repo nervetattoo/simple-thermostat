@@ -17,9 +17,9 @@ function setValue(obj, path, value) {
   o[a[0]] = value
 }
 
-const OptionsDecimals = ['0', '1']
+const OptionsDecimals = [0, 1]
 
-const OptionsStepSize = ['0.5', '1']
+const OptionsStepSize = [0.5, 1]
 
 const OptionsStepLayout = ['column', 'row']
 
@@ -178,7 +178,7 @@ export default class SimpleThermostatEditor extends LitElement {
               <paper-listbox
                 slot="dropdown-content"
                 .selected=${Object.values(OptionsDecimals).indexOf(
-                  String(this.config.decimals)
+                  +this.config.decimals
                 )}
               >
                 ${Object.values(OptionsDecimals).map(
@@ -223,7 +223,7 @@ export default class SimpleThermostatEditor extends LitElement {
               <paper-listbox
                 slot="dropdown-content"
                 .selected=${Object.values(OptionsStepSize).indexOf(
-                  String(this.config.step_size)
+                  +this.config.step_size
                 )}
               >
                 ${Object.values(OptionsStepSize).map(
