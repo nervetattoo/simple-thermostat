@@ -8,11 +8,18 @@ import postCSS from 'rollup-plugin-postcss'
 import postCSSLit from 'rollup-plugin-postcss-lit'
 import postCSSPresetEnv from 'postcss-preset-env'
 import dts from 'rollup-plugin-dts'
+import inject from 'rollup-plugin-inject-process-env'
 
-const shared = [
+const shared = (DEBUG) => [
   resolve(),
   commonjs(),
   json(),
+  inject(
+    {
+      DEBUG,
+    },
+    { exclude: '**/*.css' }
+  ),
   typescript(),
   postCSS({
     plugins: [
@@ -39,7 +46,7 @@ export default [
       name: 'SimpleThermostat',
     },
     plugins: [
-      ...shared,
+      ...shared(false),
       minifyHTML({
         options: {
           shouldMinifyCSS: () => false,
@@ -60,7 +67,7 @@ export default [
       format: 'es',
       name: 'SimpleThermostat',
     },
-    plugins: [...shared],
+    plugins: shared(true),
   },
   {
     input: './dist/config/card.d.ts',

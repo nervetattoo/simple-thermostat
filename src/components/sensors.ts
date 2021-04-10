@@ -47,19 +47,15 @@ export default function renderSensors({
       },
     }),
     ...(sensors.map(({ name, state, ...rest }) => {
-      return (
-        state &&
-        renderInfoItem({
-          hide: false,
-          state,
-          localize,
-          openEntityPopover,
-          details: {
-            ...rest,
-            heading: showLabels && name,
-          },
-        })
-      )
+      return renderInfoItem({
+        state,
+        localize,
+        openEntityPopover,
+        details: {
+          ...rest,
+          heading: showLabels && name,
+        },
+      })
     }) || null),
   ].filter((it) => it !== null)
 

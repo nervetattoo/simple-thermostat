@@ -10,7 +10,7 @@ interface InfoItemDetails extends LooseObject {
 }
 
 interface InfoItemOptions {
-  hide: boolean
+  hide?: boolean
   state: any
   localize?
   openEntityPopover?
@@ -21,17 +21,20 @@ interface InfoItemOptions {
 // See https://github.com/home-assistant/home-assistant/blob/dev/homeassistant/components/climate/const.py#L36-L57
 
 export default function renderInfoItem({
-  hide,
+  hide = false,
   state,
   details,
   localize,
   openEntityPopover,
 }: InfoItemOptions) {
-  if (hide || !state) return
+  if (hide || typeof state === 'undefined') return
 
   const { heading, icon, unit, decimals } = details
 
   let valueCell
+  if (process.env.DEBUG) {
+    console.log('ST: infoItem', { state, details })
+  }
   if (typeof state === 'object') {
     const [domain] = state.entity_id.split('.')
     const prefix = [
