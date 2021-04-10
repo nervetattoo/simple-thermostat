@@ -14,7 +14,14 @@
       "@semantic-release/github",
       {
         "assets": [
-          { "path": "dist/simple-thermostat.js", "label": "SimpleThermostat" }
+          {
+            "path": "dist/simple-thermostat.js",
+            "label": "simple-thermostat.js"
+          },
+          {
+            "path": "dist/simple-thermostat.debug.js",
+            "label": "simple-thermostat.debug.js"
+          }
         ]
       }
     ]

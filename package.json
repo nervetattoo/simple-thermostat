@@ -52,6 +52,7 @@
   "scripts": {
     "test": "jest",
     "build": "cross-env NODE_ENV=production rollup -c",
+    "postversion": "npm build",
     "dev": "concurrently 'npm:dev:*'",
     "dev:build": "tsc --watch",
     "dev:test": "jest --watch",

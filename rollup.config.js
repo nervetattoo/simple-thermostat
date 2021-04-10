@@ -9,6 +9,27 @@ import postCSSLit from 'rollup-plugin-postcss-lit'
 import postCSSPresetEnv from 'postcss-preset-env'
 import dts from 'rollup-plugin-dts'
 
+const shared = [
+  resolve(),
+  commonjs(),
+  json(),
+  typescript(),
+  postCSS({
+    plugins: [
+      postCSSPresetEnv({
+        stage: 1,
+        features: {
+          'nesting-rules': true,
+          'custom-media-query': true,
+        },
+      }),
+    ],
+    inject: true,
+    extract: false,
+  }),
+  postCSSLit(),
+]
+
 export default [
   {
     input: 'src/simple-thermostat.ts',
@@ -18,24 +39,7 @@ export default [
       name: 'SimpleThermostat',
     },
     plugins: [
-      resolve(),
-      commonjs(),
-      json(),
-      typescript(),
-      postCSS({
-        plugins: [
-          postCSSPresetEnv({
-            stage: 1,
-            features: {
-              'nesting-rules': true,
-              'custom-media-query': true,
-            },
-          }),
-        ],
-        inject: true,
-        extract: false,
-      }),
-      postCSSLit(),
+      ...shared,
       minifyHTML({
         options: {
           shouldMinifyCSS: () => false,
@@ -48,6 +52,15 @@ export default [
         },
       }),
     ],
+  },
+  {
+    input: 'src/simple-thermostat.ts',
+    output: {
+      file: 'dist/simple-thermostat.debug.js',
+      format: 'es',
+      name: 'SimpleThermostat',
+    },
+    plugins: [...shared],
   },
   {
     input: './dist/config/card.d.ts',
