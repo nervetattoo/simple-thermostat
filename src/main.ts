@@ -331,7 +331,7 @@ export default class SimpleThermostat extends LitElement {
             return html`
               <div class="current-wrapper ${stepLayout}">
                 <ha-icon-button
-                  ?disabled=${maxTemp && value >= maxTemp}
+                  ?disabled=${maxTemp !== null && value >= maxTemp}
                   class="thermostat-trigger"
                   icon=${row ? ICONS.PLUS : ICONS.UP}
                   @click="${() => this.setTemperature(this._stepSize, field)}"
@@ -350,7 +350,7 @@ export default class SimpleThermostat extends LitElement {
                     : nothing}
                 </h3>
                 <ha-icon-button
-                  ?disabled=${minTemp && value <= minTemp}
+                  ?disabled=${minTemp !== null && value <= minTemp}
                   class="thermostat-trigger"
                   icon=${row ? ICONS.MINUS : ICONS.DOWN}
                   @click="${() => this.setTemperature(-this._stepSize, field)}"
