@@ -28,6 +28,13 @@ const includeDomains = ['climate']
 const GithubReadMe =
   'https://github.com/nervetattoo/simple-thermostat/blob/master/README.md'
 
+const stub = {
+  header: {},
+  layout: {
+    modes: {},
+  },
+}
+
 export default class SimpleThermostatEditor extends LitElement {
   config: CardConfig
   hass: HASS
@@ -41,16 +48,11 @@ export default class SimpleThermostatEditor extends LitElement {
   }
 
   static getStubConfig() {
-    return {
-      header: {},
-      layout: {
-        modes: {},
-      },
-    }
+    return { ...stub }
   }
 
   setConfig(config) {
-    this.config = config
+    this.config = config || { ...stub }
   }
 
   _openLink() {
