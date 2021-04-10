@@ -6,6 +6,7 @@ export default function renderSensors({
   _hide,
   entity,
   unit,
+  hass,
   sensors,
   config,
   localize,
@@ -30,6 +31,7 @@ export default function renderSensors({
     renderInfoItem({
       hide: _hide.temperature,
       state: `${formatNumber(current, config)}${unit || ''}`,
+      hass,
       details: {
         heading: showLabels
           ? config?.label?.temperature ?? localize('ui.card.climate.currently')
@@ -39,6 +41,7 @@ export default function renderSensors({
     renderInfoItem({
       hide: _hide.state,
       state: stateString,
+      hass,
       details: {
         heading: showLabels
           ? config?.label?.state ??
@@ -49,6 +52,7 @@ export default function renderSensors({
     ...(sensors.map(({ name, state, ...rest }) => {
       return renderInfoItem({
         state,
+        hass,
         localize,
         openEntityPopover,
         details: {

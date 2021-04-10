@@ -4,6 +4,7 @@ import { render } from 'lit-html'
 test('return undefined on hide and no state', () => {
   const firstResult = renderInfoItem({
     hide: true,
+    hass: {},
     state: 'foo',
     details: {},
   })
@@ -12,6 +13,7 @@ test('return undefined on hide and no state', () => {
   expect(
     renderInfoItem({
       hide: false,
+      hass: {},
       state: '',
       details: {},
     })
@@ -25,6 +27,7 @@ test('render into dom', () => {
   }
   const result = renderInfoItem({
     hide: false,
+    hass: {},
     state: spec.value,
     details: { heading: spec.heading },
   })
@@ -45,6 +48,7 @@ test('render with icon', () => {
   }
   const result = renderInfoItem({
     hide: false,
+    hass: {},
     state: spec.value,
     details: { heading: spec.heading, icon: 'test' },
   })

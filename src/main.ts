@@ -318,6 +318,7 @@ export default class SimpleThermostat extends LitElement {
             ? renderSensors({
                 _hide: this._hide,
                 unit,
+                hass: this._hass,
                 entity: this.entity,
                 sensors: this.sensors,
                 config: this.config,

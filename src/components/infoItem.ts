@@ -7,11 +7,13 @@ interface InfoItemDetails extends LooseObject {
   icon?: string
   unit?: string
   decimals?: number
+  type?: string
 }
 
 interface InfoItemOptions {
   hide?: boolean
   state: any
+  hass: any
   localize?
   openEntityPopover?
   details: InfoItemDetails
@@ -22,6 +24,7 @@ interface InfoItemOptions {
 
 export default function renderInfoItem({
   hide = false,
+  hass,
   state,
   details,
   localize,
@@ -29,13 +32,19 @@ export default function renderInfoItem({
 }: InfoItemOptions) {
   if (hide || typeof state === 'undefined') return
 
-  const { heading, icon, unit, decimals } = details
+  const { type, heading, icon, unit, decimals } = details
 
   let valueCell
   if (process.env.DEBUG) {
     console.log('ST: infoItem', { state, details })
   }
-  if (typeof state === 'object') {
+  if (type === 'relativetime') {
+    valueCell = html`
+      <div class="sensor-value">
+        <ha-relative-time .datetime=${state} .hass=${hass}></ha-relative-time>
+      </div>
+    `
+  } else if (typeof state === 'object') {
     const [domain] = state.entity_id.split('.')
     const prefix = [
       'component',
