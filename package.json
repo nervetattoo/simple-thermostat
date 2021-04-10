@@ -1,6 +1,6 @@
 {
   "name": "simple-thermostat",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "A different take on the thermostat card for Home Assistant Lovelace UI",
   "main": "dist/simple-thermostat.js",
   "repository": "git@github.com:nervetattoo/simple-thermostat.git",
