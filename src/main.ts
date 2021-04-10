@@ -374,13 +374,17 @@ export default class SimpleThermostat extends LitElement {
     `
   }
 
-  toggleEntityChanged(ev: Event) {
-    if (!this.header) return
+  toggleEntityChanged = (ev: Event) => {
+    if (!this.header || !this?.header?.toggle) return
+
     const el = ev.target as HTMLInputElement
-    const newVal = el.checked
-    this._hass.callService('homeassistant', newVal ? 'turn_on' : 'turn_off', {
-      entity_id: this.header?.toggle?.entity,
-    })
+    this._hass.callService(
+      'homeassistant',
+      el.checked ? 'turn_on' : 'turn_off',
+      {
+        entity_id: this.header?.toggle?.entity?.entity_id,
+      }
+    )
   }
 
   setTemperature(change: number, field: string) {

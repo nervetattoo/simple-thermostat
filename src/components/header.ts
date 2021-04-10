@@ -71,14 +71,14 @@ function renderFaults(faults, openEntityPopover) {
   return html` <div class="faults">${faultHtml}</div>`
 }
 
-function renderToggle(toggle, toggleEntityChanged, openEntityPopover) {
+function renderToggle(toggle, openEntityPopover, toggleEntityChanged) {
   if (!toggle) return nothing
 
   return html`
     <div style="margin-left: auto;">
       <span
         class="clickable toggle-label"
-        @click="${() => openEntityPopover(toggle.entity)}"
+        @click=${() => openEntityPopover(toggle.entity.entity_id)}
         >${toggle.label}
       </span>
       <ha-switch
