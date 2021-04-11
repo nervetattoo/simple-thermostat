@@ -21,13 +21,11 @@ export default function renderSensors({
     type: 'table',
     labels: true,
   }
-  var stateString = localize(state, 'component.climate.state._.')
+  let stateString = localize(state, 'component.climate.state._.')
   if (action) {
     stateString = [
       localize(action, 'state_attributes.climate.hvac_action.'),
-      ' (',
-      stateString,
-      ')',
+      ` (${stateString})`,
     ].join('')
   }
   const sensorHtml = [
