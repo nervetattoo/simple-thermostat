@@ -14,7 +14,7 @@ test('return undefined on hide and no state', () => {
     renderInfoItem({
       hide: false,
       hass: {},
-      state: '',
+      state: undefined,
       details: {},
     })
   ).toBe(undefined)

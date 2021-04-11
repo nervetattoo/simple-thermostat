@@ -56,7 +56,7 @@
     "postversion": "npm run build",
     "dev": "concurrently 'npm:dev:*'",
     "dev:build": "tsc --watch",
-    "dev:test": "jest --watch",
+    "dev:test": "jest --watchAll",
     "size-build": "yarn build",
     "size": "size-limit",
     "analyze": "size-limit --why",

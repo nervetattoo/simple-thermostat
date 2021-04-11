@@ -11,7 +11,7 @@ test('single setpoint', () => {
   ).toEqual(match)
 
   expect(
-    parseSetpoints(false, { temperature: 20, target_temp_low: 19 })
+    parseSetpoints(null, { temperature: 20, target_temp_low: 19 })
   ).toEqual(match)
 })
 
@@ -25,7 +25,7 @@ test('dual setpoint', () => {
 })
 
 test('dual setpoint defaults', () => {
-  const result = parseSetpoints(false, {
+  const result = parseSetpoints(undefined, {
     target_temp_high: 20,
     target_temp_low: 19,
   })
