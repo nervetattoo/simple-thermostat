@@ -117,7 +117,7 @@ export default class SimpleThermostat extends LitElement {
   showSensors: boolean = true
   @property()
   name: string | false = ''
-  _stepSize = STEP_SIZE
+  stepSize = STEP_SIZE
   @property()
   _values: Values
   @property()
@@ -238,7 +238,7 @@ export default class SimpleThermostat extends LitElement {
     })
 
     if (this.config.step_size) {
-      this._stepSize = +this.config.step_size
+      this.stepSize = +this.config.step_size
     }
 
     if (this.config.hide) {
@@ -285,6 +285,17 @@ export default class SimpleThermostat extends LitElement {
   }
 
   render({ _hide, _values, _updatingValues, config, entity } = this) {
+    const warnings = []
+    if (this.stepSize < 1 && this.config.decimals === 0) {
+      warnings.push(html`
+        <hui-warning>
+          Decimals is set to 0 and step_size is lower than 1. Decrementing a
+          setpoint will likely not work. Change one of the settings to clear
+          this warning.
+        </hui-warning>
+      `)
+    }
+
     if (!entity) {
       return html`
         <hui-warning> Entity not available: ${config.entity} </hui-warning>
@@ -307,6 +318,7 @@ export default class SimpleThermostat extends LitElement {
     const classes = [!this.header && 'no-header', action].filter((cx) => !!cx)
     return html`
       <ha-card class="${classes.join(' ')}">
+        ${warnings}
         ${renderHeader({
           header: this.header,
           toggleEntityChanged: this.toggleEntityChanged,
@@ -335,7 +347,7 @@ export default class SimpleThermostat extends LitElement {
                   ?disabled=${maxTemp !== null && value >= maxTemp}
                   class="thermostat-trigger"
                   icon=${row ? ICONS.PLUS : ICONS.UP}
-                  @click="${() => this.setTemperature(this._stepSize, field)}"
+                  @click="${() => this.setTemperature(this.stepSize, field)}"
                 >
                 </ha-icon-button>
 
@@ -354,7 +366,7 @@ export default class SimpleThermostat extends LitElement {
                   ?disabled=${minTemp !== null && value <= minTemp}
                   class="thermostat-trigger"
                   icon=${row ? ICONS.MINUS : ICONS.DOWN}
-                  @click="${() => this.setTemperature(-this._stepSize, field)}"
+                  @click="${() => this.setTemperature(-this.stepSize, field)}"
                 >
                 </ha-icon-button>
               </div>
