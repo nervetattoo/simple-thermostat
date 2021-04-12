@@ -10,10 +10,6 @@
           {
             "path": "dist/simple-thermostat.js",
             "label": "simple-thermostat.js"
-          },
-          {
-            "path": "dist/simple-thermostat.debug.js",
-            "label": "simple-thermostat.debug.js"
           }
         ]
       }
