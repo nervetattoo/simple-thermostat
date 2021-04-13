@@ -110,7 +110,7 @@ export default class SimpleThermostat extends LitElement {
   @property()
   _hass: HASS = {}
   @property()
-  entity: LooseObject = {}
+  entity: LooseObject
   @property()
   sensors: Array<Sensor> = []
   @property()
@@ -144,9 +144,6 @@ export default class SimpleThermostat extends LitElement {
   }
 
   setConfig(config: CardConfig) {
-    if (!config.entity) {
-      throw new Error('You need to define an entity')
-    }
     this.config = {
       decimals: DECIMALS,
       ...config,
@@ -154,6 +151,10 @@ export default class SimpleThermostat extends LitElement {
   }
 
   set hass(hass: any) {
+    if (!this.config.entity) {
+      return
+    }
+
     const entity = hass.states[this.config.entity]
     if (typeof entity === undefined) {
       return

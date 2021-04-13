@@ -7,14 +7,14 @@ import { CardConfig } from './config/card'
 import { HASS } from './types'
 
 function setValue(obj, path, value) {
-  const a = path.split('.')
+  const pathFragments = path.split('.')
   let o = obj
-  while (a.length - 1) {
-    var n = a.shift()
-    if (!(n in o)) o[n] = {}
-    o = o[n]
+  while (pathFragments.length - 1) {
+    var fragment = pathFragments.shift()
+    if (!o.hasOwnProperty(fragment)) o[fragment] = {}
+    o = o[fragment]
   }
-  o[a[0]] = value
+  o[pathFragments[0]] = value
 }
 
 const OptionsDecimals = [0, 1]
@@ -31,7 +31,7 @@ const GithubReadMe =
 const stub = {
   header: {},
   layout: {
-    modes: {},
+    mode: {},
   },
 }
 
@@ -59,23 +59,6 @@ export default class SimpleThermostatEditor extends LitElement {
     window.open(GithubReadMe)
   }
 
-  get _show_header() {
-    if (this.config.header === false) {
-      return false
-    } else {
-      return true
-    }
-  }
-
-  set _show_header(val) {
-    console.log('set show header', val)
-    if (val) {
-      this.config.header = {}
-    } else {
-      this.config.header = false
-    }
-  }
-
   render() {
     if (!this.hass) return html``
 
@@ -97,7 +80,6 @@ export default class SimpleThermostatEditor extends LitElement {
           <ha-formfield label="Show header?">
             <ha-switch
               .checked=${this.config.header !== false}
-              .configValue="${'header'}"
               @change=${this.toggleHeader}
             ></ha-switch>
           </ha-formfield>
