@@ -60,8 +60,8 @@ resources:
 ## Available configuration options:
 
 - `entity` _string_: The thermostat entity id **required**
-- `header` _false|Header object_: See section about header config
-- `setpoints` _false|Setpoints object_: See section about header config
+- `header` _false|Header object_: See [section](#header-config) about header config
+- `setpoints` _false|Setpoints object_: See [section](#setpoints-config) about setpoints config
 - `layout` _Layout object_:
   - `step` _row|column_: Where to render the setpoint up/down buttons
   - `mode` _object_: Disable elements for all modes
