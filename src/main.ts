@@ -9,6 +9,7 @@ import styles from './styles.css'
 import formatNumber from './formatNumber'
 import fireEvent from './fireEvent'
 import renderHeader from './components/header'
+import renderTemplated, { wrapSensors } from './components/templated'
 import renderSensors from './components/sensors'
 import renderModeType from './components/modeType'
 
@@ -23,6 +24,7 @@ import {
   ControlModeOption,
   LooseObject,
   Sensor,
+  PreparedSensor,
   HASS,
   HVAC_MODES,
 } from './types'
@@ -112,7 +114,7 @@ export default class SimpleThermostat extends LitElement {
   @property()
   entity: LooseObject
   @property()
-  sensors: Array<Sensor> = []
+  sensors: Array<Sensor | PreparedSensor> = []
   @property()
   showSensors: boolean = true
   @property()
@@ -248,6 +250,43 @@ export default class SimpleThermostat extends LitElement {
 
     if (this.config.sensors === false) {
       this.showSensors = false
+    } else if (this.config.version === 3) {
+      this.sensors = []
+      const customSensors = this.config.sensors.map((sensor, index) => {
+        const entityId = sensor?.entity ?? this.config.entity
+        let context = this.entity
+        if (sensor?.entity) {
+          context = this._hass.states[sensor.entity]
+        }
+        return {
+          id: sensor?.id ?? String(index),
+          label: sensor?.label,
+          template: sensor.template,
+          entityId,
+          context,
+        } as PreparedSensor
+      })
+      const ids = customSensors.map((s) => s.id)
+      const builtins = []
+      if (!ids.includes('state')) {
+        builtins.push({
+          id: 'state',
+          label: '{{ui.operation}}',
+          template: '{{state.text}}',
+          entityId: this.config.entity,
+          context: this.entity,
+        })
+      }
+      if (!ids.includes('temperature')) {
+        builtins.push({
+          id: 'temperature',
+          label: '{{ui.currently}}',
+          template: '{{current_temperature|formatNumber}}',
+          entityId: this.config.entity,
+          context: this.entity,
+        })
+      }
+      this.sensors = [...builtins, ...customSensors]
     } else if (this.config.sensors) {
       this.sensors = this.config.sensors.map(
         ({ name, entity, attribute, unit = '', ...rest }) => {
@@ -317,6 +356,34 @@ export default class SimpleThermostat extends LitElement {
     const row = stepLayout === 'row'
 
     const classes = [!this.header && 'no-header', action].filter((cx) => !!cx)
+
+    let sensorsHtml
+    if (this.config.version === 3) {
+      sensorsHtml = this.sensors.map((spec: PreparedSensor) => {
+        return renderTemplated({
+          ...spec,
+          variables: this.config.variables,
+          hass: this._hass,
+          config: this.config,
+          localize: this.localize,
+          openEntityPopover: this.openEntityPopover,
+        })
+      })
+      sensorsHtml = wrapSensors(this.config, sensorsHtml)
+    } else {
+      sensorsHtml = this.showSensors
+        ? renderSensors({
+            _hide: this._hide,
+            unit,
+            hass: this._hass,
+            entity: this.entity,
+            sensors: this.sensors,
+            config: this.config,
+            localize: this.localize,
+            openEntityPopover: this.openEntityPopover,
+          })
+        : ''
+    }
     return html`
       <ha-card class="${classes.join(' ')}">
         ${warnings}
@@ -327,18 +394,7 @@ export default class SimpleThermostat extends LitElement {
           openEntityPopover: this.openEntityPopover,
         })}
         <section class="body">
-          ${this.showSensors
-            ? renderSensors({
-                _hide: this._hide,
-                unit,
-                hass: this._hass,
-                entity: this.entity,
-                sensors: this.sensors,
-                config: this.config,
-                localize: this.localize,
-                openEntityPopover: this.openEntityPopover,
-              })
-            : ''}
+          ${sensorsHtml}
           ${Object.entries(_values).map(([field, value]) => {
             const hasValue = ['string', 'number'].includes(typeof value)
             const showUnit = unit !== false && hasValue

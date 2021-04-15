@@ -11,7 +11,9 @@ import dts from 'rollup-plugin-dts'
 import inject from 'rollup-plugin-inject-process-env'
 
 const shared = (DEBUG) => [
-  resolve(),
+  resolve({
+    browser: true,
+  }),
   commonjs(),
   json(),
   inject(

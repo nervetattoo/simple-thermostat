@@ -1,6 +1,7 @@
 import { html } from 'lit-html'
 import formatNumber from '../formatNumber'
 import renderInfoItem from './infoItem'
+import { wrapSensors } from './templated'
 
 export default function renderSensors({
   _hide,
@@ -17,10 +18,7 @@ export default function renderSensors({
     attributes: { hvac_action: action, current_temperature: current },
   } = entity
 
-  const { type, labels: showLabels } = config?.layout?.sensors ?? {
-    type: 'table',
-    labels: true,
-  }
+  const showLabels = config?.layout?.sensors?.labels ?? true
   let stateString = localize(state, 'component.climate.state._.')
   if (action) {
     stateString = [
@@ -64,9 +62,5 @@ export default function renderSensors({
     }) || null),
   ].filter((it) => it !== null)
 
-  const classes = [
-    showLabels ? 'with-labels' : 'without-labels',
-    type === 'list' ? 'as-list' : 'as-table',
-  ]
-  return html` <div class="sensors ${classes.join(' ')}">${sensorHtml}</div> `
+  return wrapSensors(config, sensorHtml)
 }
