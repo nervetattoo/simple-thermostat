@@ -12,7 +12,8 @@
   ],
   "dependencies": {
     "debounce-fn": "^5.0.0",
-    "lit-element": "^2.4.0"
+    "lit-element": "^2.4.0",
+    "squirrelly": "^8.0.8"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
@@ -76,7 +77,7 @@
   "size-limit": [
     {
       "path": "dist/simple-thermostat.js",
-      "limit": "15 KB"
+      "limit": "20 KB"
     }
   ]
 }
