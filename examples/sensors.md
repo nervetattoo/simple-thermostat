@@ -99,12 +99,13 @@ To break it down. You can render an icon with `{{"mdi:sleep"|icon}}`, and the `v
 ### Available filters
 
 | Name         | Description                                     | Example        |
-| ------------ | ----------------------------------------------- | -------------- | --------------------------------------------- |
-| icon         | Render as icon                                  | `{{"mdi:sleep" | icon}}`                                       |
-| translate    | Use HA translation string                       | `{{"on"        | translate("state.default.")}}`                |
-| formatNumber | Format a number with x decimals                 | `{{3           | formatNumber({ decimals: 3 }) }}`             |
-| css          | (For the crazy ones). Set custom css properties | `{{state.text  | css({ 'font-size': '3em', color: 'red' }) }}` |
-| debug        | Print a structure as a JSON string              | `{{state       | debug}}`                                      |
+| ------------ | ----------------------------------------------- | ----------------------------------------------------------- |
+| icon         | Render as icon                                  | `{{"mdi:sleep"\|icon}}`                                       |
+| translate    | Use HA translation string                       | `{{"on"\| translate("state.default.")}}`                |
+| formatNumber | Format a number with x decimals                 | `{{3\|formatNumber({ decimals: 3 }) }}`             |
+| css          | (For the crazy ones). Set custom css properties | `{{state.text\| css({ 'font-size': '3em', color: 'red' }) }}` |
+| debug        | Print a structure as a JSON string              | `{{state\| debug}}`                                      |
+
 
 ### Translations
 
