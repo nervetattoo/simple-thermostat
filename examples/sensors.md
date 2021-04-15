@@ -1,5 +1,7 @@
 # Different example usage of sensors with templating support (2.4 release)
 
+You must set `version: 3` on the card to enable these features.
+
 ### Render a state value from a different entity:
 
 This is the basic, most used case. Just render the state of a different sensor.
@@ -9,6 +11,7 @@ The two following sensors are thus equal
 ```yaml
 type: 'custom:simple-thermostat'
 entity: climate.living_room
+version: 3
 sensors:
   - entity: sensor.living_room_humidity
 
@@ -26,6 +29,7 @@ But you can use this to tweak it.
 ```yaml
 type: 'custom:simple-thermostat'
 entity: climate.living_room
+version: 3
 sensors:
   - id: state
     label: '{{ui.operation}}'
@@ -46,6 +50,7 @@ The `ui.operation` value looks strange, but we'll get back to what the `ui` vari
 ```yaml
 type: 'custom:simple-thermostat'
 entity: climate.living_room
+version: 3
 sensors:
   - label: Min/max temp
     template: '{{min_temp}} / {{max_temp}}'
@@ -56,6 +61,7 @@ Templating with lists of values, use `filters` to prepare it to a string:
 ```yaml
 type: 'custom:simple-thermostat'
 entity: climate.living_room
+version: 3
 sensors:
   - label: Supported HVAC modes
     template: "{{hvac_modes|join(', ')}}"
@@ -68,6 +74,7 @@ All the attributes from the entity referenced can be reached as variables in the
 ```yaml
 type: 'custom:simple-thermostat'
 entity: climate.living_room
+version: 3
 sensors:
   - label: Temperature
     entity: sensor.multisensor_living_room
@@ -83,6 +90,7 @@ Lets replace the built-in `State` with an icon
 ```yaml
 type: 'custom:simple-thermostat'
 entity: climate.living_room
+version: 3
 variables:
   icons:
     idle: 'mdi:sleep'
