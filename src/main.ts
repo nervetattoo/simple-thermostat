@@ -92,7 +92,7 @@ function getModeList(
     })
 }
 
-type Values = {
+interface Values {
   [key: string]: number | string
 }
 
@@ -109,7 +109,6 @@ export default class SimpleThermostat extends LitElement {
   service: Service
   @property()
   modes: Array<ControlMode> = []
-  @property()
   _hass: HASS = {}
   @property()
   entity: LooseObject
@@ -120,8 +119,10 @@ export default class SimpleThermostat extends LitElement {
   @property()
   name: string | false = ''
   stepSize = STEP_SIZE
-  @property()
-  _values: Values
+  @property({
+    type: Object,
+  })
+  _values: Values = {}
   @property()
   _updatingValues: boolean = false
   @property()
@@ -459,11 +460,14 @@ export default class SimpleThermostat extends LitElement {
 
   setTemperature(change: number, field: string) {
     this._updatingValues = true
-    const previousValue = this._values[field] as number
-    const newValue = previousValue + change
+    const previousValue = this._values[field]
+    const newValue = Number(previousValue) + change
     const { decimals } = this.config
 
-    this._values[field] = +formatNumber(newValue, { decimals })
+    this._values = {
+      ...this._values,
+      [field]: +formatNumber(newValue, { decimals }),
+    }
     this._debouncedSetTemperature(this._values)
   }
 
