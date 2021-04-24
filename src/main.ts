@@ -263,6 +263,7 @@ export default class SimpleThermostat extends LitElement {
           id: sensor?.id ?? String(index),
           label: sensor?.label,
           template: sensor.template,
+          show: sensor?.show !== false,
           entityId,
           context,
         } as PreparedSensor
@@ -360,16 +361,18 @@ export default class SimpleThermostat extends LitElement {
 
     let sensorsHtml
     if (this.config.version === 3) {
-      sensorsHtml = this.sensors.map((spec: PreparedSensor) => {
-        return renderTemplated({
-          ...spec,
-          variables: this.config.variables,
-          hass: this._hass,
-          config: this.config,
-          localize: this.localize,
-          openEntityPopover: this.openEntityPopover,
+      sensorsHtml = this.sensors
+        .filter((spec: PreparedSensor) => spec.show !== false)
+        .map((spec: PreparedSensor) => {
+          return renderTemplated({
+            ...spec,
+            variables: this.config.variables,
+            hass: this._hass,
+            config: this.config,
+            localize: this.localize,
+            openEntityPopover: this.openEntityPopover,
+          })
         })
-      })
       sensorsHtml = wrapSensors(this.config, sensorsHtml)
     } else {
       sensorsHtml = this.showSensors

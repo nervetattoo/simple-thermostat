@@ -11,6 +11,7 @@ export interface ConfigSensor {
   unit?: string
   decimals?: number
   template?: string
+  show?: boolean
   type?: 'relativetime' | 'template'
 }
 
@@ -25,6 +26,7 @@ export interface PreparedSensor {
   label: string | false
   entityId: string
   template: string
+  show: boolean
   context: LooseObject
 }
 
