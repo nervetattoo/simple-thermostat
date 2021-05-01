@@ -29,6 +29,10 @@ import {
   HVAC_MODES,
 } from './types'
 
+interface HANode extends Element {
+  hass: any
+}
+
 const DEBOUNCE_TIMEOUT = 1000
 const STEP_SIZE = 0.5
 const DECIMALS = 1
@@ -150,6 +154,23 @@ export default class SimpleThermostat extends LitElement {
     this.config = {
       decimals: DECIMALS,
       ...config,
+    }
+  }
+
+  updated() {
+    super.connectedCallback()
+    const patchHass: Array<HANode> = Array.from(
+      this.renderRoot.querySelectorAll('[with-hass]')
+    )
+    for (const child of Array.from(patchHass)) {
+      // Forward attributes to properties
+      Array.from(child.attributes).forEach((attr) => {
+        if (attr.name.startsWith('fwd-')) {
+          child[attr.name.replace('fwd-', '')] = attr.value
+        }
+      })
+      // Always forward hass
+      child.hass = this._hass
     }
   }
 

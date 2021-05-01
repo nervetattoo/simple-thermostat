@@ -79,6 +79,9 @@ export default function renderTemplated({
       return String(formatNumber(str, opts))
     }
   )
+  Sqrl.filters.define('relativetime', (str, opts = {}) => {
+    return `<ha-relative-time fwd-datetime=${str} with-hass></ha-relative-time>`
+  })
   Sqrl.filters.define('translate', (str, prefix = '') => {
     if (!prefix && (domain === 'climate' || domain === 'humidifier')) {
       return localize(str, `state_attributes.${domain}.${str}`)
