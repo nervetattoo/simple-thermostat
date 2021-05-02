@@ -71,9 +71,9 @@ export default [
     },
     plugins: shared(true),
   },
-  {
-    input: './dist/config/card.d.ts',
-    output: [{ file: 'dist/st.d.ts', format: 'es' }],
-    plugins: [dts()],
-  },
+  // {
+  //   input: './dist/config/card.d.ts',
+  //   output: [{ file: 'dist/st.d.ts', format: 'es' }],
+  //   plugins: [dts()],
+  // },
 ]
