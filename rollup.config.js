@@ -43,7 +43,7 @@ export default [
   {
     input: 'src/simple-thermostat.ts',
     output: {
-      dir: 'dist',
+      file: 'dist/simple-thermostat.js',
       format: 'es',
       name: 'SimpleThermostat',
     },
