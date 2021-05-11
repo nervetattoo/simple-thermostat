@@ -235,18 +235,19 @@ export default class SimpleThermostatEditor extends LitElement {
       return
     }
     const { target } = ev
+    const copy = { ...this.config }
     if (target.configValue) {
       if (target.value === '') {
-        delete this.config[target.configValue]
+        delete copy[target.configValue]
       } else {
         setValue(
-          this.config,
+          copy,
           target.configValue,
           target.checked !== undefined ? target.checked : target.value
         )
       }
     }
-    fireEvent(this, 'config-changed', { config: this.config })
+    fireEvent(this, 'config-changed', { config: copy })
   }
 
   toggleHeader(ev) {
