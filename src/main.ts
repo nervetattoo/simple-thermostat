@@ -431,6 +431,7 @@ export default class SimpleThermostat extends LitElement {
                   icon=${row ? ICONS.PLUS : ICONS.UP}
                   @click="${() => this.setTemperature(this.stepSize, field)}"
                 >
+                  <ha-icon .icon=${row ? ICONS.PLUS : ICONS.UP}></ha-icon>
                 </ha-icon-button>
 
                 <h3
@@ -450,6 +451,7 @@ export default class SimpleThermostat extends LitElement {
                   icon=${row ? ICONS.MINUS : ICONS.DOWN}
                   @click="${() => this.setTemperature(-this.stepSize, field)}"
                 >
+                  <ha-icon .icon=${row ? ICONS.MINUS : ICONS.DOWN}></ha-icon>
                 </ha-icon-button>
               </div>
             `
