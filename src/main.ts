@@ -33,7 +33,7 @@ interface HANode extends Element {
   hass: any
 }
 
-const DEBOUNCE_TIMEOUT = 1000
+const DEBOUNCE_TIMEOUT = 500
 const STEP_SIZE = 0.5
 const DECIMALS = 1
 
