@@ -1,0 +1,248 @@
+@custom-media --vp-s (width >= 480px);
+@custom-media --vp-m (width >= 768px);
+@custom-media --vp-l (width >= 992px);
+@custom-media --vp-xl (width >= 1200px);
+
+:host {
+  --st-default-spacing: 4px;
+}
+ha-card {
+  -webkit-font-smoothing: var(--paper-font-body1_-_-webkit-font-smoothing);
+  font-size: var(--paper-font-body1_-_font-size);
+  font-weight: var(--paper-font-body1_-_font-weight);
+  line-height: var(--paper-font-body1_-_line-height);
+
+  padding-bottom: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
+
+  --auto-color: green;
+  --heat_cool-color: springgreen;
+  --cool-color: #2b9af9;
+  --heat-color: #ff8100;
+  --manual-color: #44739e;
+  --off-color: #8a8a8a;
+  --fan_only-color: #8a8a8a;
+  --dry-color: #efbd07;
+}
+
+ha-card.no-header {
+  padding: calc(var(--st-spacing, var(--st-default-spacing)) * 4) 0;
+}
+
+.body {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(min-content, auto);
+  place-items: center;
+  padding: 0 calc(var(--st-spacing, var(--st-default-spacing)) * 4);
+  padding-bottom: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
+}
+
+.toggle-label {
+  color: var(--st-toggle-label-color, var(--primary-text-color));
+  margin-right: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
+  font-size: var(
+    --st-font-size-toggle-label,
+    var(--paper-font-subhead_-_font-size, 16px)
+  );
+}
+
+.faults {
+  display: flex;
+  flex-direction: row;
+  margin-left: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
+}
+.fault-icon {
+  padding: 2px;
+  cursor: pointer;
+  color: var(--st-fault-inactive-color, var(--secondary-background-color));
+  &.active {
+    color: var(--st-fault-active-color, var(--accent-color));
+  }
+  &.hide {
+    display: none;
+  }
+}
+
+.sensors {
+  display: grid;
+  grid-gap: var(--st-spacing, var(--st-default-spacing));
+  font-size: var(
+    --st-font-size-sensors,
+    var(--paper-font-subhead_-_font-size, 16px)
+  );
+}
+.sensors.as-list {
+  grid-auto-flow: column;
+  grid-template-columns: min-content;
+}
+
+.sensors.as-table {
+  &.without-labels {
+    grid: auto-flow / 100%;
+    place-items: start;
+  }
+  &.with-labels {
+    grid: auto-flow / auto auto;
+    place-items: start;
+  }
+}
+
+.sensor-value {
+  display: flex;
+  align-items: center;
+  padding-bottom: 4px;
+}
+.sensor-heading {
+  font-weight: 300;
+  padding-right: 8px;
+  padding-bottom: 4px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.sensors:empty {
+  display: none;
+}
+header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  padding: calc(var(--st-spacing, var(--st-default-spacing)) * 6)
+    calc(var(--st-spacing, var(--st-default-spacing)) * 4)
+    calc(var(--st-spacing, var(--st-default-spacing)) * 4);
+}
+.header__icon {
+  margin-right: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
+  color: var(--paper-item-icon-color, #44739e);
+}
+.header__title {
+  font-size: var(--st-font-size-title, var(--ha-card-header-font-size, 24px));
+  line-height: var(--st-font-size-title, var(--ha-card-header-font-size, 24px));
+  -webkit-font-smoothing: var(--paper-font-headline_-_-webkit-font-smoothing);
+  font-weight: normal;
+  margin: 0;
+  align-self: left;
+}
+.current-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  overflow: hidden;
+  flex-wrap: wrap;
+
+  &.row {
+    flex-direction: row-reverse;
+  }
+}
+.current--value {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  font-weight: 400;
+  line-height: var(--st-font-size-l, var(--paper-font-display1_-_font-size));
+  font-size: var(--st-font-size-l, var(--paper-font-display1_-_font-size));
+  @media (--vp-m) {
+    font-size: var(--st-font-size-xl, var(--paper-font-display2_-_font-size));
+    line-height: var(--st-font-size-xl, var(--paper-font-display2_-_font-size));
+  }
+
+  &.updating {
+    color: var(--error-color);
+  }
+}
+.current--unit {
+  font-size: var(--st-font-size-m, var(--paper-font-title_-_font-size));
+}
+.thermostat-trigger {
+  padding: 0px;
+}
+.clickable {
+  cursor: pointer;
+}
+.modes {
+  display: grid;
+  grid-template-columns: auto;
+  grid-auto-flow: column;
+  grid-gap: 2px;
+  margin-top: calc(var(--st-spacing, var(--st-default-spacing)) * 2);
+  padding: var(--st-spacing, var(--st-default-spacing));
+
+  &.heading {
+    grid-template-columns: min-content;
+  }
+}
+.mode-title {
+  padding: 0 16px;
+  place-self: center;
+  font-size: var(
+    --st-font-size-sensors,
+    var(--paper-font-subhead_-_font-size, 16px)
+  );
+  font-weight: 300;
+  white-space: nowrap;
+}
+.mode-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  min-height: 24px;
+  padding: var(--st-spacing, var(--st-default-spacing)) 0;
+  background: var(--st-mode-background, var(--secondary-background-color));
+  color: var(--secondary-text-color);
+  cursor: pointer;
+  border-radius: var(--st-spacing, var(--st-default-spacing));
+
+  &:hover {
+    color: var(--st-mode-active-color, var(--primary-text-color));
+  }
+
+  &.active,
+  &.active:hover {
+    background: var(--st-mode-active-background, var(--primary-color));
+    color: var(--st-mode-active-color, var(--text-primary-color));
+  }
+
+  &.active.off {
+    background: var(--st-mode-active-background, var(--off-color));
+  }
+  &.active.heat {
+    background: var(--st-mode-active-background, var(--heat-color));
+  }
+  &.active.cool {
+    background: var(--st-mode-active-background, var(--cool-color));
+  }
+  &.active.heat_cool {
+    background: var(--st-mode-active-background, var(--heat_cool-color));
+  }
+  &.active.auto {
+    background: var(--st-mode-active-background, var(--auto-color));
+  }
+  &.active.dry {
+    background: var(--st-mode-active-background, var(--dry-color));
+  }
+  &.active.fan_only {
+    background: var(--st-mode-active-background, var(--fan_only-color));
+  }
+}
+.mode-icon {
+  --iron-icon-width: 24px;
+  --iron-icon-height: 24px;
+  display: block;
+}
+ha-switch {
+  padding: 16px 6px;
+}
+.side-by-side {
+  display: flex;
+  align-items: center;
+}
+.side-by-side > * {
+  flex: 1;
+  padding-right: 4px;
+}
