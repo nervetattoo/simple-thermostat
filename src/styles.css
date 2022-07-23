@@ -209,25 +209,25 @@ header {
   }
 
   &.active.off {
-    background: var(--off-color);
+    background: var(--st-mode-active-background, var(--off-color));
   }
   &.active.heat {
-    background: var(--heat-color);
+    background: var(--st-mode-active-background, var(--heat-color));
   }
   &.active.cool {
-    background: var(--cool-color);
+    background: var(--st-mode-active-background, var(--cool-color));
   }
   &.active.heat_cool {
-    background: var(--heat_cool-color);
+    background: var(--st-mode-active-background, var(--heat_cool-color));
   }
   &.active.auto {
-    background: var(--auto-color);
+    background: var(--st-mode-active-background, var(--auto-color));
   }
   &.active.dry {
-    background: var(--dry-color);
+    background: var(--st-mode-active-background, var(--dry-color));
   }
   &.active.fan_only {
-    background: var(--fan_only-color);
+    background: var(--st-mode-active-background, var(--fan_only-color));
   }
 }
 .mode-icon {
