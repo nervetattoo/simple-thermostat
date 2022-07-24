@@ -28,6 +28,10 @@ ha-card.no-header {
   padding: calc(var(--st-spacing, var(--st-default-spacing)) * 4) 0;
 }
 
+ha-icon-button ha-icon {
+  display: flex;
+}
+
 .body {
   display: grid;
   grid-auto-flow: column;
