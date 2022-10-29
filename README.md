@@ -45,15 +45,10 @@ Home Assistant 0.84 or higher
 
 <details>
    <summary>Manual install</summary>
-1. Download the `simple-thermostat.js` from the [latest release](https://github.com/nervetattoo/simple-thermostat/releases/latest) and store it in your `configuration/www` folder.
-   _Previously you could download the source file from Github but starting from the 0.14 release that is no longer possible. If you try to do so it will crash_
-2. Configure Lovelace to load the card:
 
-```yaml
-resources:
-  - url: /local/simple-thermostat.js?v=1
-    type: module
-```
+ 1. Download the `simple-thermostat.js` from the [latest release](https://github.com/nervetattoo/simple-thermostat/releases/latest) and store it in your `configuration/www` folder.
+  
+2. Configure Lovelace to load the card. This can be done by going to Settings, Dashboards, choose Resources from the three dots in the upper-right corner and then "Add Resource". Set URL to `/local/simple-thermostat.js?v=3` and choose "JavaScript Module" as "Resource Type".
 
 </details>
 
