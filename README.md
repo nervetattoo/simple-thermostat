@@ -302,19 +302,20 @@ example-theme:
   st-spacing: 2px
 ```
 
-### Example using card-mod
+### Example using [card-mod](https://github.com/thomasloven/lovelace-card-mod)
 
 Same example as above, but will only apply to a single card.
 
 ```yaml
 type: 'custom:simple-thermostat'
-style: |
-  ha-card {
-    --st-font-size-xl: 24px;
-    --st-font-size-m: 20px;
-    --st-font-size-title: 20px;
-    --st-font-size-sensors: 30px;
-    --st-spacing: 2px;
-  }
+card_mod:
+  style: |
+    ha-card {
+      --st-font-size-xl: 24px;
+      --st-font-size-m: 20px;
+      --st-font-size-title: 20px;
+      --st-font-size-sensors: 30px;
+      --st-spacing: 2px;
+    }
   ...
 ```
