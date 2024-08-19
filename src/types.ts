@@ -53,6 +53,7 @@ export interface ControlModeOption {
   value: string
   name: string
   icon: string
+  order: number
 }
 export interface ControlMode {
   type: string

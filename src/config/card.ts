@@ -61,6 +61,7 @@ interface CardConfig {
       labels: boolean
     }
     step: 'row' | 'column'
+    disstep: boolean
   }
   unit?: boolean | string
   fallback?: string

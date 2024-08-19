@@ -68,6 +68,7 @@ resources:
     - `names` _boolean_
     - `icons` _boolean_
     - `headings` _boolean_
+  - `disstep` _boolean_: If true disable step button up/down
   - `sensors`: _object_
     - `type`: _list|table_: How to render the sensors
     - `labels`: _boolean_: Whether to show labels/headings or not. Hiding here overrides hiding under root level `sensors` config
@@ -86,12 +87,15 @@ resources:
   - `temperature`: _bool_ (Default to `false`)
   - `state`: _bool_ (Default to `false`)
 - `control` _object|array_ (From 0.27)
+
   - `hvac|fan|preset|swing` _object|bool_: The key of the mode type (hvac, preset, fan, swing)
     - `_name` _string_: Override the name of the mode type
     - `_hide_when_off` _bool_: Hides the mode type selection row when the entity is off. Defaults to false shown
     - `{mode}` _string_: Name of mode type to control
       - `name` _string|bool_: Specify a custom name or set to `false` to show only the icon
       - `icon` _string|bool_: Specify a custom icon or set to `false` to not show icon
+      - `order`: _number_: Order of the control in the list. If not set, show default order.
+
 - `sensors` _array|false_
   - `entity` _string_: A sensor value entity id
   - `name` _string_: Specify a sensor name to use instead of the default friendly_name

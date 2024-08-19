@@ -20,6 +20,9 @@ export default function renderModeType({
   if (list.length === 0 || (hide_when_off && state === HVAC_MODES.OFF)) {
     return null
   }
+  const sortedList = list.some((item) => item.hasOwnProperty('order'))
+    ? [...list].sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+    : list
 
   let localizePrefix = `state_attributes.climate.${type}_mode.`
   if (type === 'hvac') {
@@ -44,7 +47,7 @@ export default function renderModeType({
   return html`
     <div class="modes ${headings ? 'heading' : ''}">
       ${headings ? html` <div class="mode-title">${title}</div> ` : ''}
-      ${list.map(
+      ${sortedList.map(
         ({ value, icon, name }) => html`
           <div
             class="mode-item ${value === mode ? 'active ' + mode : ''}"
