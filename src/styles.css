@@ -257,22 +257,46 @@ ha-switch {
 .side-by-side {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 .side-by-side > * {
   flex: 1;
-  padding-right: 4px;
+  min-width: 0;
 }
-.styles-editor {
-  margin-top: 16px;
+.card-config {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
-.styles-label {
+.card-config > ha-entity-picker {
   display: block;
-  font-size: var(--ha-font-size-s, 12px);
-  font-weight: 500;
-  color: var(--secondary-text-color);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
   margin-bottom: 4px;
+}
+.editor-section {
+  --expansion-panel-summary-padding: 0 16px;
+  --expansion-panel-content-padding: 0 16px 12px;
+}
+.editor-section ha-formfield {
+  display: flex;
+}
+.editor-section .side-by-side {
+  margin-top: 8px;
+}
+.editor-section ha-textfield,
+.editor-section ha-select {
+  display: block;
+  width: 100%;
+}
+.editor-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 0 8px;
+  flex-wrap: wrap;
+}
+.editor-footer__hint {
+  font-size: var(--ha-font-size-s, 12px);
+  color: var(--secondary-text-color);
 }
 .styles-hint {
   font-size: var(--ha-font-size-s, 12px);
