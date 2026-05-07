@@ -1,4 +1,4 @@
-import { html, nothing } from 'lit-html'
+import { html, nothing } from 'lit'
 import { LooseObject } from '../types'
 import { HeaderData } from '../config/header'
 
@@ -30,8 +30,7 @@ export default function renderHeader({
   return html`
     <header>
       <div
-        style="display: flex;"
-        class="clickable"
+        class="clickable header__clickable"
         @click=${() => openEntityPopover()}
       >
         ${renderIcon(icon)} ${renderName(name)}
@@ -53,18 +52,18 @@ function renderName(name) {
 }
 
 function renderFaults(faults, openEntityPopover) {
-  if (faults.length === 0) {
+  if (!faults?.length) {
     return nothing
   }
   const faultHtml = faults.map(({ icon, hide_inactive, state }) => {
     return html` <ha-icon
-      class="fault-icon ${state.state === 'on'
+      class="fault-icon ${state?.state === 'on'
         ? 'active'
         : hide_inactive
-        ? ' hide'
+        ? 'hide'
         : ''}"
-      icon="${icon || state.attributes.icon}"
-      @click="${() => openEntityPopover(state.entity_id)}"
+      .icon=${icon || state?.attributes?.icon}
+      @click="${() => openEntityPopover(state?.entity_id)}"
     ></ha-icon>`
   })
 
@@ -75,7 +74,7 @@ function renderToggle(toggle, openEntityPopover, toggleEntityChanged) {
   if (!toggle) return nothing
 
   return html`
-    <div style="margin-left: auto;">
+    <div class="header__toggle">
       <span
         class="clickable toggle-label"
         @click=${() => openEntityPopover(toggle.entity.entity_id)}

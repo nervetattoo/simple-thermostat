@@ -1,5 +1,5 @@
 {
   "name": "Simple Thermostat",
-  "homeassistant": "0.84.0",
+  "homeassistant": "2024.1.0",
   "render_readme": true
 }

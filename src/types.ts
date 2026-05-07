@@ -27,7 +27,7 @@ export interface PreparedSensor {
   entityId: string
   template: string
   show: boolean
-  context: LooseObject
+  context: LooseObject | undefined
 }
 
 export interface Sensor extends ConfigSensor {

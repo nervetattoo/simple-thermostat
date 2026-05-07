@@ -1,7 +1,6 @@
-import { LitElement, html } from 'lit-element'
+import { LitElement, html } from 'lit'
 import styles from './styles.css'
 import fireEvent from './fireEvent'
-import { name } from '../package.json'
 
 import { CardConfig } from './config/card'
 import { HASS } from './types'
@@ -10,11 +9,22 @@ function setValue(obj, path, value) {
   const pathFragments = path.split('.')
   let o = obj
   while (pathFragments.length - 1) {
-    var fragment = pathFragments.shift()
-    if (!o.hasOwnProperty(fragment)) o[fragment] = {}
+    const fragment = pathFragments.shift()
+    if (!Object.hasOwn(o, fragment)) o[fragment] = {}
     o = o[fragment]
   }
   o[pathFragments[0]] = value
+}
+
+function deletePath(obj, path) {
+  const parts = path.split('.')
+  let o = obj
+  while (parts.length > 1) {
+    const part = parts.shift()
+    if (!o[part]) return
+    o = o[part]
+  }
+  delete o[parts[0]]
 }
 
 const OptionsDecimals = [0, 1]
@@ -23,10 +33,12 @@ const OptionsStepSize = [0.5, 1]
 
 const OptionsStepLayout = ['column', 'row']
 
+const NUMERIC_CONFIG_PATHS = ['decimals', 'step_size']
+
 const includeDomains = ['climate']
 
 const GithubReadMe =
-  'https://github.com/nervetattoo/simple-thermostat/blob/master/README.md'
+  'https://github.com/duczz/simple-thermostat/blob/master/README.md'
 
 const stub = {
   header: {},
@@ -38,8 +50,8 @@ const stub = {
 const cloneDeep = (obj) => JSON.parse(JSON.stringify(obj))
 
 export default class SimpleThermostatEditor extends LitElement {
-  config: CardConfig
-  hass: HASS
+  config!: CardConfig
+  hass?: HASS
 
   static get styles() {
     return styles
@@ -49,12 +61,8 @@ export default class SimpleThermostatEditor extends LitElement {
     return { hass: {}, config: {} }
   }
 
-  static getStubConfig() {
-    return { ...stub }
-  }
-
   setConfig(config) {
-    this.config = config || { ...stub }
+    this.config = config || cloneDeep(stub)
   }
 
   _openLink() {
@@ -110,19 +118,19 @@ export default class SimpleThermostatEditor extends LitElement {
           ${this.config.header !== false
             ? html`
                 <div class="side-by-side">
-                  <paper-input
+                  <ha-textfield
                     label="Name (optional)"
-                    .value="${this.config.header?.name}"
+                    .value="${this.config.header?.name ?? ''}"
                     .configValue="${'header.name'}"
-                    @value-changed="${this.valueChanged}"
-                  ></paper-input>
+                    @change="${this.valueChanged}"
+                  ></ha-textfield>
 
-                  <ha-icon-input
+                  <ha-icon-picker
                     label="Icon (optional)"
-                    .value="${this.config.header?.icon}"
+                    .value="${this.config.header?.icon ?? ''}"
                     .configValue=${'header.icon'}
                     @value-changed=${this.valueChanged}
-                  ></ha-icon-input>
+                  ></ha-icon-picker>
                 </div>
 
                 <div class="side-by-side">
@@ -135,97 +143,98 @@ export default class SimpleThermostatEditor extends LitElement {
                     allow-custom-entity
                   ></ha-entity-picker>
 
-                  <paper-input
+                  <ha-textfield
                     label="Toggle entity label"
-                    .value="${this.config?.header?.toggle?.name}"
+                    .value="${this.config?.header?.toggle?.name ?? ''}"
                     .configValue="${'header.toggle.name'}"
-                    @value-changed="${this.valueChanged}"
-                  ></paper-input>
+                    @change="${this.valueChanged}"
+                  ></ha-textfield>
                 </div>
               `
             : ''}
 
           <div class="side-by-side">
-            <paper-input
+            <ha-textfield
               label="Fallback Text (optional)"
-              .value="${this.config.fallback}"
+              .value="${this.config.fallback ?? ''}"
               .configValue="${'fallback'}"
-              @value-changed="${this.valueChanged}"
-            ></paper-input>
+              @change="${this.valueChanged}"
+            ></ha-textfield>
           </div>
 
           <div class="side-by-side">
-            <paper-dropdown-menu
+            <ha-select
               label="Decimals (optional)"
               .configValue=${'decimals'}
+              .value=${String(this.config.decimals ?? 1)}
               @value-changed="${this.valueChanged}"
-              class="dropdown"
             >
-              <paper-listbox
-                slot="dropdown-content"
-                .selected=${Object.values(OptionsDecimals).indexOf(
-                  +this.config.decimals
-                )}
-              >
-                ${Object.values(OptionsDecimals).map(
-                  (item) => html` <paper-item>${item}</paper-item> `
-                )}
-              </paper-listbox>
-            </paper-dropdown-menu>
+              ${OptionsDecimals.map(
+                (item) =>
+                  html`<mwc-list-item .value=${String(item)}
+                    >${item}</mwc-list-item
+                  >`
+              )}
+            </ha-select>
 
-            <paper-input
+            <ha-textfield
               label="Unit (optional)"
-              .value="${this.config.unit}"
+              .value="${this.config.unit ?? ''}"
               .configValue="${'unit'}"
-              @value-changed="${this.valueChanged}"
-            ></paper-input>
+              @change="${this.valueChanged}"
+            ></ha-textfield>
           </div>
 
           <div class="side-by-side">
-            <paper-dropdown-menu
+            <ha-select
               label="Step Layout (optional)"
               .configValue=${'layout.step'}
+              .value=${this.config.layout?.step ?? 'column'}
               @value-changed="${this.valueChanged}"
-              class="dropdown"
             >
-              <paper-listbox
-                slot="dropdown-content"
-                .selected=${Object.values(OptionsStepLayout).indexOf(
-                  this.config.layout?.step
-                )}
-              >
-                ${Object.values(OptionsStepLayout).map(
-                  (item) => html` <paper-item>${item}</paper-item> `
-                )}
-              </paper-listbox>
-            </paper-dropdown-menu>
+              ${OptionsStepLayout.map(
+                (item) =>
+                  html`<mwc-list-item .value=${item}>${item}</mwc-list-item>`
+              )}
+            </ha-select>
 
-            <paper-dropdown-menu
+            <ha-select
               label="Step Size (optional)"
               .configValue=${'step_size'}
+              .value=${String(this.config.step_size ?? 0.5)}
               @value-changed="${this.valueChanged}"
-              class="dropdown"
             >
-              <paper-listbox
-                slot="dropdown-content"
-                .selected=${Object.values(OptionsStepSize).indexOf(
-                  +this.config.step_size
-                )}
-              >
-                ${Object.values(OptionsStepSize).map(
-                  (item) => html` <paper-item>${item}</paper-item> `
-                )}
-              </paper-listbox>
-            </paper-dropdown-menu>
+              ${OptionsStepSize.map(
+                (item) =>
+                  html`<mwc-list-item .value=${String(item)}
+                    >${item}</mwc-list-item
+                  >`
+              )}
+            </ha-select>
           </div>
 
           <div class="side-by-side">
-            <mwc-button @click=${this._openLink}>
+            <ha-button @click=${this._openLink}>
               Configuration Options
-            </mwc-button>
+            </ha-button>
 
             Settings for label, control, sensors, faults and hiding UI elements
             can only be configured in the code editor
+          </div>
+
+          <div class="styles-editor">
+            <label class="styles-label">Custom CSS</label>
+            <p class="styles-hint">
+              Applied directly to the card. Use CSS custom properties
+              (<code>--st-*</code>) or target any selector inside the card.
+            </p>
+            <ha-code-editor
+              .value=${this.config.styles ?? ''}
+              .configValue=${'styles'}
+              mode="css"
+              autofocus="false"
+              @value-changed=${this.valueChanged}
+            ></ha-code-editor>
           </div>
         </div>
       </div>
@@ -239,21 +248,31 @@ export default class SimpleThermostatEditor extends LitElement {
     const { target } = ev
     const copy = cloneDeep(this.config)
     if (target.configValue) {
-      if (target.value === '') {
-        delete copy[target.configValue]
+      let value =
+        target.checked !== undefined
+          ? target.checked
+          : ev.detail?.value !== undefined
+          ? ev.detail.value
+          : target.value
+      if (value === '' || value === undefined) {
+        deletePath(copy, target.configValue)
       } else {
-        setValue(
-          copy,
-          target.configValue,
-          target.checked !== undefined ? target.checked : target.value
-        )
+        if (
+          typeof value === 'string' &&
+          NUMERIC_CONFIG_PATHS.includes(target.configValue)
+        ) {
+          const num = Number(value)
+          if (!Number.isNaN(num)) value = num
+        }
+        setValue(copy, target.configValue, value)
       }
     }
     fireEvent(this, 'config-changed', { config: copy })
   }
 
   toggleHeader(ev) {
-    this.config.header = ev.target.checked ? {} : false
-    fireEvent(this, 'config-changed', { config: this.config })
+    const copy = cloneDeep(this.config)
+    copy.header = ev.target.checked ? {} : false
+    fireEvent(this, 'config-changed', { config: copy })
   }
 }

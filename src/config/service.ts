@@ -2,11 +2,11 @@ export interface Service {
   domain: string
   service: string
   data?: {
-    [key: string]: string
+    [key: string]: any
   }
 }
 
-export default function parseServie(config: false | Service): Service {
+export default function parseService(config: false | Service): Service {
   if (!config) {
     return {
       domain: 'climate',

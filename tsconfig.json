@@ -1,15 +1,17 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "declaration": true,
-    "moduleResolution": "node",
-    "resolveJsonModule": false,
+    "target": "ES2021",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ES2020",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
+    "strictNullChecks": true,
     "experimentalDecorators": true,
+    "useDefineForClassFields": false,
     "rootDir": "./src",
     "outDir": "./dist",
-    "types": ["node", "jest"],
-    "typeRoots": ["./node_modules/@types", "./typings"]
+    "types": ["node"]
   },
   "include": ["./src"]
 }

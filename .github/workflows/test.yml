@@ -10,18 +10,22 @@ on:
       - master
 
 jobs:
-  build:
-    runs-on: macOS-latest
+  test:
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@master
-      - name: Use Node.js 14.x
-        uses: actions/setup-node@v1
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 14.x
-      - name: yarn install and test
-        run: |
-          yarn install
-          yarn test
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests
+        run: npm test
         env:
           CI: true

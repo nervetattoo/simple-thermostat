@@ -1,4 +1,4 @@
-import { html } from 'lit-html'
+import { html } from 'lit'
 import formatNumber from '../formatNumber'
 import renderInfoItem from './infoItem'
 import { wrapSensors } from './templated'
@@ -19,12 +19,16 @@ export default function renderSensors({
   } = entity
 
   const showLabels = config?.layout?.sensors?.labels ?? true
-  let stateString = localize(state, 'component.climate.state._.')
+  let stateString =
+    hass.formatEntityState?.(entity) ??
+    localize(state, 'component.climate.state._.')
   if (action) {
-    stateString = [
-      localize(action, 'state_attributes.climate.hvac_action.'),
-      ` (${stateString})`,
-    ].join('')
+    const actionLabel =
+      localize(
+        action,
+        'component.climate.entity_component._.state_attributes.hvac_action.state.'
+      ) || localize(action, 'state_attributes.climate.hvac_action.')
+    stateString = [actionLabel, ` (${stateString})`].join('')
   }
   const sensorHtml = [
     renderInfoItem({
@@ -48,7 +52,7 @@ export default function renderSensors({
           : false,
       },
     }),
-    ...(sensors.map(({ name, state, ...rest }) => {
+    ...sensors.map(({ name, state, ...rest }) => {
       return renderInfoItem({
         state,
         hass,
@@ -59,8 +63,8 @@ export default function renderSensors({
           heading: showLabels && name,
         },
       })
-    }) || null),
-  ].filter((it) => it !== null)
+    }),
+  ].filter(Boolean)
 
   return wrapSensors(config, sensorHtml)
 }
