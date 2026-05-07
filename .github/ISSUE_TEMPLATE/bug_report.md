@@ -18,7 +18,7 @@ A clear and concise description of what the bug is.
 A clear and concise description of what you expected to happen.
 
 ```yaml
-# The least ammount of code possible to reproduce my error
+# The least amount of code possible to reproduce my error
 type: 'custom:simple-thermostat'
 entity: ...
 ```

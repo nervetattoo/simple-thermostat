@@ -46,7 +46,7 @@ export interface HeaderData {
   name?: Name
   icon: Icon
   faults?: Array<Fault>
-  toggle?: Toggle
+  toggle?: Toggle | null
 }
 
 export interface Toggle {
@@ -84,12 +84,13 @@ export default function parseHeaderConfig(
   }
 }
 
-function parseToggle(config: ToggleConfig, hass): Toggle {
+function parseToggle(config: ToggleConfig, hass): Toggle | null {
   const entity: HAState = hass.states[config.entity]
+  if (!entity) return null
 
   let label = ''
   if (config?.name === true) {
-    label = entity.attributes.name
+    label = entity.attributes.friendly_name
   } else {
     label = (config?.name as string) ?? ''
   }
@@ -97,15 +98,15 @@ function parseToggle(config: ToggleConfig, hass): Toggle {
   return { entity, label }
 }
 
-function parseFaults(config: Array<Fault>, hass: HASS) {
+function parseFaults(config: Array<Fault> | undefined, hass: HASS) {
   if (Array.isArray(config)) {
-    return config.map(({ entity, ...rest }: Fault) => {
-      return {
+    return config
+      .filter(({ entity }) => Boolean(hass.states?.[entity]))
+      .map(({ entity, ...rest }: Fault) => ({
         ...rest,
         state: hass.states[entity],
         entity,
-      }
-    })
+      }))
   }
   return []
 }

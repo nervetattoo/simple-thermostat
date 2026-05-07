@@ -1,4 +1,4 @@
-import { html } from 'lit-html'
+import { html } from 'lit'
 import formatNumber from '../formatNumber'
 import { LooseObject } from '../types'
 
@@ -18,9 +18,6 @@ interface InfoItemOptions {
   openEntityPopover?
   details: InfoItemDetails
 }
-
-// Preset mode can be  one of: none, eco, away, boost, comfort, home, sleep, activity
-// See https://github.com/home-assistant/home-assistant/blob/dev/homeassistant/components/climate/const.py#L36-L57
 
 export default function renderInfoItem({
   hide = false,
@@ -53,16 +50,17 @@ export default function renderInfoItem({
       state.attributes?.device_class ?? '_',
       '',
     ].join('.')
-    let value = localize(state.state, prefix)
-    if (typeof decimals === 'number') {
+    const haFormatted = hass.formatEntityState?.(state)
+    let value = haFormatted ?? localize?.(state.state, prefix) ?? state.state
+    if (!haFormatted && typeof decimals === 'number') {
       value = formatNumber(value, { decimals })
     }
     valueCell = html`
       <div
         class="sensor-value clickable"
-        @click="${() => openEntityPopover(state.entity_id)}"
+        @click="${() => openEntityPopover?.(state.entity_id)}"
       >
-        ${value} ${unit || state.attributes.unit_of_measurement}
+        ${value} ${unit || state.attributes?.unit_of_measurement || ''}
       </div>
     `
   } else {
@@ -76,7 +74,7 @@ export default function renderInfoItem({
   }
 
   const headingResult = icon
-    ? html` <ha-icon icon="${icon}"></ha-icon> `
+    ? html` <ha-icon .icon=${icon}></ha-icon> `
     : html` ${heading}: `
 
   return html`

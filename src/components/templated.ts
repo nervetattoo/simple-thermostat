@@ -1,12 +1,11 @@
 import * as Sqrl from 'squirrelly'
-import { html } from 'lit-html'
-import { unsafeHTML } from 'lit-html/directives/unsafe-html.js'
+import { html } from 'lit'
+import { unsafeHTML } from 'lit/directives/unsafe-html.js'
 import formatNumber from '../formatNumber'
-import renderInfoItem from './infoItem'
 
 const renderIcon = (icon) => `<ha-icon icon="${icon}"></ha-icon>`
 
-Sqrl.defaultConfig.autoEscape = false // Turns autoEscaping on
+Sqrl.defaultConfig.autoEscape = false // Turns autoEscaping off — needed for HTML output
 Sqrl.filters.define('icon', renderIcon)
 Sqrl.filters.define('join', (arr, delimiter = ', ') => arr.join(delimiter))
 Sqrl.filters.define('css', (str, css) => {
@@ -25,10 +24,8 @@ Sqrl.filters.define('debug', (data) => {
 })
 
 export function wrapSensors(config, content) {
-  const { type, labels: showLabels } = config?.layout?.sensors ?? {
-    type: 'table',
-    labels: true,
-  }
+  const type = config?.layout?.sensors?.type ?? 'table'
+  const showLabels = config?.layout?.sensors?.labels ?? true
 
   const classes = [
     showLabels ? 'with-labels' : 'without-labels',
@@ -48,17 +45,15 @@ export default function renderTemplated({
   localize,
   openEntityPopover,
 }) {
+  if (!context) return null
+
   const { state, attributes } = context
 
   const [domain] = entityId.split('.')
-  const lang = hass.selectedLanguage || hass.language
   const trPrefix = 'ui.card.climate.'
-  const translations = Object.entries(hass.resources[lang]).reduce(
-    (memo, [key, value]) => {
-      if (key.startsWith(trPrefix)) memo[key.replace(trPrefix, '')] = value
-      return memo
-    },
-    {}
+  const uiKeys = ['currently', 'operation', 'fan_mode', 'swing_mode', 'preset_mode', 'humidity']
+  const translations = Object.fromEntries(
+    uiKeys.map((key) => [key, hass.localize?.(`${trPrefix}${key}`) ?? key])
   )
 
   // Prepare data to inject as variables into the template
@@ -79,7 +74,7 @@ export default function renderTemplated({
       return String(formatNumber(str, opts))
     }
   )
-  Sqrl.filters.define('relativetime', (str, opts = {}) => {
+  Sqrl.filters.define('relativetime', (str) => {
     return `<ha-relative-time fwd-datetime=${str} with-hass></ha-relative-time>`
   })
   Sqrl.filters.define('translate', (str, prefix = '') => {
@@ -89,7 +84,13 @@ export default function renderTemplated({
     return localize(str, prefix)
   })
 
-  const render = (template) => Sqrl.render(template, data, { useWith: true })
+  const render = (template) => {
+    try {
+      return Sqrl.render(template, data, { useWith: true })
+    } catch {
+      return `[template error: ${template}]`
+    }
+  }
 
   const value = render(template)
 

@@ -4,19 +4,25 @@ on:
   push:
     branches:
       - master
-      - beta
-  pull_request:
-    branches:
-      - master
-  schedule:
-    - cron: '0 0 * * *'
 
 jobs:
   validate:
-    runs-on: 'ubuntu-latest'
+    runs-on: ubuntu-latest
     steps:
-      - uses: 'actions/checkout@v2'
-      - name: HACS validation
-        uses: 'hacs/action@main'
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          category: 'plugin'
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: HACS validation
+        uses: hacs/action@main
+        with:
+          category: plugin

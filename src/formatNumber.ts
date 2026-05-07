@@ -1,4 +1,3 @@
-type Input = number | null | undefined | boolean | string
 type Options = {
   decimals?: number
   fallback?: string
@@ -17,7 +16,12 @@ function formatNumber(
     return fallback
   }
 
-  return Number(number).toFixed(decimals)
+  const numeric = Number(number)
+  if (Number.isNaN(numeric)) {
+    return fallback
+  }
+
+  return numeric.toFixed(decimals)
 }
 
 export default formatNumber

@@ -1,6 +1,31 @@
+# Dependencies
 node_modules
-*.min.js
-simple-thermostat.js
-.nvmrc
-build dist
+
+# Build output
 dist
+
+# Test coverage
+coverage
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# macOS
+.DS_Store
+.AppleDouble
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# Editor
+.vscode
+.idea
+*.swp
+*.swo

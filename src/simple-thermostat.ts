@@ -12,4 +12,5 @@ console.info(`%c${CARD_NAME}: ${version}`, 'font-weight: bold')
   name: 'Simple Thermostat',
   preview: false,
   description: 'A different take on the thermostat card',
+  documentationURL: 'https://github.com/duczz/simple-thermostat',
 })
