@@ -1,6 +1,9 @@
 # Dependencies
 node_modules
 
+# Debug build artifacts
+dist/*.debug.js
+
 
 # Test coverage
 coverage
