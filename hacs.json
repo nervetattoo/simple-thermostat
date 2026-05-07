@@ -1,5 +1,6 @@
 {
   "name": "Simple Thermostat",
+  "filename": "simple-thermostat.js",
   "homeassistant": "2024.1.0",
   "render_readme": true
 }
