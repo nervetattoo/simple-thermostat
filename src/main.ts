@@ -342,7 +342,7 @@ export default class SimpleThermostat extends LitElement {
   localize = (label: string, prefix = '') => {
     const lang = this._hass.selectedLanguage || this._hass.language
     const key = `${prefix}${label}`
-    const translations = this._hass.resources[lang]
+    const translations = this._hass.resources?.[lang]
 
     return translations?.[key] ?? label
   }
