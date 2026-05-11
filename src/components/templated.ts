@@ -53,7 +53,7 @@ export default function renderTemplated({
   const [domain] = entityId.split('.')
   const lang = hass.selectedLanguage || hass.language
   const trPrefix = 'ui.card.climate.'
-  const translations = Object.entries(hass.resources[lang]).reduce(
+  const translations = Object.entries(hass.resources?.[lang] ?? {}).reduce(
     (memo, [key, value]) => {
       if (key.startsWith(trPrefix)) memo[key.replace(trPrefix, '')] = value
       return memo
