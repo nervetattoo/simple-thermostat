@@ -42,10 +42,10 @@ const MODE_TYPES: Array<string> = Object.values(MODES)
 const DEFAULT_CONTROL = [MODES.HVAC, MODES.PRESET]
 
 const ICONS = {
-  UP: 'hass:chevron-up',
-  DOWN: 'hass:chevron-down',
-  PLUS: 'mdi:plus',
-  MINUS: 'mdi:minus',
+  UP: 'mdi:arrow-up-bold-circle-outline',
+  DOWN: 'mdi:arrow-down-bold-circle-outline',
+  PLUS: 'mdi:plus-circle-outline',
+  MINUS: 'mdi:minus-circle-outline',
 }
 
 type ModeIcons = {
